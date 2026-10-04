@@ -578,7 +578,7 @@
 - [ ] Test OAuth through BFF
   - GitHub OAuth flow
   - Google OAuth flow
-  - CoreControl OAuth flow
+  - SystemAuth OAuth flow
 
 ### 6.2 Frontend Migration
 

@@ -103,7 +103,7 @@ SystemForge Web is an open-source React framework providing a complete **web app
 
 Similar to Gmail/HubSpot, users can:
 
-- Link multiple OAuth accounts (GitHub, Google, CoreControl)
+- Link multiple OAuth accounts (GitHub, Google, SystemAuth)
 - Switch between organizations without full logout
 - Switch between linked accounts in one click
 - See all available contexts in a unified menu
@@ -160,7 +160,7 @@ Organization Level (Tenant Scope)
 | FR-3.2 | Provide `useAuth` hook returning user, isAuthenticated, isLoading, logout, refreshUser | P0       |
 | FR-3.3 | Provide `ProtectedRoute` component that redirects unauthenticated users                | P0       |
 | FR-3.4 | Support session-expired event handling with automatic redirect                         | P0       |
-| FR-3.5 | Support multiple OAuth providers (GitHub, Google, CoreControl)                         | P1       |
+| FR-3.5 | Support multiple OAuth providers (GitHub, Google, SystemAuth)                         | P1       |
 | FR-3.6 | Provide `usePermissions` hook for role-based UI rendering                              | P1       |
 | FR-3.7 | Provide `useLinkedAccounts` hook for account switching                                 | P1       |
 | FR-3.8 | Provide `useCurrentOrg` hook for organization context                                  | P0       |
@@ -306,7 +306,7 @@ interface User {
 }
 
 interface LinkedAccount {
-  provider: 'github' | 'google' | 'corecontrol';
+  provider: 'github' | 'google' | 'systemauth';
   provider_user_id: string;
   email: string;
   connected_at: string;
@@ -355,9 +355,9 @@ function MyApp() {
 ### D. BFF Auth Flow
 
 ```
-┌─────────┐     ┌─────────┐     ┌──────────┐     ┌──────────┐
-│ Browser │     │   BFF   │     │ CoreAuth │     │  OAuth   │
-└────┬────┘     └────┬────┘     └────┬─────┘     └────┬─────┘
+┌─────────┐     ┌─────────┐     ┌────────────┐     ┌──────────┐
+│ Browser │     │   BFF   │     │ SystemAuth │     │  OAuth   │
+└────┬────┘     └────┬────┘     └─────┬──────┘     └────┬─────┘
      │               │               │                │
      │  Click Login  │               │                │
      ├──────────────►│               │                │
