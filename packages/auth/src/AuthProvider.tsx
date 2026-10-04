@@ -249,7 +249,12 @@ export function AuthProvider({
   );
 
   /**
-   * Initial fetch and session check interval
+   * Initial fetch of the current user on mount.
+   *
+   * This must NOT depend on `user` - fetchUser() calls setUser() internally,
+   * so a `user` dependency here would re-run this effect every time the
+   * fetch resolves (even on success, since each response is a new object
+   * reference), creating an infinite fetch loop with no delay.
    */
   useEffect(() => {
     let mounted = true;
@@ -264,18 +269,29 @@ export function AuthProvider({
 
     init();
 
-    // Set up session check interval
+    return () => {
+      mounted = false;
+    };
+  }, [fetchUser]);
+
+  /**
+   * Periodic session check while logged in. Split from the initial-fetch
+   * effect above so depending on `user` here (to start/stop polling based on
+   * login state) doesn't also re-trigger the initial fetch.
+   */
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
     const interval = setInterval(() => {
-      if (user) {
-        checkSession();
-      }
+      checkSession();
     }, checkInterval);
 
     return () => {
-      mounted = false;
       clearInterval(interval);
     };
-  }, [fetchUser, checkSession, checkInterval, user]);
+  }, [user, checkSession, checkInterval]);
 
   /**
    * Listen for session expired events from other parts of the app
