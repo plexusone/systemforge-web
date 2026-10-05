@@ -9,7 +9,7 @@
  * - Snapshot coordination
  */
 
-import { useEffect, useRef, useCallback, createContext, useContext, useState } from 'react';
+import { useEffect, useRef, useCallback, createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
 import { useTelemetryOptional } from '../TelemetryProvider';
 
@@ -228,19 +228,11 @@ interface JourneyProviderProps {
  * ```
  */
 export function JourneyProvider({ journeyId, children }: JourneyProviderProps) {
-  const [context, setContext] = useState<JourneyContext>({
+  const context: JourneyContext = {
     journeyId,
     currentStepId: null,
     stepHistory: [],
-  });
-
-  // Update journey ID if it changes
-  useEffect(() => {
-    setContext((prev) => ({
-      ...prev,
-      journeyId,
-    }));
-  }, [journeyId]);
+  };
 
   return <JourneyContext.Provider value={context}>{children}</JourneyContext.Provider>;
 }
@@ -606,13 +598,13 @@ export function useAPITracker() {
  */
 export function usePageLeaveTracker(path: string): void {
   const telemetry = useTelemetryOptional();
-  const enteredAt = useRef<number>(Date.now());
+  const enteredAt = useRef<number | null>(null);
 
   useEffect(() => {
     enteredAt.current = Date.now();
 
     return () => {
-      const duration = Date.now() - enteredAt.current;
+      const duration = enteredAt.current ? Date.now() - enteredAt.current : 0;
 
       telemetry?.trackEvent('page_leave', {
         path,
