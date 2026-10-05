@@ -60,9 +60,7 @@ function NavItemComponent({
       )}
     >
       {item.icon && (
-        <span className="flex items-center justify-center w-5 h-5 flex-shrink-0">
-          {item.icon}
-        </span>
+        <span className="flex items-center justify-center w-5 h-5 flex-shrink-0">{item.icon}</span>
       )}
 
       {!isCollapsed && (
@@ -75,9 +73,7 @@ function NavItemComponent({
             </Badge>
           )}
 
-          {item.external && (
-            <ExternalLinkIcon className="h-3 w-3 text-muted-foreground" />
-          )}
+          {item.external && <ExternalLinkIcon className="h-3 w-3 text-muted-foreground" />}
         </>
       )}
     </a>
@@ -183,10 +179,7 @@ export function Sidebar({
             variant="ghost"
             onClick={onToggleCollapse}
             aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            className={cn(
-              'w-full',
-              isCollapsed ? 'justify-center' : 'justify-start'
-            )}
+            className={cn('w-full', isCollapsed ? 'justify-center' : 'justify-start')}
           >
             {isCollapsed ? (
               <PanelLeftOpenIcon className="h-5 w-5" />

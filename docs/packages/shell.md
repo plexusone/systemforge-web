@@ -93,12 +93,7 @@ import { Breadcrumbs } from '@plexusone/shell';
 function ProjectPage() {
   return (
     <div>
-      <Breadcrumbs
-        items={[
-          { label: 'Projects', href: '/projects' },
-          { label: 'My Project' },
-        ]}
-      />
+      <Breadcrumbs items={[{ label: 'Projects', href: '/projects' }, { label: 'My Project' }]} />
       <h1>My Project</h1>
     </div>
   );
@@ -109,14 +104,14 @@ function ProjectPage() {
 
 ### AppShell Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `brandName` | `string` | Application name |
-| `brandLogo` | `string` | Logo URL |
-| `navigation` | `NavItem[]` | Navigation items |
-| `userMenu` | `ReactNode` | Custom user menu |
-| `sidebar` | `ReactNode` | Custom sidebar content |
-| `footer` | `ReactNode` | Footer content |
+| Prop         | Type        | Description            |
+| ------------ | ----------- | ---------------------- |
+| `brandName`  | `string`    | Application name       |
+| `brandLogo`  | `string`    | Logo URL               |
+| `navigation` | `NavItem[]` | Navigation items       |
+| `userMenu`   | `ReactNode` | Custom user menu       |
+| `sidebar`    | `ReactNode` | Custom sidebar content |
+| `footer`     | `ReactNode` | Footer content         |
 
 ### NavItem Type
 
@@ -132,17 +127,17 @@ interface NavItem {
 
 ### Sidebar Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `items` | `NavItem[]` | Navigation items |
-| `collapsed` | `boolean` | Collapsed state |
+| Prop         | Type                           | Description       |
+| ------------ | ------------------------------ | ----------------- |
+| `items`      | `NavItem[]`                    | Navigation items  |
+| `collapsed`  | `boolean`                      | Collapsed state   |
 | `onCollapse` | `(collapsed: boolean) => void` | Collapse callback |
 
 ### Navbar Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `brandName` | `string` | Application name |
-| `brandLogo` | `string` | Logo URL |
-| `userMenu` | `ReactNode` | User menu component |
+| Prop          | Type        | Description           |
+| ------------- | ----------- | --------------------- |
+| `brandName`   | `string`    | Application name      |
+| `brandLogo`   | `string`    | Logo URL              |
+| `userMenu`    | `ReactNode` | User menu component   |
 | `orgSwitcher` | `ReactNode` | Organization switcher |

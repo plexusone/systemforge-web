@@ -33,11 +33,11 @@ SystemForge Web packages have the following peer dependencies:
 
 Some packages have additional peer dependencies:
 
-| Package | Additional Peers |
-|---------|------------------|
+| Package                 | Additional Peers        |
+| ----------------------- | ----------------------- |
 | `@plexusone/api-client` | `@tanstack/react-query` |
-| `@plexusone/shell` | `react-router-dom` |
-| `@plexusone/pages` | `react-router-dom` |
+| `@plexusone/shell`      | `react-router-dom`      |
+| `@plexusone/pages`      | `react-router-dom`      |
 
 ## TypeScript
 

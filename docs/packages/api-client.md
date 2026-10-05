@@ -111,26 +111,26 @@ function DownloadReport() {
 
 ### ApiProvider Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `baseUrl` | `string` | Base URL for API requests |
-| `headers` | `Record<string, string>` | Additional headers |
-| `onError` | `(error: ApiError) => void` | Global error handler |
+| Prop      | Type                        | Description               |
+| --------- | --------------------------- | ------------------------- |
+| `baseUrl` | `string`                    | Base URL for API requests |
+| `headers` | `Record<string, string>`    | Additional headers        |
+| `onError` | `(error: ApiError) => void` | Global error handler      |
 
 ### useApi Return Value
 
-| Method | Description |
-|--------|-------------|
-| `useQuery(key, path, options?)` | GET request with caching |
-| `useMutation(path, options?)` | POST/PUT/DELETE request |
-| `useInfiniteQuery(key, path, options?)` | Paginated queries |
+| Method                                  | Description              |
+| --------------------------------------- | ------------------------ |
+| `useQuery(key, path, options?)`         | GET request with caching |
+| `useMutation(path, options?)`           | POST/PUT/DELETE request  |
+| `useInfiniteQuery(key, path, options?)` | Paginated queries        |
 
 ### Client Methods
 
-| Method | Description |
-|--------|-------------|
-| `get(path, options?)` | GET request |
-| `post(path, data?, options?)` | POST request |
-| `put(path, data?, options?)` | PUT request |
-| `patch(path, data?, options?)` | PATCH request |
-| `delete(path, options?)` | DELETE request |
+| Method                         | Description    |
+| ------------------------------ | -------------- |
+| `get(path, options?)`          | GET request    |
+| `post(path, data?, options?)`  | POST request   |
+| `put(path, data?, options?)`   | PUT request    |
+| `patch(path, data?, options?)` | PATCH request  |
+| `delete(path, options?)`       | DELETE request |

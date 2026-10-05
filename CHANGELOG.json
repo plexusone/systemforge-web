@@ -11,31 +11,75 @@
       "date": "2026-04-27",
       "highlights": [
         { "description": "Initial release of SystemForge Web component library monorepo" },
-        { "description": "ProductGraph telemetry integration with session management and OTel compliance" },
+        {
+          "description": "ProductGraph telemetry integration with session management and OTel compliance"
+        },
         { "description": "Multi-tenant primitives with organization context and tenant isolation" }
       ],
       "added": [
         { "description": "Monorepo setup with pnpm workspaces and Turborepo", "commit": "5f055db" },
-        { "description": "ESLint and Prettier configuration for consistent code style", "commit": "c1e86d4" },
+        {
+          "description": "ESLint and Prettier configuration for consistent code style",
+          "commit": "c1e86d4"
+        },
         { "description": "Vitest testing framework configuration", "commit": "1f736e2" },
         { "description": "GitHub Actions CI/CD workflows", "commit": "bdee74f" },
-        { "description": "Changesets for versioning and changelog generation", "commit": "e6dea5e" },
-        { "description": "`@systemforge/auth` package with JWT/OAuth/OIDC authentication primitives", "commit": "4b1d2be" },
-        { "description": "`@systemforge/tenant` package with TenantProvider and useOrganization hooks", "commit": "e1db48a" },
-        { "description": "`@systemforge/api-client` package with typed HTTP client utilities", "commit": "6d36fc1" },
-        { "description": "`@systemforge/telemetry` package with TelemetryProvider, ErrorBoundary, and hooks", "commit": "98e11f7" },
-        { "description": "`@systemforge/design-tokens` package with CSS custom properties", "commit": "a14ba33" },
-        { "description": "`@systemforge/shell` package with AppShell layout components", "commit": "570bff9" },
-        { "description": "`@systemforge/pages` package with default page components (404, 500, Loading)", "commit": "4f643aa" },
-        { "description": "ProductGraphAdapter with session management (30-min timeout) and event batching", "commit": "ddee117" },
-        { "description": "ProductGraph hooks: ComponentPathProvider, useStateTracker, JourneyProvider", "commit": "ec194bc" },
-        { "description": "ProductGraph hooks: useScrollTracker, useClickTracker, useAPITracker, usePageLeaveTracker", "commit": "ec194bc" },
-        { "description": "ProductGraph adapter and hook exports with TypeScript types", "commit": "205b8e6" }
+        {
+          "description": "Changesets for versioning and changelog generation",
+          "commit": "e6dea5e"
+        },
+        {
+          "description": "`@systemforge/auth` package with JWT/OAuth/OIDC authentication primitives",
+          "commit": "4b1d2be"
+        },
+        {
+          "description": "`@systemforge/tenant` package with TenantProvider and useOrganization hooks",
+          "commit": "e1db48a"
+        },
+        {
+          "description": "`@systemforge/api-client` package with typed HTTP client utilities",
+          "commit": "6d36fc1"
+        },
+        {
+          "description": "`@systemforge/telemetry` package with TelemetryProvider, ErrorBoundary, and hooks",
+          "commit": "98e11f7"
+        },
+        {
+          "description": "`@systemforge/design-tokens` package with CSS custom properties",
+          "commit": "a14ba33"
+        },
+        {
+          "description": "`@systemforge/shell` package with AppShell layout components",
+          "commit": "570bff9"
+        },
+        {
+          "description": "`@systemforge/pages` package with default page components (404, 500, Loading)",
+          "commit": "4f643aa"
+        },
+        {
+          "description": "ProductGraphAdapter with session management (30-min timeout) and event batching",
+          "commit": "ddee117"
+        },
+        {
+          "description": "ProductGraph hooks: ComponentPathProvider, useStateTracker, JourneyProvider",
+          "commit": "ec194bc"
+        },
+        {
+          "description": "ProductGraph hooks: useScrollTracker, useClickTracker, useAPITracker, usePageLeaveTracker",
+          "commit": "ec194bc"
+        },
+        {
+          "description": "ProductGraph adapter and hook exports with TypeScript types",
+          "commit": "205b8e6"
+        }
       ],
       "documentation": [
         { "description": "Project documentation with architecture overview", "commit": "25a249d" },
         { "description": "MkDocs documentation site with Material theme", "commit": "311a4f8" },
-        { "description": "ProductGraph integration design documents (PRD, TRD, PLAN, TASKS)", "commit": "9363c0f" }
+        {
+          "description": "ProductGraph integration design documents (PRD, TRD, PLAN, TASKS)",
+          "commit": "9363c0f"
+        }
       ],
       "infrastructure": [
         { "description": "Shared pnpm workflows from grokify/.github", "commit": "bb07c1d" }

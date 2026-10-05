@@ -20,9 +20,6 @@ if (!existsSync(distDir)) {
 
 // Build CSS with Tailwind v4 via PostCSS
 console.log('Building CSS with Tailwind v4...');
-execSync(
-  `npx postcss ${srcCss} -o ${distCss}`,
-  { cwd: rootDir, stdio: 'inherit' }
-);
+execSync(`npx postcss ${srcCss} -o ${distCss}`, { cwd: rootDir, stdio: 'inherit' });
 
 console.log('CSS built successfully!');

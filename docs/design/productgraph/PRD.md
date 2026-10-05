@@ -91,37 +91,37 @@ As a data analyst, I want events forwarded to Amplitude and Mixpanel so that I c
 
 ### Functional Requirements
 
-| ID | Requirement | Priority |
-|----|-------------|----------|
-| FR-1 | ProductGraphAdapter tracks all TelemetryEvent types | P0 |
-| FR-2 | Session management with 30-minute timeout | P0 |
-| FR-3 | Event batching (20 events, 5s interval) | P0 |
-| FR-4 | OTel semantic convention compliance | P0 |
-| FR-5 | Component path tracking | P1 |
-| FR-6 | State change tracking with before/after | P1 |
-| FR-7 | Journey step tracking | P1 |
-| FR-8 | Scroll depth tracking | P2 |
-| FR-9 | API call timing tracking | P1 |
-| FR-10 | Error boundary integration | P0 |
+| ID    | Requirement                                         | Priority |
+| ----- | --------------------------------------------------- | -------- |
+| FR-1  | ProductGraphAdapter tracks all TelemetryEvent types | P0       |
+| FR-2  | Session management with 30-minute timeout           | P0       |
+| FR-3  | Event batching (20 events, 5s interval)             | P0       |
+| FR-4  | OTel semantic convention compliance                 | P0       |
+| FR-5  | Component path tracking                             | P1       |
+| FR-6  | State change tracking with before/after             | P1       |
+| FR-7  | Journey step tracking                               | P1       |
+| FR-8  | Scroll depth tracking                               | P2       |
+| FR-9  | API call timing tracking                            | P1       |
+| FR-10 | Error boundary integration                          | P0       |
 
 ### Non-Functional Requirements
 
-| ID | Requirement | Target |
-|----|-------------|--------|
+| ID    | Requirement                      | Target  |
+| ----- | -------------------------------- | ------- |
 | NFR-1 | Bundle size (minified + gzipped) | < 15 KB |
-| NFR-2 | Event dispatch latency | < 50ms |
-| NFR-3 | Memory footprint | < 5 MB |
-| NFR-4 | Browser support | ES2020+ |
-| NFR-5 | React version | ^18.0.0 |
+| NFR-2 | Event dispatch latency           | < 50ms  |
+| NFR-3 | Memory footprint                 | < 5 MB  |
+| NFR-4 | Browser support                  | ES2020+ |
+| NFR-5 | React version                    | ^18.0.0 |
 
 ## Success Metrics
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| SDK adoption | 100% of new projects | Package installs |
-| Event delivery rate | > 99.9% | ProductGraph dashboard |
+| Metric                      | Target                    | Measurement             |
+| --------------------------- | ------------------------- | ----------------------- |
+| SDK adoption                | 100% of new projects      | Package installs        |
+| Event delivery rate         | > 99.9%                   | ProductGraph dashboard  |
 | Journey completion tracking | Active in 50% of projects | Journey events received |
-| Backend correlation | Active in 30% of projects | Correlated traces |
+| Backend correlation         | Active in 30% of projects | Correlated traces       |
 
 ## Out of Scope
 
@@ -132,20 +132,20 @@ As a data analyst, I want events forwarded to Amplitude and Mixpanel so that I c
 
 ## Dependencies
 
-| Dependency | Version | Purpose |
-|------------|---------|---------|
+| Dependency   | Version | Purpose                 |
+| ------------ | ------- | ----------------------- |
 | ProductGraph | v0.2.0+ | Event ingestion backend |
-| omnidxi | v0.1.0+ | Analytics forwarding |
-| React | ^18.0.0 | UI framework |
+| omnidxi      | v0.1.0+ | Analytics forwarding    |
+| React        | ^18.0.0 | UI framework            |
 
 ## Timeline
 
-| Milestone | Target Date |
-|-----------|-------------|
-| Adapter implementation | DONE |
-| Documentation | 2026-04-30 |
-| Example app | 2026-05-05 |
-| v1.0.0 release | 2026-05-10 |
+| Milestone              | Target Date |
+| ---------------------- | ----------- |
+| Adapter implementation | DONE        |
+| Documentation          | 2026-04-30  |
+| Example app            | 2026-05-05  |
+| v1.0.0 release         | 2026-05-10  |
 
 ## Related Documents
 

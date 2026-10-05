@@ -7,7 +7,13 @@ import {
   type ChatModelAdapter,
   type ChatModelRunResult,
 } from '@assistant-ui/react';
-import type { ChatConfig, ChatProviderProps, Conversation, Message, ChatEventCallbacks } from '../types';
+import type {
+  ChatConfig,
+  ChatProviderProps,
+  Conversation,
+  Message,
+  ChatEventCallbacks,
+} from '../types';
 
 interface ChatContextValue {
   config: ChatConfig;
@@ -162,8 +168,9 @@ export function ChatProvider({
   events = {},
   children,
 }: ChatProviderProps) {
-  const [currentConversation, setCurrentConversationState] =
-    React.useState<Conversation | null>(initialConversation ?? null);
+  const [currentConversation, setCurrentConversationState] = React.useState<Conversation | null>(
+    initialConversation ?? null
+  );
 
   // Wrap setCurrentConversation to trigger callback
   const setCurrentConversation = React.useCallback(
@@ -245,9 +252,7 @@ export function ChatProvider({
 
   return (
     <ChatContext.Provider value={contextValue}>
-      <AssistantRuntimeProvider runtime={runtime}>
-        {children}
-      </AssistantRuntimeProvider>
+      <AssistantRuntimeProvider runtime={runtime}>{children}</AssistantRuntimeProvider>
     </ChatContext.Provider>
   );
 }

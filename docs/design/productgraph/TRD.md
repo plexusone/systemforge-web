@@ -86,30 +86,30 @@ This document describes the technical architecture for integrating @plexusone/te
 
 ### Event Type Mapping
 
-| TelemetryEventType | ProductGraph event.type | Refinements |
-|--------------------|-------------------------|-------------|
-| `page_view` | `page.view` | - |
-| `action` | `ui.click` | Based on action: scroll, input, focus, blur, submit |
-| `error` | `error` | - |
-| `performance` | `performance` | - |
-| `custom` | `custom` | - |
+| TelemetryEventType | ProductGraph event.type | Refinements                                         |
+| ------------------ | ----------------------- | --------------------------------------------------- |
+| `page_view`        | `page.view`             | -                                                   |
+| `action`           | `ui.click`              | Based on action: scroll, input, focus, blur, submit |
+| `error`            | `error`                 | -                                                   |
+| `performance`      | `performance`           | -                                                   |
+| `custom`           | `custom`                | -                                                   |
 
 ### ProductGraphEvent Schema
 
 ```typescript
 interface ProductGraphEvent {
   // Identity
-  event_id: string;              // UUID v4
-  project_id: string;            // From config
-  'session.id': string;          // Managed by adapter
-  'user.id'?: string;            // From identify()
-  'user.anonymous_id'?: string;  // localStorage fallback
+  event_id: string; // UUID v4
+  project_id: string; // From config
+  'session.id': string; // Managed by adapter
+  'user.id'?: string; // From identify()
+  'user.anonymous_id'?: string; // localStorage fallback
 
   // Event classification
   'event.type': ProductGraphEventType;
   'event.name': string;
-  'event.timestamp': string;     // ISO8601
-  'event.sequence': number;      // Auto-incremented
+  'event.timestamp': string; // ISO8601
+  'event.sequence': number; // Auto-incremented
 
   // Page context
   'page.path'?: string;
@@ -147,7 +147,7 @@ interface ProductGraphEvent {
   'error.stack'?: string;
 
   // Performance
-  'duration_ms'?: number;
+  duration_ms?: number;
 
   // Organization
   'org.id'?: string;
@@ -168,30 +168,30 @@ interface ProductGraphEvent {
 ```typescript
 interface ProductGraphConfig {
   // Required
-  projectId: string;        // ProductGraph project ID
-  endpoint: string;         // ProductGraph endpoint URL
+  projectId: string; // ProductGraph project ID
+  endpoint: string; // ProductGraph endpoint URL
 
   // Optional
-  apiKey?: string;          // X-PG-API-Key header
-  sessionTimeout?: number;  // Session timeout in ms (default: 30 min)
-  batchSize?: number;       // Events per batch (default: 20)
-  batchInterval?: number;   // Flush interval in ms (default: 5000)
-  debug?: boolean;          // Enable console logging
-  headers?: Record<string, string>;  // Custom headers
+  apiKey?: string; // X-PG-API-Key header
+  sessionTimeout?: number; // Session timeout in ms (default: 30 min)
+  batchSize?: number; // Events per batch (default: 20)
+  batchInterval?: number; // Flush interval in ms (default: 5000)
+  debug?: boolean; // Enable console logging
+  headers?: Record<string, string>; // Custom headers
 
   // Future
-  captureSnapshots?: boolean;  // DOM snapshots
-  snapshotQuality?: number;    // JPEG quality (0-1)
+  captureSnapshots?: boolean; // DOM snapshots
+  snapshotQuality?: number; // JPEG quality (0-1)
 }
 ```
 
 ### Environment Variables
 
-| Variable | Description |
-|----------|-------------|
+| Variable                              | Description        |
+| ------------------------------------- | ------------------ |
 | `NEXT_PUBLIC_PRODUCTGRAPH_PROJECT_ID` | Project identifier |
-| `NEXT_PUBLIC_PRODUCTGRAPH_ENDPOINT` | API endpoint |
-| `NEXT_PUBLIC_PRODUCTGRAPH_API_KEY` | API key (optional) |
+| `NEXT_PUBLIC_PRODUCTGRAPH_ENDPOINT`   | API endpoint       |
+| `NEXT_PUBLIC_PRODUCTGRAPH_API_KEY`    | API key (optional) |
 
 ## Hooks API
 
@@ -231,13 +231,13 @@ import {
   usePageView,
   useJourneyStep,
   JourneyProvider,
-  ComponentPathProvider
+  ComponentPathProvider,
 } from '@plexusone/telemetry';
 
 const adapter = new ProductGraphAdapter({
   projectId: 'proj_demo',
   endpoint: 'https://api.productgraph.io/v1/events',
-  apiKey: 'pk_live_xxx'
+  apiKey: 'pk_live_xxx',
 });
 
 function App() {
@@ -298,12 +298,12 @@ func Middleware(next http.Handler) http.Handler {
 
 ### Bundle Size
 
-| Component | Size (min+gzip) |
-|-----------|-----------------|
-| Core telemetry | ~3 KB |
-| ProductGraphAdapter | ~4 KB |
-| Hooks | ~3 KB |
-| Total | ~10 KB |
+| Component           | Size (min+gzip) |
+| ------------------- | --------------- |
+| Core telemetry      | ~3 KB           |
+| ProductGraphAdapter | ~4 KB           |
+| Hooks               | ~3 KB           |
+| Total               | ~10 KB          |
 
 ### Memory
 
@@ -341,7 +341,7 @@ describe('ProductGraphAdapter', () => {
     const adapter = new ProductGraphAdapter(config);
     const event = adapter.transform({
       type: 'page_view',
-      properties: { path: '/home' }
+      properties: { path: '/home' },
     });
     expect(event['event.type']).toBe('page.view');
     expect(event['page.path']).toBe('/home');

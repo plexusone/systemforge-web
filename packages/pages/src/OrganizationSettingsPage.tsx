@@ -77,13 +77,7 @@ const tabConfig: Record<OrgSettingsTab, { label: string; icon: ReactNode }> = {
 /**
  * General Settings Tab
  */
-function GeneralTab({
-  orgSlug,
-  apiBaseUrl,
-}: {
-  orgSlug: string;
-  apiBaseUrl: string;
-}): ReactNode {
+function GeneralTab({ orgSlug, apiBaseUrl }: { orgSlug: string; apiBaseUrl: string }): ReactNode {
   const [name, setName] = useState('');
   const [logoUrl, setLogoUrl] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -453,7 +447,13 @@ function DangerTab({
  */
 function MembersTabPlaceholder(): ReactNode {
   return (
-    <div style={{ padding: '24px', textAlign: 'center', color: 'var(--cf-color-fg-secondary, #52525b)' }}>
+    <div
+      style={{
+        padding: '24px',
+        textAlign: 'center',
+        color: 'var(--cf-color-fg-secondary, #52525b)',
+      }}
+    >
       <p>Use OrganizationMembersPage component for full functionality.</p>
     </div>
   );
@@ -461,7 +461,13 @@ function MembersTabPlaceholder(): ReactNode {
 
 function InvitationsTabPlaceholder(): ReactNode {
   return (
-    <div style={{ padding: '24px', textAlign: 'center', color: 'var(--cf-color-fg-secondary, #52525b)' }}>
+    <div
+      style={{
+        padding: '24px',
+        textAlign: 'center',
+        color: 'var(--cf-color-fg-secondary, #52525b)',
+      }}
+    >
       <p>Use OrganizationInvitationsPage component for full functionality.</p>
     </div>
   );
@@ -589,9 +595,7 @@ export function OrganizationSettingsPage({
             padding: '24px',
           }}
         >
-          {currentTab === 'general' && (
-            <GeneralTab orgSlug={orgSlug} apiBaseUrl={apiBaseUrl} />
-          )}
+          {currentTab === 'general' && <GeneralTab orgSlug={orgSlug} apiBaseUrl={apiBaseUrl} />}
           {currentTab === 'members' && <MembersTabPlaceholder />}
           {currentTab === 'invitations' && <InvitationsTabPlaceholder />}
           {currentTab === 'danger' && (

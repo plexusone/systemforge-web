@@ -14,15 +14,15 @@ SystemForge Web provides a complete set of React packages for building productio
 
 ## Packages
 
-| Package | Description |
-|---------|-------------|
-| `@plexusone/auth` | Authentication primitives (AuthProvider, ProtectedRoute) |
-| `@plexusone/tenant` | Multi-tenant context (TenantProvider, RequireRole) |
-| `@plexusone/api-client` | HTTP client with auth integration |
-| `@plexusone/telemetry` | Event instrumentation and error tracking |
-| `@plexusone/shell` | Application shell components |
-| `@plexusone/pages` | Pre-built pages (Login, Settings, Error) |
-| `@plexusone/design-tokens` | Design system tokens |
+| Package                    | Description                                              |
+| -------------------------- | -------------------------------------------------------- |
+| `@plexusone/auth`          | Authentication primitives (AuthProvider, ProtectedRoute) |
+| `@plexusone/tenant`        | Multi-tenant context (TenantProvider, RequireRole)       |
+| `@plexusone/api-client`    | HTTP client with auth integration                        |
+| `@plexusone/telemetry`     | Event instrumentation and error tracking                 |
+| `@plexusone/shell`         | Application shell components                             |
+| `@plexusone/pages`         | Pre-built pages (Login, Settings, Error)                 |
+| `@plexusone/design-tokens` | Design system tokens                                     |
 
 ## Quick Example
 

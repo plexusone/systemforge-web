@@ -57,10 +57,7 @@ export function Breadcrumbs({
           const isCollapsed = collapsed && index === 1;
 
           return (
-            <li
-              key={`${item.label}-${index}`}
-              className="flex items-center gap-1"
-            >
+            <li key={`${item.label}-${index}`} className="flex items-center gap-1">
               {index > 0 && (
                 <span className="text-muted-foreground flex items-center" aria-hidden="true">
                   {separator || defaultSeparator}
@@ -68,9 +65,7 @@ export function Breadcrumbs({
               )}
 
               {isCollapsed ? (
-                <span className="text-muted-foreground px-1 py-0.5">
-                  {item.label}
-                </span>
+                <span className="text-muted-foreground px-1 py-0.5">{item.label}</span>
               ) : item.href && !isLast ? (
                 <a
                   href={item.href}

@@ -76,14 +76,30 @@ SystemForge Web follows a modular, composable architecture designed for multi-te
 The recommended provider order:
 
 ```tsx
-<QueryClientProvider>        {/* TanStack Query */}
-  <BrowserRouter>            {/* React Router */}
-    <TelemetryProvider>      {/* Event tracking */}
-      <ErrorBoundary>        {/* Error handling */}
-        <AuthProvider>       {/* Authentication */}
-          <ApiProvider>      {/* HTTP client */}
-            <TenantProvider> {/* Multi-tenancy */}
-              <AppShell>     {/* Layout */}
+<QueryClientProvider>
+  {' '}
+  {/* TanStack Query */}
+  <BrowserRouter>
+    {' '}
+    {/* React Router */}
+    <TelemetryProvider>
+      {' '}
+      {/* Event tracking */}
+      <ErrorBoundary>
+        {' '}
+        {/* Error handling */}
+        <AuthProvider>
+          {' '}
+          {/* Authentication */}
+          <ApiProvider>
+            {' '}
+            {/* HTTP client */}
+            <TenantProvider>
+              {' '}
+              {/* Multi-tenancy */}
+              <AppShell>
+                {' '}
+                {/* Layout */}
                 <App />
               </AppShell>
             </TenantProvider>

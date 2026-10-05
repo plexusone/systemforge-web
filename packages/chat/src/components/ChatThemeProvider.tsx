@@ -123,22 +123,26 @@ export function ChatThemeProvider({
     }
   }, []);
 
-  const cssVariables = React.useMemo(() => ({
-    '--chat-primary': themeState.theme.primary,
-    '--chat-primary-hover': themeState.theme.primaryHover,
-    '--chat-primary-foreground': themeState.theme.primaryForeground,
-    '--chat-background': themeState.theme.background,
-    '--chat-foreground': themeState.theme.foreground,
-    '--chat-muted': themeState.theme.muted,
-    '--chat-muted-foreground': themeState.theme.mutedForeground,
-    '--chat-border': themeState.theme.border,
-    '--chat-user-message-bg': themeState.theme.userMessageBg,
-    '--chat-user-message-fg': themeState.theme.userMessageFg,
-    '--chat-assistant-message-bg': themeState.theme.assistantMessageBg,
-    '--chat-assistant-message-fg': themeState.theme.assistantMessageFg,
-    '--chat-border-radius': themeState.theme.borderRadius,
-    ...(themeState.theme.fontFamily && { '--chat-font-family': themeState.theme.fontFamily }),
-  } as React.CSSProperties), [themeState.theme]);
+  const cssVariables = React.useMemo(
+    () =>
+      ({
+        '--chat-primary': themeState.theme.primary,
+        '--chat-primary-hover': themeState.theme.primaryHover,
+        '--chat-primary-foreground': themeState.theme.primaryForeground,
+        '--chat-background': themeState.theme.background,
+        '--chat-foreground': themeState.theme.foreground,
+        '--chat-muted': themeState.theme.muted,
+        '--chat-muted-foreground': themeState.theme.mutedForeground,
+        '--chat-border': themeState.theme.border,
+        '--chat-user-message-bg': themeState.theme.userMessageBg,
+        '--chat-user-message-fg': themeState.theme.userMessageFg,
+        '--chat-assistant-message-bg': themeState.theme.assistantMessageBg,
+        '--chat-assistant-message-fg': themeState.theme.assistantMessageFg,
+        '--chat-border-radius': themeState.theme.borderRadius,
+        ...(themeState.theme.fontFamily && { '--chat-font-family': themeState.theme.fontFamily }),
+      }) as React.CSSProperties,
+    [themeState.theme]
+  );
 
   const contextValue = React.useMemo(
     () => ({
@@ -177,10 +181,7 @@ export function useChatTheme(): ChatThemeContextValue {
 /**
  * Creates a custom theme by merging with the base theme.
  */
-export function createTheme(
-  base: 'light' | 'dark',
-  overrides: Partial<ChatTheme>
-): ChatTheme {
+export function createTheme(base: 'light' | 'dark', overrides: Partial<ChatTheme>): ChatTheme {
   const baseTheme = base === 'dark' ? darkTheme : lightTheme;
   return { ...baseTheme, ...overrides };
 }

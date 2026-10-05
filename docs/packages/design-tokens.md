@@ -64,12 +64,12 @@ export default {
 ```typescript
 import { colors } from '@plexusone/design-tokens';
 
-colors.primary[500]    // Primary brand color
-colors.secondary[500]  // Secondary color
-colors.success[500]    // Success states
-colors.warning[500]    // Warning states
-colors.error[500]      // Error states
-colors.gray[500]       // Neutral gray
+colors.primary[500]; // Primary brand color
+colors.secondary[500]; // Secondary color
+colors.success[500]; // Success states
+colors.warning[500]; // Warning states
+colors.error[500]; // Error states
+colors.gray[500]; // Neutral gray
 ```
 
 ### Typography
@@ -77,22 +77,22 @@ colors.gray[500]       // Neutral gray
 ```typescript
 import { typography } from '@plexusone/design-tokens';
 
-typography.sizes.xs    // 12px
-typography.sizes.sm    // 14px
-typography.sizes.base  // 16px
-typography.sizes.lg    // 18px
-typography.sizes.xl    // 20px
-typography.sizes['2xl'] // 24px
-typography.sizes['3xl'] // 30px
+typography.sizes.xs; // 12px
+typography.sizes.sm; // 14px
+typography.sizes.base; // 16px
+typography.sizes.lg; // 18px
+typography.sizes.xl; // 20px
+typography.sizes['2xl']; // 24px
+typography.sizes['3xl']; // 30px
 
-typography.weights.normal    // 400
-typography.weights.medium    // 500
-typography.weights.semibold  // 600
-typography.weights.bold      // 700
+typography.weights.normal; // 400
+typography.weights.medium; // 500
+typography.weights.semibold; // 600
+typography.weights.bold; // 700
 
-typography.lineHeights.tight   // 1.25
-typography.lineHeights.normal  // 1.5
-typography.lineHeights.relaxed // 1.75
+typography.lineHeights.tight; // 1.25
+typography.lineHeights.normal; // 1.5
+typography.lineHeights.relaxed; // 1.75
 ```
 
 ### Spacing
@@ -100,15 +100,15 @@ typography.lineHeights.relaxed // 1.75
 ```typescript
 import { spacing } from '@plexusone/design-tokens';
 
-spacing[0]   // 0
-spacing[1]   // 4px
-spacing[2]   // 8px
-spacing[3]   // 12px
-spacing[4]   // 16px
-spacing[6]   // 24px
-spacing[8]   // 32px
-spacing[12]  // 48px
-spacing[16]  // 64px
+spacing[0]; // 0
+spacing[1]; // 4px
+spacing[2]; // 8px
+spacing[3]; // 12px
+spacing[4]; // 16px
+spacing[6]; // 24px
+spacing[8]; // 32px
+spacing[12]; // 48px
+spacing[16]; // 64px
 ```
 
 ### Breakpoints
@@ -116,11 +116,11 @@ spacing[16]  // 64px
 ```typescript
 import { breakpoints } from '@plexusone/design-tokens';
 
-breakpoints.sm   // 640px
-breakpoints.md   // 768px
-breakpoints.lg   // 1024px
-breakpoints.xl   // 1280px
-breakpoints['2xl'] // 1536px
+breakpoints.sm; // 640px
+breakpoints.md; // 768px
+breakpoints.lg; // 1024px
+breakpoints.xl; // 1280px
+breakpoints['2xl']; // 1536px
 ```
 
 ### Shadows
@@ -128,10 +128,10 @@ breakpoints['2xl'] // 1536px
 ```typescript
 import { shadows } from '@plexusone/design-tokens';
 
-shadows.sm     // Small shadow
-shadows.md     // Medium shadow
-shadows.lg     // Large shadow
-shadows.xl     // Extra large shadow
+shadows.sm; // Small shadow
+shadows.md; // Medium shadow
+shadows.lg; // Large shadow
+shadows.xl; // Extra large shadow
 ```
 
 ### Border Radii
@@ -139,12 +139,12 @@ shadows.xl     // Extra large shadow
 ```typescript
 import { radii } from '@plexusone/design-tokens';
 
-radii.none    // 0
-radii.sm      // 2px
-radii.md      // 4px
-radii.lg      // 8px
-radii.xl      // 12px
-radii.full    // 9999px
+radii.none; // 0
+radii.sm; // 2px
+radii.md; // 4px
+radii.lg; // 8px
+radii.xl; // 12px
+radii.full; // 9999px
 ```
 
 ### Z-Index
@@ -152,11 +152,11 @@ radii.full    // 9999px
 ```typescript
 import { zIndex } from '@plexusone/design-tokens';
 
-zIndex.dropdown   // 1000
-zIndex.sticky     // 1100
-zIndex.modal      // 1200
-zIndex.popover    // 1300
-zIndex.tooltip    // 1400
+zIndex.dropdown; // 1000
+zIndex.sticky; // 1100
+zIndex.modal; // 1200
+zIndex.popover; // 1300
+zIndex.tooltip; // 1400
 ```
 
 ## CSS Variables

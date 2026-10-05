@@ -87,10 +87,7 @@ export function ChatWidget({
   };
 
   return (
-    <div
-      className={cn('fixed', positionClasses[position], className)}
-      style={{ zIndex }}
-    >
+    <div className={cn('fixed', positionClasses[position], className)} style={{ zIndex }}>
       {/* Chat Panel */}
       <div
         className={cn(
@@ -107,9 +104,7 @@ export function ChatWidget({
         <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
           <div>
             <h3 className="font-semibold text-lg">{title}</h3>
-            {subtitle && (
-              <p className="text-sm text-blue-100">{subtitle}</p>
-            )}
+            {subtitle && <p className="text-sm text-blue-100">{subtitle}</p>}
           </div>
           <button
             onClick={handleClose}
@@ -122,10 +117,7 @@ export function ChatWidget({
 
         {/* Chat Content */}
         <div className="flex-1 overflow-hidden">
-          <ChatThread
-            className="h-full"
-            welcomeMessage={welcomeMessage}
-          />
+          <ChatThread className="h-full" welcomeMessage={welcomeMessage} />
         </div>
 
         {/* Composer */}
@@ -147,10 +139,9 @@ export function ChatWidget({
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
       >
         {triggerContent || (
-          <span className={cn(
-            'transition-transform duration-300',
-            isOpen ? 'rotate-90' : 'rotate-0'
-          )}>
+          <span
+            className={cn('transition-transform duration-300', isOpen ? 'rotate-90' : 'rotate-0')}
+          >
             {isOpen ? <XIcon className="w-6 h-6" /> : <ChatIcon className="w-6 h-6" />}
           </span>
         )}
@@ -187,11 +178,7 @@ function XIcon({ className }: { className?: string }) {
       stroke="currentColor"
       strokeWidth={2}
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M6 18L18 6M6 6l12 12"
-      />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
     </svg>
   );
 }

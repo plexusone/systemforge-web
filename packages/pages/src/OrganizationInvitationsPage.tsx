@@ -340,9 +340,7 @@ export function OrganizationInvitationsPage({
       if (!response.ok) throw new Error('Failed to revoke invitation');
 
       setInvitations((prev) =>
-        prev.map((inv) =>
-          inv.id === invitationId ? { ...inv, status: 'revoked' } : inv
-        )
+        prev.map((inv) => (inv.id === invitationId ? { ...inv, status: 'revoked' } : inv))
       );
       setMessage({ type: 'success', text: 'Invitation revoked' });
       onInvitationRevoked?.();
@@ -356,7 +354,13 @@ export function OrganizationInvitationsPage({
 
   if (isLoading) {
     return (
-      <div style={{ padding: '32px', textAlign: 'center', color: 'var(--cf-color-fg-secondary, #52525b)' }}>
+      <div
+        style={{
+          padding: '32px',
+          textAlign: 'center',
+          color: 'var(--cf-color-fg-secondary, #52525b)',
+        }}
+      >
         Loading invitations...
       </div>
     );
@@ -378,7 +382,14 @@ export function OrganizationInvitationsPage({
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '32px 24px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '24px',
+        }}
+      >
         <div>
           <h1
             style={{
@@ -391,7 +402,8 @@ export function OrganizationInvitationsPage({
             Invitations
           </h1>
           <p style={{ fontSize: '14px', color: 'var(--cf-color-fg-secondary, #52525b)' }}>
-            {pendingInvitations.length} pending invitation{pendingInvitations.length !== 1 ? 's' : ''}
+            {pendingInvitations.length} pending invitation
+            {pendingInvitations.length !== 1 ? 's' : ''}
           </p>
         </div>
 
@@ -471,7 +483,14 @@ export function OrganizationInvitationsPage({
                 }}
               >
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      marginBottom: '4px',
+                    }}
+                  >
                     <span style={{ fontWeight: 500, color: 'var(--cf-color-fg-primary, #18181b)' }}>
                       {invitation.email || 'Link invitation'}
                     </span>
@@ -559,7 +578,14 @@ export function OrganizationInvitationsPage({
                 }}
               >
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      marginBottom: '4px',
+                    }}
+                  >
                     <span style={{ fontWeight: 500, color: 'var(--cf-color-fg-primary, #18181b)' }}>
                       {invitation.email || 'Link invitation'}
                     </span>

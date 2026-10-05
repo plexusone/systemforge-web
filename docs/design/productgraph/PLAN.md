@@ -90,7 +90,7 @@ class ProductGraphAdapter {
     return {
       'X-Session-ID': this.sessionManager.getSessionId(),
       'X-Request-ID': crypto.randomUUID(),
-      'X-Trace-ID': this.getTraceId()
+      'X-Trace-ID': this.getTraceId(),
     };
   }
 }
@@ -104,7 +104,7 @@ function useAPITracker() {
     fetch: async (url: string, options?: RequestInit) => {
       const headers = {
         ...options?.headers,
-        ...adapter.getCorrelationHeaders()
+        ...adapter.getCorrelationHeaders(),
       };
       const start = performance.now();
       const response = await fetch(url, { ...options, headers });
@@ -117,12 +117,12 @@ function useAPITracker() {
           method: options?.method || 'GET',
           path: new URL(url).pathname,
           status_code: response.status,
-          duration_ms: Math.round(duration)
-        }
+          duration_ms: Math.round(duration),
+        },
       });
 
       return response;
-    }
+    },
   };
 }
 ```
@@ -180,46 +180,46 @@ export function Providers({ children }) {
 
 **Targets:**
 
-| Metric | Current | Target |
-|--------|---------|--------|
-| Bundle size (min+gzip) | ~10 KB | < 8 KB |
-| Event dispatch latency | ~30ms | < 20ms |
-| Memory footprint | ~500 KB | < 300 KB |
+| Metric                 | Current | Target   |
+| ---------------------- | ------- | -------- |
+| Bundle size (min+gzip) | ~10 KB  | < 8 KB   |
+| Event dispatch latency | ~30ms   | < 20ms   |
+| Memory footprint       | ~500 KB | < 300 KB |
 
 ## Timeline
 
-| Phase | Duration | Target |
-|-------|----------|--------|
-| Phase 1: Documentation | 3 days | 2026-04-30 |
-| Phase 2: Testing | 5 days | 2026-05-07 |
-| Phase 3: Backend Correlation | 3 days | 2026-05-12 |
-| Phase 4: SSR Support | 3 days | 2026-05-15 |
-| Phase 5: Performance | 2 days | 2026-05-19 |
+| Phase                        | Duration | Target     |
+| ---------------------------- | -------- | ---------- |
+| Phase 1: Documentation       | 3 days   | 2026-04-30 |
+| Phase 2: Testing             | 5 days   | 2026-05-07 |
+| Phase 3: Backend Correlation | 3 days   | 2026-05-12 |
+| Phase 4: SSR Support         | 3 days   | 2026-05-15 |
+| Phase 5: Performance         | 2 days   | 2026-05-19 |
 
 ## Dependencies
 
 ### Internal
 
-| Dependency | Version | Status |
-|------------|---------|--------|
-| ProductGraph | v0.2.0 | Ready |
-| omnidxi | v0.1.0 | Ready |
+| Dependency   | Version | Status |
+| ------------ | ------- | ------ |
+| ProductGraph | v0.2.0  | Ready  |
+| omnidxi      | v0.1.0  | Ready  |
 
 ### External
 
-| Dependency | Version | Purpose |
-|------------|---------|---------|
-| React | ^18.0.0 | UI framework |
-| TypeScript | ^5.0.0 | Type safety |
+| Dependency | Version | Purpose      |
+| ---------- | ------- | ------------ |
+| React      | ^18.0.0 | UI framework |
+| TypeScript | ^5.0.0  | Type safety  |
 
 ## Risks
 
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Bundle size growth | Medium | Tree-shaking, lazy loading |
-| SSR hydration mismatches | High | Client-only initialization |
-| Ad blocker evolution | Low | Backend forwarding handles this |
-| Breaking API changes | Medium | Semantic versioning |
+| Risk                     | Impact | Mitigation                      |
+| ------------------------ | ------ | ------------------------------- |
+| Bundle size growth       | Medium | Tree-shaking, lazy loading      |
+| SSR hydration mismatches | High   | Client-only initialization      |
+| Ad blocker evolution     | Low    | Backend forwarding handles this |
+| Breaking API changes     | Medium | Semantic versioning             |
 
 ## Success Criteria
 

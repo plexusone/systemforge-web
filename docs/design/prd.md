@@ -160,7 +160,7 @@ Organization Level (Tenant Scope)
 | FR-3.2 | Provide `useAuth` hook returning user, isAuthenticated, isLoading, logout, refreshUser | P0       |
 | FR-3.3 | Provide `ProtectedRoute` component that redirects unauthenticated users                | P0       |
 | FR-3.4 | Support session-expired event handling with automatic redirect                         | P0       |
-| FR-3.5 | Support multiple OAuth providers (GitHub, Google, SystemAuth)                         | P1       |
+| FR-3.5 | Support multiple OAuth providers (GitHub, Google, SystemAuth)                          | P1       |
 | FR-3.6 | Provide `usePermissions` hook for role-based UI rendering                              | P1       |
 | FR-3.7 | Provide `useLinkedAccounts` hook for account switching                                 | P1       |
 | FR-3.8 | Provide `useCurrentOrg` hook for organization context                                  | P0       |
@@ -384,7 +384,7 @@ function MyApp() {
 
 | Project                                                               | Relationship                                   |
 | --------------------------------------------------------------------- | ---------------------------------------------- |
-| [SystemForge](https://github.com/plexusone/systemforge)                     | Backend platform (identity, auth, marketplace) |
+| [SystemForge](https://github.com/plexusone/systemforge)               | Backend platform (identity, auth, marketplace) |
 | [ProductGraph](https://github.com/plexusone/productgraph)             | Telemetry sink, journey analytics              |
 | [design-system-spec](https://github.com/plexusone/design-system-spec) | Design token format specification              |
 | [App1](https://github.com/grokify/app1)                               | Target application (LMS)                       |

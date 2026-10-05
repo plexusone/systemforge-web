@@ -28,9 +28,7 @@ export interface UseConversationsReturn {
   refresh: () => Promise<void>;
 }
 
-export function useConversations(
-  options: UseConversationsOptions = {}
-): UseConversationsReturn {
+export function useConversations(options: UseConversationsOptions = {}): UseConversationsReturn {
   const { config, currentConversation, setCurrentConversation } = useChatContext();
   const [conversations, setConversations] = React.useState<Conversation[]>(
     options.initialConversations ?? []
@@ -111,14 +109,11 @@ export function useConversations(
 
   const deleteConversation = React.useCallback(
     async (id: string) => {
-      const response = await fetch(
-        `${config.apiBaseUrl}/v1/conversations/${id}`,
-        {
-          method: 'DELETE',
-          headers: config.headers,
-          credentials: 'include',
-        }
-      );
+      const response = await fetch(`${config.apiBaseUrl}/v1/conversations/${id}`, {
+        method: 'DELETE',
+        headers: config.headers,
+        credentials: 'include',
+      });
 
       if (!response.ok) {
         throw new Error('Failed to delete conversation');

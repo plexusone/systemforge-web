@@ -69,11 +69,7 @@ function OrgSwitcher() {
   const { organizations, currentOrg, switchOrg, isLoading } = useOrganizations();
 
   return (
-    <select
-      value={currentOrg?.id}
-      onChange={(e) => switchOrg(e.target.value)}
-      disabled={isLoading}
-    >
+    <select value={currentOrg?.id} onChange={(e) => switchOrg(e.target.value)} disabled={isLoading}>
       {organizations.map((org) => (
         <option key={org.id} value={org.id}>
           {org.name}
@@ -104,19 +100,19 @@ function AdminPanel() {
 
 ### TenantProvider Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `defaultOrgId` | `string` | Default organization to select |
-| `onOrgChange` | `(orgId: string) => void` | Callback when org changes |
+| Prop           | Type                      | Description                    |
+| -------------- | ------------------------- | ------------------------------ |
+| `defaultOrgId` | `string`                  | Default organization to select |
+| `onOrgChange`  | `(orgId: string) => void` | Callback when org changes      |
 
 ### useOrganization Return Value
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `organization` | `Organization \| null` | Current organization |
-| `membership` | `Membership \| null` | Current user's membership |
-| `isLoading` | `boolean` | Loading state |
-| `error` | `Error \| null` | Error if any |
+| Property       | Type                   | Description               |
+| -------------- | ---------------------- | ------------------------- |
+| `organization` | `Organization \| null` | Current organization      |
+| `membership`   | `Membership \| null`   | Current user's membership |
+| `isLoading`    | `boolean`              | Loading state             |
+| `error`        | `Error \| null`        | Error if any              |
 
 ### Organization Type
 
@@ -145,8 +141,8 @@ interface Membership {
 
 ### RequireRole Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `roles` | `string[]` | Allowed roles |
+| Prop       | Type        | Description                        |
+| ---------- | ----------- | ---------------------------------- |
+| `roles`    | `string[]`  | Allowed roles                      |
 | `fallback` | `ReactNode` | Component to show if access denied |
-| `children` | `ReactNode` | Protected content |
+| `children` | `ReactNode` | Protected content                  |

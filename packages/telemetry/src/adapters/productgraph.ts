@@ -439,13 +439,13 @@ export class ProductGraphAdapter implements TelemetryAdapter {
 
       // State properties
       if (props.state_key) pgEvent['ui.state.key'] = props.state_key as string;
-      if (props.state_before)
-        pgEvent['ui.state.before'] = JSON.stringify(props.state_before);
+      if (props.state_before) pgEvent['ui.state.before'] = JSON.stringify(props.state_before);
       if (props.state_after) pgEvent['ui.state.after'] = JSON.stringify(props.state_after);
 
       // Journey properties
       if (props.journey_id) pgEvent['gen_ai.journey.id'] = props.journey_id as string;
-      if (props.journey_step_id) pgEvent['gen_ai.journey.step.id'] = props.journey_step_id as string;
+      if (props.journey_step_id)
+        pgEvent['gen_ai.journey.step.id'] = props.journey_step_id as string;
       if (props.journey_step_name)
         pgEvent['gen_ai.journey.step.name'] = props.journey_step_name as string;
 

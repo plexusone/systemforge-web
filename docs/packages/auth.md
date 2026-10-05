@@ -95,7 +95,9 @@ function LinkedAccounts() {
       {accounts.map((account) => (
         <div key={account.provider}>
           {account.provider}: {account.connected ? 'Connected' : 'Not connected'}
-          <button onClick={() => account.connected ? unlink(account.provider) : link(account.provider)}>
+          <button
+            onClick={() => (account.connected ? unlink(account.provider) : link(account.provider))}
+          >
             {account.connected ? 'Disconnect' : 'Connect'}
           </button>
         </div>
@@ -109,22 +111,22 @@ function LinkedAccounts() {
 
 ### AuthProvider Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `bffBaseUrl` | `string` | Base URL for BFF auth endpoints |
-| `loginPath` | `string` | Path to redirect for login (default: `/login`) |
-| `onAuthError` | `(error: Error) => void` | Error callback |
+| Prop          | Type                     | Description                                    |
+| ------------- | ------------------------ | ---------------------------------------------- |
+| `bffBaseUrl`  | `string`                 | Base URL for BFF auth endpoints                |
+| `loginPath`   | `string`                 | Path to redirect for login (default: `/login`) |
+| `onAuthError` | `(error: Error) => void` | Error callback                                 |
 
 ### useAuth Return Value
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `user` | `User \| null` | Current user object |
-| `isAuthenticated` | `boolean` | Whether user is authenticated |
-| `isLoading` | `boolean` | Loading state |
-| `login` | `() => void` | Initiate login flow |
-| `logout` | `() => Promise<void>` | Logout user |
-| `refresh` | `() => Promise<void>` | Refresh session |
+| Property          | Type                  | Description                   |
+| ----------------- | --------------------- | ----------------------------- |
+| `user`            | `User \| null`        | Current user object           |
+| `isAuthenticated` | `boolean`             | Whether user is authenticated |
+| `isLoading`       | `boolean`             | Loading state                 |
+| `login`           | `() => void`          | Initiate login flow           |
+| `logout`          | `() => Promise<void>` | Logout user                   |
+| `refresh`         | `() => Promise<void>` | Refresh session               |
 
 ### User Type
 

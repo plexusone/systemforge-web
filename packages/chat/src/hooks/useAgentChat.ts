@@ -38,15 +38,7 @@ export function useAgentChat(options: UseAgentChatOptions = {}): UseAgentChatRet
   const { config } = useChatContext();
   const { conversationId, onMessageSent, onError } = options;
 
-  const {
-    messages,
-    isLoading,
-    error,
-    append,
-    stop,
-    setMessages,
-    reload,
-  } = useChat({
+  const { messages, isLoading, error, append, stop, setMessages, reload } = useChat({
     api: `${config.apiBaseUrl}/v1/chat/completions`,
     headers: {
       ...config.headers,

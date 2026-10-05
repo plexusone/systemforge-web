@@ -27,11 +27,7 @@ export function OrgSwitcher({ compact = false }: OrgSwitcherProps): ReactNode {
   const { currentOrg, organizations, setCurrentOrg, isLoading } = useTenant();
 
   if (isLoading) {
-    return (
-      <div className="px-3 py-2 bg-secondary rounded-md opacity-50 text-sm">
-        Loading...
-      </div>
-    );
+    return <div className="px-3 py-2 bg-secondary rounded-md opacity-50 text-sm">Loading...</div>;
   }
 
   if (!currentOrg) {
@@ -53,9 +49,7 @@ export function OrgSwitcher({ compact = false }: OrgSwitcherProps): ReactNode {
           )}
         >
           <Avatar className="h-5 w-5 rounded">
-            {currentOrg.logo_url ? (
-              <AvatarImage src={currentOrg.logo_url} alt="" />
-            ) : null}
+            {currentOrg.logo_url ? <AvatarImage src={currentOrg.logo_url} alt="" /> : null}
             <AvatarFallback className="rounded bg-transparent">
               <BuildingIcon className="h-4 w-4 text-muted-foreground" />
             </AvatarFallback>
@@ -77,15 +71,10 @@ export function OrgSwitcher({ compact = false }: OrgSwitcherProps): ReactNode {
           <DropdownMenuItem
             key={org.id}
             onClick={() => handleSelect(org.id)}
-            className={cn(
-              'cursor-pointer',
-              org.id === currentOrg.id && 'bg-accent'
-            )}
+            className={cn('cursor-pointer', org.id === currentOrg.id && 'bg-accent')}
           >
             <Avatar className="h-5 w-5 mr-2 rounded">
-              {org.logo_url ? (
-                <AvatarImage src={org.logo_url} alt="" />
-              ) : null}
+              {org.logo_url ? <AvatarImage src={org.logo_url} alt="" /> : null}
               <AvatarFallback className="rounded bg-transparent">
                 <BuildingIcon className="h-4 w-4 text-muted-foreground" />
               </AvatarFallback>
@@ -95,9 +84,7 @@ export function OrgSwitcher({ compact = false }: OrgSwitcherProps): ReactNode {
               {org.name}
             </span>
 
-            {org.id === currentOrg.id && (
-              <CheckIcon className="h-4 w-4 text-primary ml-2" />
-            )}
+            {org.id === currentOrg.id && <CheckIcon className="h-4 w-4 text-primary ml-2" />}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

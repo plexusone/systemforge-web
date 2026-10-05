@@ -27,16 +27,10 @@ function AppShellInner({
   } = useShell();
 
   // Default logo if not provided
-  const defaultLogo = (
-    <div className="font-semibold text-lg text-foreground">
-      {appName}
-    </div>
-  );
+  const defaultLogo = <div className="font-semibold text-lg text-foreground">{appName}</div>;
 
   const defaultLogoCollapsed = (
-    <div className="font-bold text-lg text-primary">
-      {appName.charAt(0)}
-    </div>
+    <div className="font-bold text-lg text-primary">{appName.charAt(0)}</div>
   );
 
   return (
@@ -71,9 +65,7 @@ function AppShellInner({
         />
 
         {/* Main content */}
-        <main className="flex-1 p-6 overflow-y-auto">
-          {children}
-        </main>
+        <main className="flex-1 p-6 overflow-y-auto">{children}</main>
       </div>
     </div>
   );

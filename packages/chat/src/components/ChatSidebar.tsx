@@ -24,12 +24,7 @@ export function ChatSidebar({
   className,
 }: ChatSidebarProps) {
   return (
-    <div
-      className={cn(
-        'flex flex-col h-full bg-gray-50 border-r border-gray-200',
-        className
-      )}
-    >
+    <div className={cn('flex flex-col h-full bg-gray-50 border-r border-gray-200', className)}>
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
         <button
@@ -44,9 +39,7 @@ export function ChatSidebar({
       {/* Conversation list */}
       <div className="flex-1 overflow-y-auto">
         {conversations.length === 0 ? (
-          <div className="p-4 text-center text-gray-500 text-sm">
-            No conversations yet
-          </div>
+          <div className="p-4 text-center text-gray-500 text-sm">No conversations yet</div>
         ) : (
           <ul className="py-2">
             {conversations.map((conversation) => (

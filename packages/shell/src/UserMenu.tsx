@@ -74,9 +74,7 @@ export function UserMenu({ actions = defaultActions, onNavigate }: UserMenuProps
           className="flex items-center gap-2 p-1 bg-transparent border-none rounded-full cursor-pointer hover:bg-accent"
         >
           <Avatar className="h-8 w-8">
-            {user.avatar_url ? (
-              <AvatarImage src={user.avatar_url} alt={user.name} />
-            ) : null}
+            {user.avatar_url ? <AvatarImage src={user.avatar_url} alt={user.name} /> : null}
             <AvatarFallback className="bg-primary/10 text-primary">
               <UserIcon className="h-4 w-4" />
             </AvatarFallback>
@@ -111,7 +109,12 @@ export function UserMenu({ actions = defaultActions, onNavigate }: UserMenuProps
                   )}
                 >
                   {action.icon && (
-                    <span className={cn('mr-2', action.destructive ? 'text-destructive' : 'text-muted-foreground')}>
+                    <span
+                      className={cn(
+                        'mr-2',
+                        action.destructive ? 'text-destructive' : 'text-muted-foreground'
+                      )}
+                    >
                       {action.icon}
                     </span>
                   )}

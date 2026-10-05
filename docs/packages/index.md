@@ -34,15 +34,15 @@ SystemForge Web is organized as a monorepo with focused, composable packages.
 
 ## Package Summary
 
-| Package | Purpose | Key Exports |
-|---------|---------|-------------|
-| [@plexusone/auth](auth.md) | Authentication | `AuthProvider`, `ProtectedRoute`, `useAuth` |
-| [@plexusone/tenant](tenant.md) | Multi-tenancy | `TenantProvider`, `RequireRole`, `useOrganization` |
-| [@plexusone/api-client](api-client.md) | HTTP client | `ApiProvider`, `useApi`, `createClient` |
-| [@plexusone/telemetry](telemetry.md) | Instrumentation | `TelemetryProvider`, `ErrorBoundary` |
-| [@plexusone/shell](shell.md) | App layout | `AppShell`, `Sidebar`, `Navbar` |
-| [@plexusone/pages](pages.md) | Pre-built pages | `LoginPage`, `ErrorPage` |
-| [@plexusone/design-tokens](design-tokens.md) | Design system | Colors, typography, spacing |
+| Package                                      | Purpose         | Key Exports                                        |
+| -------------------------------------------- | --------------- | -------------------------------------------------- |
+| [@plexusone/auth](auth.md)                   | Authentication  | `AuthProvider`, `ProtectedRoute`, `useAuth`        |
+| [@plexusone/tenant](tenant.md)               | Multi-tenancy   | `TenantProvider`, `RequireRole`, `useOrganization` |
+| [@plexusone/api-client](api-client.md)       | HTTP client     | `ApiProvider`, `useApi`, `createClient`            |
+| [@plexusone/telemetry](telemetry.md)         | Instrumentation | `TelemetryProvider`, `ErrorBoundary`               |
+| [@plexusone/shell](shell.md)                 | App layout      | `AppShell`, `Sidebar`, `Navbar`                    |
+| [@plexusone/pages](pages.md)                 | Pre-built pages | `LoginPage`, `ErrorPage`                           |
+| [@plexusone/design-tokens](design-tokens.md) | Design system   | Colors, typography, spacing                        |
 
 ## Choosing Packages
 

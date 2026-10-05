@@ -27,10 +27,7 @@ import { TelemetryProvider, consoleSink } from '@plexusone/telemetry';
 
 function App() {
   return (
-    <TelemetryProvider
-      sinks={[consoleSink()]}
-      context={{ appVersion: '1.0.0' }}
-    >
+    <TelemetryProvider sinks={[consoleSink()]} context={{ appVersion: '1.0.0' }}>
       <YourApp />
     </TelemetryProvider>
   );
@@ -118,19 +115,16 @@ const analyticsSink = {
 
 ### TelemetryProvider Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `sinks` | `TelemetrySink[]` | Array of telemetry sinks |
+| Prop      | Type                      | Description                   |
+| --------- | ------------------------- | ----------------------------- |
+| `sinks`   | `TelemetrySink[]`         | Array of telemetry sinks      |
 | `context` | `Record<string, unknown>` | Global context for all events |
-| `enabled` | `boolean` | Enable/disable telemetry |
+| `enabled` | `boolean`                 | Enable/disable telemetry      |
 
 ### useTrack Return Value
 
 ```typescript
-type TrackFunction = (
-  event: string,
-  properties?: Record<string, unknown>
-) => void;
+type TrackFunction = (event: string, properties?: Record<string, unknown>) => void;
 ```
 
 ### TelemetrySink Interface
@@ -156,9 +150,9 @@ const adapter = new ProductGraphAdapter({
   projectId: 'my-project',
   endpoint: 'https://api.productgraph.io/v1/events',
   apiKey: process.env.NEXT_PUBLIC_PRODUCTGRAPH_API_KEY,
-  batchSize: 20,           // Events per batch (default: 20)
-  batchInterval: 5000,     // Flush interval in ms (default: 5000)
-  sessionTimeout: 30 * 60 * 1000,  // Session timeout (default: 30 min)
+  batchSize: 20, // Events per batch (default: 20)
+  batchInterval: 5000, // Flush interval in ms (default: 5000)
+  sessionTimeout: 30 * 60 * 1000, // Session timeout (default: 30 min)
 });
 
 function App() {
@@ -172,15 +166,15 @@ function App() {
 
 ### Configuration Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `projectId` | string | required | ProductGraph project ID |
-| `endpoint` | string | required | ProductGraph API endpoint |
-| `apiKey` | string | - | API key for X-PG-API-Key header |
-| `batchSize` | number | 20 | Events per batch |
-| `batchInterval` | number | 5000 | Flush interval (ms) |
-| `sessionTimeout` | number | 1800000 | Session timeout (ms) |
-| `debug` | boolean | false | Enable console logging |
+| Option           | Type    | Default  | Description                     |
+| ---------------- | ------- | -------- | ------------------------------- |
+| `projectId`      | string  | required | ProductGraph project ID         |
+| `endpoint`       | string  | required | ProductGraph API endpoint       |
+| `apiKey`         | string  | -        | API key for X-PG-API-Key header |
+| `batchSize`      | number  | 20       | Events per batch                |
+| `batchInterval`  | number  | 5000     | Flush interval (ms)             |
+| `sessionTimeout` | number  | 1800000  | Session timeout (ms)            |
+| `debug`          | boolean | false    | Enable console logging          |
 
 ### Journey Tracking
 
@@ -224,7 +218,7 @@ function CartPage() {
 
   // Tracks changes to cart.items with before/after values
   useStateTracker('cart.items', items, {
-    debounce: 500,  // Debounce rapid changes
+    debounce: 500, // Debounce rapid changes
   });
 
   return <CartList items={items} />;
@@ -256,12 +250,12 @@ function Widget() {
 
 ### Interaction Hooks
 
-| Hook | Purpose |
-|------|---------|
-| `useScrollTracker` | Track scroll depth (25%, 50%, 75%, 90%, 100%) |
-| `useClickTracker` | Track clicks with component context |
-| `useAPITracker` | Track API calls with timing |
-| `usePageLeaveTracker` | Track page exit and duration |
+| Hook                  | Purpose                                       |
+| --------------------- | --------------------------------------------- |
+| `useScrollTracker`    | Track scroll depth (25%, 50%, 75%, 90%, 100%) |
+| `useClickTracker`     | Track clicks with component context           |
+| `useAPITracker`       | Track API calls with timing                   |
+| `usePageLeaveTracker` | Track page exit and duration                  |
 
 ```tsx
 import { useScrollTracker, useAPITracker } from '@plexusone/telemetry';
@@ -288,15 +282,15 @@ function DataFetcher() {
 
 ProductGraph events follow OpenTelemetry semantic conventions:
 
-| Namespace | Fields |
-|-----------|--------|
-| `session.*` | id |
-| `event.*` | type, name, timestamp, sequence |
-| `page.*` | path, title, url, referrer |
-| `ui.*` | component.name, component.path, action, element |
-| `ui.state.*` | key, before, after |
-| `gen_ai.journey.*` | id, step.id, step.name |
-| `api.*` | method, path, status_code, duration_ms |
-| `error.*` | type, message, stack |
+| Namespace          | Fields                                          |
+| ------------------ | ----------------------------------------------- |
+| `session.*`        | id                                              |
+| `event.*`          | type, name, timestamp, sequence                 |
+| `page.*`           | path, title, url, referrer                      |
+| `ui.*`             | component.name, component.path, action, element |
+| `ui.state.*`       | key, before, after                              |
+| `gen_ai.journey.*` | id, step.id, step.name                          |
+| `api.*`            | method, path, status_code, duration_ms          |
+| `error.*`          | type, message, stack                            |
 
 See the [ProductGraph Integration TRD](../design/productgraph/TRD.md) for full details.

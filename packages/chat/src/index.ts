@@ -64,7 +64,11 @@ export { ChatMessage } from './components/ChatMessage';
 export { ChatSidebar } from './components/ChatSidebar';
 
 // Hooks
-export { useAgentChat, type UseAgentChatOptions, type UseAgentChatReturn } from './hooks/useAgentChat';
+export {
+  useAgentChat,
+  type UseAgentChatOptions,
+  type UseAgentChatReturn,
+} from './hooks/useAgentChat';
 export { useConversations } from './hooks/useConversations';
 
 // Types

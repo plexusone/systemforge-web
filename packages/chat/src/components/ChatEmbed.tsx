@@ -89,18 +89,13 @@ export function ChatEmbed({
       {showHeader && (
         <div className="flex-shrink-0 px-4 py-3 border-b border-gray-200 bg-gray-50">
           <h3 className="font-semibold text-gray-900">{title}</h3>
-          {subtitle && (
-            <p className="text-sm text-gray-500 mt-0.5">{subtitle}</p>
-          )}
+          {subtitle && <p className="text-sm text-gray-500 mt-0.5">{subtitle}</p>}
         </div>
       )}
 
       {/* Chat Thread */}
       <div className="flex-1 overflow-hidden min-h-0">
-        <ChatThread
-          className="h-full"
-          welcomeMessage={welcomeMessage}
-        />
+        <ChatThread className="h-full" welcomeMessage={welcomeMessage} />
       </div>
 
       {/* Composer */}

@@ -102,45 +102,45 @@ function Maintenance() {
 
 ### LoginPage Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `brandName` | `string` | Application name |
-| `brandLogo` | `string` | Logo URL |
-| `providers` | `string[]` | OAuth providers |
-| `onLogin` | `(provider: string) => void` | Login callback |
-| `showEmailLogin` | `boolean` | Show email/password form |
+| Prop             | Type                         | Description              |
+| ---------------- | ---------------------------- | ------------------------ |
+| `brandName`      | `string`                     | Application name         |
+| `brandLogo`      | `string`                     | Logo URL                 |
+| `providers`      | `string[]`                   | OAuth providers          |
+| `onLogin`        | `(provider: string) => void` | Login callback           |
+| `showEmailLogin` | `boolean`                    | Show email/password form |
 
 ### UserSettingsPage Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `sections` | `string[]` | Settings sections to show |
-| `onSave` | `(data: UserData) => Promise<void>` | Save callback |
-| `onCancel` | `() => void` | Cancel callback |
+| Prop       | Type                                | Description               |
+| ---------- | ----------------------------------- | ------------------------- |
+| `sections` | `string[]`                          | Settings sections to show |
+| `onSave`   | `(data: UserData) => Promise<void>` | Save callback             |
+| `onCancel` | `() => void`                        | Cancel callback           |
 
 ### ErrorPage Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `code` | `number` | Error code (404, 500, etc.) |
-| `title` | `string` | Error title |
-| `message` | `string` | Error message |
-| `action` | `{ label: string; href: string }` | Action button |
+| Prop      | Type                              | Description                 |
+| --------- | --------------------------------- | --------------------------- |
+| `code`    | `number`                          | Error code (404, 500, etc.) |
+| `title`   | `string`                          | Error title                 |
+| `message` | `string`                          | Error message               |
+| `action`  | `{ label: string; href: string }` | Action button               |
 
 ### LoadingPage Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `message` | `string` | Loading message |
+| Prop          | Type      | Description                  |
+| ------------- | --------- | ---------------------------- |
+| `message`     | `string`  | Loading message              |
 | `showSpinner` | `boolean` | Show spinner (default: true) |
 
 ### MaintenancePage Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `title` | `string` | Page title |
-| `message` | `string` | Maintenance message |
-| `estimatedTime` | `string` | Estimated downtime |
+| Prop            | Type     | Description         |
+| --------------- | -------- | ------------------- |
+| `title`         | `string` | Page title          |
+| `message`       | `string` | Maintenance message |
+| `estimatedTime` | `string` | Estimated downtime  |
 
 ## Organization Management Pages
 
@@ -242,37 +242,37 @@ function OrgSettings() {
 
 ### OrganizationMembersPage Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `orgSlug` | `string` | Organization slug (required) |
-| `currentUserId` | `string` | Current user's principal ID |
-| `currentUserRole` | `MemberRole` | User's role: `owner`, `admin`, or `member` |
-| `apiBaseUrl` | `string` | API base URL (default: `/api`) |
-| `onMemberUpdate` | `() => void` | Callback when member is updated |
-| `onOwnershipTransferred` | `() => void` | Callback when ownership transfers |
+| Prop                     | Type         | Description                                |
+| ------------------------ | ------------ | ------------------------------------------ |
+| `orgSlug`                | `string`     | Organization slug (required)               |
+| `currentUserId`          | `string`     | Current user's principal ID                |
+| `currentUserRole`        | `MemberRole` | User's role: `owner`, `admin`, or `member` |
+| `apiBaseUrl`             | `string`     | API base URL (default: `/api`)             |
+| `onMemberUpdate`         | `() => void` | Callback when member is updated            |
+| `onOwnershipTransferred` | `() => void` | Callback when ownership transfers          |
 
 ### OrganizationInvitationsPage Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `orgSlug` | `string` | Organization slug (required) |
-| `currentUserRole` | `MemberRole` | User's role: `owner`, `admin`, or `member` |
-| `apiBaseUrl` | `string` | API base URL (default: `/api`) |
-| `onInvitationCreated` | `() => void` | Callback when invitation is created |
-| `onInvitationRevoked` | `() => void` | Callback when invitation is revoked |
+| Prop                  | Type         | Description                                |
+| --------------------- | ------------ | ------------------------------------------ |
+| `orgSlug`             | `string`     | Organization slug (required)               |
+| `currentUserRole`     | `MemberRole` | User's role: `owner`, `admin`, or `member` |
+| `apiBaseUrl`          | `string`     | API base URL (default: `/api`)             |
+| `onInvitationCreated` | `() => void` | Callback when invitation is created        |
+| `onInvitationRevoked` | `() => void` | Callback when invitation is revoked        |
 
 ### OrganizationSettingsPage Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `orgSlug` | `string` | Organization slug (required) |
-| `activeTab` | `OrgSettingsTab` | Active tab: `general`, `members`, `invitations`, `danger` |
-| `tabs` | `OrgSettingsTab[]` | Available tabs (default: all) |
-| `currentUserId` | `string` | Current user's principal ID |
-| `currentUserRole` | `MemberRole` | User's role: `owner`, `admin`, or `member` |
-| `apiBaseUrl` | `string` | API base URL (default: `/api`) |
-| `onTabChange` | `(tab: OrgSettingsTab) => void` | Tab change callback |
-| `onNavigate` | `(href: string) => void` | Navigation callback |
+| Prop              | Type                            | Description                                               |
+| ----------------- | ------------------------------- | --------------------------------------------------------- |
+| `orgSlug`         | `string`                        | Organization slug (required)                              |
+| `activeTab`       | `OrgSettingsTab`                | Active tab: `general`, `members`, `invitations`, `danger` |
+| `tabs`            | `OrgSettingsTab[]`              | Available tabs (default: all)                             |
+| `currentUserId`   | `string`                        | Current user's principal ID                               |
+| `currentUserRole` | `MemberRole`                    | User's role: `owner`, `admin`, or `member`                |
+| `apiBaseUrl`      | `string`                        | API base URL (default: `/api`)                            |
+| `onTabChange`     | `(tab: OrgSettingsTab) => void` | Tab change callback                                       |
+| `onNavigate`      | `(href: string) => void`        | Navigation callback                                       |
 
 ## Types
 
@@ -332,14 +332,14 @@ interface OrgInvitation {
 
 Organization management follows this permission model:
 
-| Action | Owner | Admin | Member |
-|--------|-------|-------|--------|
-| View members | Yes | Yes | Yes |
-| Invite users | Yes | Yes | No |
-| Edit member roles | Yes | Yes* | No |
-| Remove members | Yes | Yes* | No |
-| Update org settings | Yes | Yes | No |
-| Transfer ownership | Yes | No | No |
-| Delete organization | Yes | No | No |
+| Action              | Owner | Admin | Member |
+| ------------------- | ----- | ----- | ------ |
+| View members        | Yes   | Yes   | Yes    |
+| Invite users        | Yes   | Yes   | No     |
+| Edit member roles   | Yes   | Yes\* | No     |
+| Remove members      | Yes   | Yes\* | No     |
+| Update org settings | Yes   | Yes   | No     |
+| Transfer ownership  | Yes   | No    | No     |
+| Delete organization | Yes   | No    | No     |
 
-*Admin cannot modify other admins or the owner
+\*Admin cannot modify other admins or the owner

@@ -45,7 +45,15 @@ function RoleBadge({ role }: { role: MemberRole }): ReactNode {
 /**
  * Avatar component
  */
-function Avatar({ name, avatarUrl, size = 40 }: { name: string; avatarUrl?: string; size?: number }): ReactNode {
+function Avatar({
+  name,
+  avatarUrl,
+  size = 40,
+}: {
+  name: string;
+  avatarUrl?: string;
+  size?: number;
+}): ReactNode {
   if (avatarUrl) {
     return (
       <img
@@ -333,9 +341,7 @@ export function OrganizationMembersPage({
 
       if (!response.ok) throw new Error('Failed to update member');
 
-      setMembers((prev) =>
-        prev.map((m) => (m.id === memberId ? { ...m, role: newRole } : m))
-      );
+      setMembers((prev) => prev.map((m) => (m.id === memberId ? { ...m, role: newRole } : m)));
       setEditingMemberId(null);
       setMessage({ type: 'success', text: 'Member role updated' });
       onMemberUpdate?.();
@@ -367,15 +373,12 @@ export function OrganizationMembersPage({
   };
 
   const handleTransferOwnership = async (newOwnerId: string) => {
-    const response = await fetch(
-      `${apiBaseUrl}/organizations/${orgSlug}/transfer-ownership`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ new_owner_principal_id: newOwnerId }),
-      }
-    );
+    const response = await fetch(`${apiBaseUrl}/organizations/${orgSlug}/transfer-ownership`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ new_owner_principal_id: newOwnerId }),
+    });
 
     if (!response.ok) {
       throw new Error('Failed to transfer ownership');
@@ -396,7 +399,13 @@ export function OrganizationMembersPage({
 
   if (isLoading) {
     return (
-      <div style={{ padding: '32px', textAlign: 'center', color: 'var(--cf-color-fg-secondary, #52525b)' }}>
+      <div
+        style={{
+          padding: '32px',
+          textAlign: 'center',
+          color: 'var(--cf-color-fg-secondary, #52525b)',
+        }}
+      >
         Loading members...
       </div>
     );
@@ -418,7 +427,14 @@ export function OrganizationMembersPage({
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '32px 24px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '24px',
+        }}
+      >
         <div>
           <h1
             style={{
@@ -495,7 +511,10 @@ export function OrganizationMembersPage({
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '16px 20px',
-                borderBottom: index < members.length - 1 ? '1px solid var(--cf-color-border-default, #e4e4e7)' : 'none',
+                borderBottom:
+                  index < members.length - 1
+                    ? '1px solid var(--cf-color-border-default, #e4e4e7)'
+                    : 'none',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>

@@ -76,10 +76,7 @@ export { ErrorBoundary, DefaultErrorFallback } from './ErrorBoundary';
 export { TelemetryClient, createTelemetryClient, ConsoleAdapter, HttpAdapter } from './telemetry';
 
 // Adapters
-export {
-  ProductGraphAdapter,
-  createProductGraphAdapter,
-} from './adapters/productgraph';
+export { ProductGraphAdapter, createProductGraphAdapter } from './adapters/productgraph';
 export type {
   ProductGraphConfig,
   ProductGraphEvent,

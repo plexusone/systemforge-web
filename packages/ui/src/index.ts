@@ -38,12 +38,7 @@ export {
 
 export { Separator } from './components/separator';
 
-export {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  TooltipProvider,
-} from './components/tooltip';
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './components/tooltip';
 
 export { Badge, badgeVariants } from './components/badge';
 export type { BadgeProps } from './components/badge';
