@@ -7,15 +7,15 @@
 
 **Theme:** The shell reads the session SystemForge serves and switches products and organizations from it
 
-- [ ] `RMI-SYSTEMFORGEWEB-006` Session provider over the relying-party BFF: `/bff/session` with memberships, per-application roles and the app catalog; redirect sign-in and sign-out
-- [ ] `RMI-SYSTEMFORGEWEB-007` Product switcher from the app catalog: role-filtered, current application first, links across hosts or client-side navigation
+- [x] `RMI-SYSTEMFORGEWEB-006` Session provider over the relying-party BFF: `/bff/session` with memberships, per-application roles and the app catalog; redirect sign-in and sign-out
+- [x] `RMI-SYSTEMFORGEWEB-007` Product switcher from the app catalog: role-filtered, current application first, links across hosts or client-side navigation
   - Depends on: `RMI-SYSTEMFORGEWEB-006`
-- [ ] `RMI-SYSTEMFORGEWEB-008` Controlled organization switcher keyed by organization ID, with the uncontrolled mode kept as opt-in
+- [x] `RMI-SYSTEMFORGEWEB-008` Controlled organization switcher keyed by organization ID, with the uncontrolled mode kept as opt-in
   - Depends on: `RMI-SYSTEMFORGEWEB-006`
-- [ ] `RMI-SYSTEMFORGEWEB-009` Shell test suite: session fixtures, switcher rules and component behavior
+- [x] `RMI-SYSTEMFORGEWEB-009` Shell test suite: session fixtures, switcher rules and component behavior
   - Depends on: `RMI-SYSTEMFORGEWEB-007`
   - Depends on: `RMI-SYSTEMFORGEWEB-008`
-- [ ] `RMI-SYSTEMFORGEWEB-010` Composition modes guide: one build and one host per application, with an example of each
+- [x] `RMI-SYSTEMFORGEWEB-010` Composition modes guide: one build and one host per application, with an example of each
 
 ## Phase 2 — Chrome
 
