@@ -2,86 +2,114 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://plexusone.github.io/systemforge-web/</loc>
-         <lastmod>2026-09-06</lastmod>
+         <lastmod>2026-10-14</lastmod>
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/changelog/</loc>
-         <lastmod>2026-09-06</lastmod>
+         <lastmod>2026-10-14</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/architecture/composition/</loc>
+         <lastmod>2026-10-14</lastmod>
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/architecture/overview/</loc>
-         <lastmod>2026-09-06</lastmod>
-    </url>
-    <url>
-         <loc>https://plexusone.github.io/systemforge-web/design/prd/</loc>
-         <lastmod>2026-09-06</lastmod>
-    </url>
-    <url>
-         <loc>https://plexusone.github.io/systemforge-web/design/trd/</loc>
-         <lastmod>2026-09-06</lastmod>
-    </url>
-    <url>
-         <loc>https://plexusone.github.io/systemforge-web/design/productgraph/PLAN/</loc>
-         <lastmod>2026-09-06</lastmod>
-    </url>
-    <url>
-         <loc>https://plexusone.github.io/systemforge-web/design/productgraph/PRD/</loc>
-         <lastmod>2026-09-06</lastmod>
-    </url>
-    <url>
-         <loc>https://plexusone.github.io/systemforge-web/design/productgraph/TASKS/</loc>
-         <lastmod>2026-09-06</lastmod>
-    </url>
-    <url>
-         <loc>https://plexusone.github.io/systemforge-web/design/productgraph/TRD/</loc>
-         <lastmod>2026-09-06</lastmod>
+         <lastmod>2026-10-14</lastmod>
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/getting-started/installation/</loc>
-         <lastmod>2026-09-06</lastmod>
+         <lastmod>2026-10-14</lastmod>
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/getting-started/quickstart/</loc>
-         <lastmod>2026-09-06</lastmod>
+         <lastmod>2026-10-14</lastmod>
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/packages/</loc>
-         <lastmod>2026-09-06</lastmod>
+         <lastmod>2026-10-14</lastmod>
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/packages/api-client/</loc>
-         <lastmod>2026-09-06</lastmod>
+         <lastmod>2026-10-14</lastmod>
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/packages/auth/</loc>
-         <lastmod>2026-09-06</lastmod>
+         <lastmod>2026-10-14</lastmod>
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/packages/design-tokens/</loc>
-         <lastmod>2026-09-06</lastmod>
+         <lastmod>2026-10-14</lastmod>
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/packages/pages/</loc>
-         <lastmod>2026-09-06</lastmod>
+         <lastmod>2026-10-14</lastmod>
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/packages/shell/</loc>
-         <lastmod>2026-09-06</lastmod>
+         <lastmod>2026-10-14</lastmod>
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/packages/telemetry/</loc>
-         <lastmod>2026-09-06</lastmod>
+         <lastmod>2026-10-14</lastmod>
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/packages/tenant/</loc>
-         <lastmod>2026-09-06</lastmod>
+         <lastmod>2026-10-14</lastmod>
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/releases/v0.1.0/</loc>
-         <lastmod>2026-09-06</lastmod>
+         <lastmod>2026-10-14</lastmod>
     </url>
     <url>
-         <loc>https://plexusone.github.io/systemforge-web/roadmap/plan/</loc>
-         <lastmod>2026-09-06</lastmod>
+         <loc>https://plexusone.github.io/systemforge-web/releases/v0.2.0/</loc>
+         <lastmod>2026-10-14</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/specs/initiatives/INIT-SYSTEMFORGEWEB-001/PLAN/</loc>
+         <lastmod>2026-10-14</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/specs/initiatives/INIT-SYSTEMFORGEWEB-001/PRD/</loc>
+         <lastmod>2026-10-14</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/specs/initiatives/INIT-SYSTEMFORGEWEB-001/ROADMAP/</loc>
+         <lastmod>2026-10-14</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/specs/initiatives/INIT-SYSTEMFORGEWEB-001/TRD/</loc>
+         <lastmod>2026-10-14</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/specs/initiatives/invention/PLAN/</loc>
+         <lastmod>2026-10-14</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/specs/initiatives/invention/PRD/</loc>
+         <lastmod>2026-10-14</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/specs/initiatives/invention/TASKS/</loc>
+         <lastmod>2026-10-14</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/specs/initiatives/invention/TRD/</loc>
+         <lastmod>2026-10-14</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/specs/initiatives/invention/productgraph/PLAN/</loc>
+         <lastmod>2026-10-14</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/specs/initiatives/invention/productgraph/PRD/</loc>
+         <lastmod>2026-10-14</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/specs/initiatives/invention/productgraph/TASKS/</loc>
+         <lastmod>2026-10-14</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/specs/initiatives/invention/productgraph/TRD/</loc>
+         <lastmod>2026-10-14</lastmod>
     </url>
 </urlset>
