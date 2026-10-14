@@ -111,9 +111,10 @@ behavior; content is the application's.
 
 ## Chrome
 
-- **Theme:** light, dark and system, applied as `data-theme` on the root
-  element and persisted in local storage, wrapped so a storage failure falls
-  back to system.
+- **Theme:** light, dark and system, applied as the `dark` class on the root
+  element (the class the design system's styles key on) with
+  `color-scheme`, and persisted in local storage, wrapped so a storage
+  failure falls back to system.
 - **Profile menu:** name, email, avatar, the current organization and the
   role held in this application, `profileItems`, and sign out. No default
   links to pages an application may not have.

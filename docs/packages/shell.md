@@ -137,6 +137,27 @@ default links were removed for the same reason.
 </AppShell>
 ```
 
+### Theme
+
+`showThemeToggle` adds a toggle that cycles light, dark and the system's
+preference. The choice is stored in local storage and applied as the `dark`
+class on the root element, which the design system's styles key on; while
+on system it follows the operating system's preference as it changes. If
+storage is unavailable the choice lasts for the page.
+
+Call `applyStoredTheme()` before the first render so the page does not
+flash the other theme:
+
+```tsx
+import { applyStoredTheme } from '@plexusone/shell';
+
+applyStoredTheme();
+createRoot(document.getElementById('root')!).render(<App />);
+```
+
+`useTheme()` returns the choice and a setter for an application that
+renders its own control.
+
 ## API Reference
 
 ### AppShell Props
@@ -156,6 +177,7 @@ default links were removed for the same reason.
 | `command`              | `ReactNode`                    | Slot after the switchers: search or a command bar                                    |
 | `actions`              | `ReactNode`                    | Slot before the profile menu: the application's own actions                          |
 | `profileItems`         | `UserAction[]`                 | The application's entries in the profile menu, above sign-out                        |
+| `showThemeToggle`      | `boolean`                      | Show the light, dark and system theme toggle. Default false                          |
 | `userActions`          | `UserAction[]`                 | Profile menu entries                                                                 |
 | `showOrgSwitcher`      | `boolean`                      | Show the `TenantProvider`-based `OrgSwitcher` when `onOrganizationChange` is not set |
 | `sidebarCollapsible`   | `boolean`                      | Whether the sidebar can collapse                                                     |
