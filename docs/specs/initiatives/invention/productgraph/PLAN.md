@@ -46,10 +46,10 @@ Integrate @plexusone/telemetry with ProductGraph to provide a complete frontend-
 
 **Files:**
 
-- `docs/design/productgraph/PRD.md` - Product requirements
-- `docs/design/productgraph/TRD.md` - Technical requirements
-- `docs/design/productgraph/PLAN.md` - This document
-- `docs/design/productgraph/TASKS.md` - Task breakdown
+- `docs/specs/initiatives/invention/productgraph/PRD.md` - Product requirements
+- `docs/specs/initiatives/invention/productgraph/TRD.md` - Technical requirements
+- `docs/specs/initiatives/invention/productgraph/PLAN.md` - This document
+- `docs/specs/initiatives/invention/productgraph/TASKS.md` - Task breakdown
 - `packages/telemetry/README.md` - Package documentation
 
 ### Phase 2: Testing

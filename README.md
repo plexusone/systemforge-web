@@ -74,7 +74,7 @@ function CheckoutPage() {
 ## Documentation
 
 - [API Documentation](https://plexusone.github.io/systemforge-web/)
-- [ProductGraph Integration](docs/design/productgraph/TRD.md)
+- [ProductGraph Integration](docs/specs/initiatives/invention/productgraph/TRD.md)
 - [Changelog](CHANGELOG.md)
 
 ## Development

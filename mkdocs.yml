@@ -59,16 +59,17 @@ nav:
     - "@plexusone/design-tokens": packages/design-tokens.md
   - Architecture:
     - Overview: architecture/overview.md
-  - Design:
-    - PRD: design/prd.md
-    - TRD: design/trd.md
-    - ProductGraph:
-      - PRD: design/productgraph/PRD.md
-      - TRD: design/productgraph/TRD.md
-      - Plan: design/productgraph/PLAN.md
-      - Tasks: design/productgraph/TASKS.md
-  - Roadmap:
-    - Plan: roadmap/plan.md
+  - Specs:
+    - Invention:
+      - PRD: specs/initiatives/invention/PRD.md
+      - TRD: specs/initiatives/invention/TRD.md
+      - Plan: specs/initiatives/invention/PLAN.md
+      - Tasks: specs/initiatives/invention/TASKS.md
+      - ProductGraph:
+        - PRD: specs/initiatives/invention/productgraph/PRD.md
+        - TRD: specs/initiatives/invention/productgraph/TRD.md
+        - Plan: specs/initiatives/invention/productgraph/PLAN.md
+        - Tasks: specs/initiatives/invention/productgraph/TASKS.md
   - Releases:
     - Changelog: changelog.md
     - v0.1.0: releases/v0.1.0.md

@@ -293,4 +293,4 @@ ProductGraph events follow OpenTelemetry semantic conventions:
 | `api.*`            | method, path, status_code, duration_ms          |
 | `error.*`          | type, message, stack                            |
 
-See the [ProductGraph Integration TRD](../design/productgraph/TRD.md) for full details.
+See the [ProductGraph Integration TRD](../specs/initiatives/invention/productgraph/TRD.md) for full details.
