@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { useAuth } from '@plexusone/auth';
+import { useAuthOptional } from '@plexusone/auth';
 import {
   Avatar,
   AvatarImage,
@@ -38,11 +38,13 @@ const defaultActions: UserAction[] = [
  * ```
  */
 export function UserMenu({ actions = defaultActions, onNavigate }: UserMenuProps): ReactNode {
-  const { user, logout, isLoading } = useAuth();
-
-  if (isLoading || !user) {
+  // Without an AuthProvider (an application on SessionProvider alone) there
+  // is no AuthProvider user to show.
+  const auth = useAuthOptional();
+  if (!auth || auth.isLoading || !auth.user) {
     return null;
   }
+  const { user, logout } = auth;
 
   const handleAction = (action: UserAction) => {
     if (action.onClick) {

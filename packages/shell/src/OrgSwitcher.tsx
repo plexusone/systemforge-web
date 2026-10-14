@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { useTenant } from '@plexusone/tenant';
+import { useTenantOptional } from '@plexusone/tenant';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,7 +24,13 @@ import type { OrgSwitcherProps } from './types';
  * ```
  */
 export function OrgSwitcher({ compact = false }: OrgSwitcherProps): ReactNode {
-  const { currentOrg, organizations, setCurrentOrg, isLoading } = useTenant();
+  // Without a TenantProvider the application owns the organization; it
+  // renders OrganizationSwitcher instead.
+  const tenant = useTenantOptional();
+  if (!tenant) {
+    return null;
+  }
+  const { currentOrg, organizations, setCurrentOrg, isLoading } = tenant;
 
   if (isLoading) {
     return <div className="px-3 py-2 bg-secondary rounded-md opacity-50 text-sm">Loading...</div>;
