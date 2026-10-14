@@ -15,6 +15,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -23,9 +26,9 @@
   },
   "peerDependencies": {
     "react": "^19.0.0",
-    "@plexusone/auth": "workspace:*",
-    "@plexusone/tenant": "workspace:*",
-    "@plexusone/ui": "workspace:*"
+    "@plexusone/auth": "workspace:^",
+    "@plexusone/tenant": "workspace:^",
+    "@plexusone/ui": "workspace:^"
   },
   "devDependencies": {
     "@plexusone/auth": "workspace:*",

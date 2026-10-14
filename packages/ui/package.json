@@ -22,6 +22,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup && pnpm run build:css",
     "build:css": "node scripts/build-css.js",

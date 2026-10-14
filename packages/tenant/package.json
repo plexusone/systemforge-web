@@ -15,6 +15,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -25,7 +28,7 @@
     "clean": "rm -rf dist"
   },
   "peerDependencies": {
-    "@plexusone/auth": "^0.1.0",
+    "@plexusone/auth": "workspace:^",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
