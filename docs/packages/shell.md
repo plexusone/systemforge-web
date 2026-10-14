@@ -117,6 +117,26 @@ read the session from `SessionProvider` in `@plexusone/auth`. See
 `OrgSwitcher` remains for applications that keep the current organization
 in `TenantProvider`.
 
+### Profile menu
+
+Under `SessionProvider`, the bar shows `ProfileMenu`: who is signed in, the
+current organization, the role held in this application (falling back to
+the organization role), the application's `profileItems`, and sign out. It
+has no default links. Applications on `AuthProvider` keep `UserMenu`, whose
+default links were removed for the same reason.
+
+```tsx
+<AppShell
+  appName="Reports"
+  app={{ id: 'reports', name: 'Reports', url: '/' }}
+  organizationId={org}
+  onOrganizationChange={(id) => navigate(`/orgs/${id}`)}
+  profileItems={[{ id: 'keys', label: 'API keys', href: `/orgs/${org}/keys` }]}
+>
+  {children}
+</AppShell>
+```
+
 ## API Reference
 
 ### AppShell Props
@@ -135,6 +155,7 @@ in `TenantProvider`.
 | `onNavigateApp`        | `(url: string) => void`        | Client-side navigation between applications in one build                             |
 | `command`              | `ReactNode`                    | Slot after the switchers: search or a command bar                                    |
 | `actions`              | `ReactNode`                    | Slot before the profile menu: the application's own actions                          |
+| `profileItems`         | `UserAction[]`                 | The application's entries in the profile menu, above sign-out                        |
 | `userActions`          | `UserAction[]`                 | Profile menu entries                                                                 |
 | `showOrgSwitcher`      | `boolean`                      | Show the `TenantProvider`-based `OrgSwitcher` when `onOrganizationChange` is not set |
 | `sidebarCollapsible`   | `boolean`                      | Whether the sidebar can collapse                                                     |
