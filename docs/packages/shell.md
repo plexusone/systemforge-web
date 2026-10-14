@@ -100,6 +100,23 @@ function ProjectPage() {
 }
 ```
 
+### Product and organization switchers
+
+`ProductSwitcher` lists the deployment's applications the person holds a
+role in for the current organization, from the session's app catalog, with
+the current application first. `OrganizationSwitcher` is controlled: it
+reports the chosen organization's ID and the application navigates. Both
+read the session from `SessionProvider` in `@plexusone/auth`. See
+[Composing applications](../architecture/composition.md).
+
+```tsx
+<ProductSwitcher self={{ id: 'reports', name: 'Reports', url: '/' }} organizationId={org} />
+<OrganizationSwitcher value={org} onChange={(id) => navigate(`/orgs/${id}`)} />
+```
+
+`OrgSwitcher` remains for applications that keep the current organization
+in `TenantProvider`.
+
 ## API Reference
 
 ### AppShell Props

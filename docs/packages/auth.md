@@ -107,6 +107,37 @@ function LinkedAccounts() {
 }
 ```
 
+### Session over the BFF
+
+`SessionProvider` reads `GET /bff/session` from the relying-party BFF and
+`useSession` returns it: the person, their memberships keyed by
+organization ID with a role per application, and the deployment's app
+catalog. Sign-in is a redirect; sign-out is a same-origin POST.
+
+```tsx
+import { SessionProvider, useSession, membershipFor } from '@plexusone/auth';
+
+function Who({ org }: { org: string }) {
+  const { status, session, signIn, signOut } = useSession();
+  if (status === 'loading') return null;
+  if (status !== 'authenticated') return <button onClick={() => signIn()}>Sign in</button>;
+  const role = membershipFor(session, org)?.applications['reports'];
+  return (
+    <span>
+      {session.user?.name} ({role ?? 'no role'}) <button onClick={() => void signOut()}>Sign out</button>
+    </span>
+  );
+}
+
+<SessionProvider onUnauthorized={() => window.location.assign('/bff/auth/login')}>
+  <Who org={orgId} />
+</SessionProvider>;
+```
+
+The session is re-read when the window regains focus and every five
+minutes (`refreshInterval`, `refreshOnFocus`). `onUnauthorized` runs when a
+signed-in session is found signed out, not after a deliberate sign-out.
+
 ## API Reference
 
 ### AuthProvider Props

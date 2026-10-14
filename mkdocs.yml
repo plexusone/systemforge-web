@@ -59,6 +59,7 @@ nav:
     - "@plexusone/design-tokens": packages/design-tokens.md
   - Architecture:
     - Overview: architecture/overview.md
+    - Composing Applications: architecture/composition.md
   - Specs:
     - "INIT-SYSTEMFORGEWEB-001: Shell Foundations":
       - PRD: specs/initiatives/INIT-SYSTEMFORGEWEB-001/PRD.md
