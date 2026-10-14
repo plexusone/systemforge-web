@@ -121,14 +121,29 @@ in `TenantProvider`.
 
 ### AppShell Props
 
-| Prop         | Type        | Description            |
-| ------------ | ----------- | ---------------------- |
-| `brandName`  | `string`    | Application name       |
-| `brandLogo`  | `string`    | Logo URL               |
-| `navigation` | `NavItem[]` | Navigation items       |
-| `userMenu`   | `ReactNode` | Custom user menu       |
-| `sidebar`    | `ReactNode` | Custom sidebar content |
-| `footer`     | `ReactNode` | Footer content         |
+| Prop                   | Type                           | Description                                                                          |
+| ---------------------- | ------------------------------ | ------------------------------------------------------------------------------------ |
+| `appName`              | `string`                       | Application name, used for the default sidebar logo                                  |
+| `logo`                 | `ReactNode`                    | Sidebar logo                                                                         |
+| `logoCollapsed`        | `ReactNode`                    | Sidebar logo when collapsed                                                          |
+| `navigation`           | `NavSection[]`                 | Sidebar navigation                                                                   |
+| `breadcrumbs`          | `BreadcrumbItem[]`             | Breadcrumbs for the current page                                                     |
+| `brand`                | `ReactNode`                    | Slot at the start of the bar: logo and wordmark                                      |
+| `app`                  | `CatalogApp`                   | This application; shows the product switcher from the session's catalog              |
+| `organizationId`       | `string`                       | The current organization's ID                                                        |
+| `onOrganizationChange` | `(id: string) => void`         | Shows the controlled `OrganizationSwitcher` and reports the chosen ID                |
+| `onNavigateApp`        | `(url: string) => void`        | Client-side navigation between applications in one build                             |
+| `command`              | `ReactNode`                    | Slot after the switchers: search or a command bar                                    |
+| `actions`              | `ReactNode`                    | Slot before the profile menu: the application's own actions                          |
+| `userActions`          | `UserAction[]`                 | Profile menu entries                                                                 |
+| `showOrgSwitcher`      | `boolean`                      | Show the `TenantProvider`-based `OrgSwitcher` when `onOrganizationChange` is not set |
+| `sidebarCollapsible`   | `boolean`                      | Whether the sidebar can collapse                                                     |
+| `defaultCollapsed`     | `boolean`                      | Initial collapsed state                                                              |
+| `onNavigate`           | `(href: string) => void`       | Navigation within the application, for SPA routing                                   |
+| `onCollapseChange`     | `(collapsed: boolean) => void` | Called when the sidebar collapses or expands                                         |
+
+The bar, from start to end: brand, product switcher, organization switcher,
+command, breadcrumbs, actions, profile menu.
 
 ### NavItem Type
 
