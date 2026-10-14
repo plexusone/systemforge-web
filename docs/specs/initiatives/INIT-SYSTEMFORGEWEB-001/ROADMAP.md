@@ -23,7 +23,7 @@
 
 - [x] `RMI-SYSTEMFORGEWEB-011` Named slots in AppShell and Navbar: brand, command, actions, breadcrumbs and profile items
 - [ ] `RMI-SYSTEMFORGEWEB-012` Theme: light, dark and system on the root element, persisted with a fallback when storage is unavailable
-- [ ] `RMI-SYSTEMFORGEWEB-013` Profile menu: identity, current organization and application role, profile items and sign out, with no default links
+- [x] `RMI-SYSTEMFORGEWEB-013` Profile menu: identity, current organization and application role, profile items and sign out, with no default links
   - Depends on: `RMI-SYSTEMFORGEWEB-006`
 - [ ] `RMI-SYSTEMFORGEWEB-014` Tooltips and accessibility: tooltip on icon controls, keyboard operation, Escape and outside click, focus return
 - [ ] `RMI-SYSTEMFORGEWEB-015` Responsive top bar and a navigation model option: sidebar, top tabs or none
