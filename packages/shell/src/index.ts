@@ -51,6 +51,18 @@ export { switcherApps } from './switcher';
 export { UserMenu } from './UserMenu';
 export { ProfileMenu, initials } from './ProfileMenu';
 export type { ProfileMenuProps } from './ProfileMenu';
+export { ThemeToggle } from './ThemeToggle';
+export {
+  useTheme,
+  applyTheme,
+  applyStoredTheme,
+  readStoredTheme,
+  resolveTheme,
+  nextTheme,
+  THEME_STORAGE_KEY,
+  THEME_CHANGE_EVENT,
+} from './theme';
+export type { Theme } from './theme';
 export { Breadcrumbs } from './Breadcrumbs';
 
 // Types

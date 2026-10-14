@@ -25,6 +25,7 @@ function AppShellInner({
   command,
   actions,
   profileItems,
+  showThemeToggle,
 }: AppShellProps): ReactNode {
   const {
     sidebarCollapsed,
@@ -80,6 +81,7 @@ function AppShellInner({
           command={command}
           actions={actions}
           profileItems={profileItems}
+          showThemeToggle={showThemeToggle}
         />
 
         {/* Main content */}

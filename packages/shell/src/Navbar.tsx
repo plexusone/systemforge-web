@@ -6,6 +6,7 @@ import { OrganizationSwitcher } from './OrganizationSwitcher';
 import { ProductSwitcher } from './ProductSwitcher';
 import { useSessionOptional } from '@plexusone/auth';
 import { ProfileMenu } from './ProfileMenu';
+import { ThemeToggle } from './ThemeToggle';
 import { UserMenu } from './UserMenu';
 import { Breadcrumbs } from './Breadcrumbs';
 
@@ -43,6 +44,7 @@ export function Navbar({
   command,
   actions,
   profileItems,
+  showThemeToggle = false,
 }: NavbarProps): ReactNode {
   // An application on SessionProvider gets the session's profile menu; one
   // on AuthProvider keeps UserMenu.
@@ -98,6 +100,8 @@ export function Navbar({
           {actions}
         </div>
       )}
+
+      {showThemeToggle && <ThemeToggle />}
 
       {hasSession ? (
         <ProfileMenu

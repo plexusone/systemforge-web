@@ -217,6 +217,11 @@ export interface AppShellConfig {
   profileItems?: UserAction[];
 
   /**
+   * Show the light, dark and system theme toggle. Default false.
+   */
+  showThemeToggle?: boolean;
+
+  /**
    * Custom navigation handler (for SPA routing)
    */
   onNavigate?: (href: string) => void;
@@ -348,6 +353,11 @@ export interface NavbarProps {
    * The application's own entries in the profile menu, above sign-out.
    */
   profileItems?: UserAction[];
+
+  /**
+   * Show the light, dark and system theme toggle. Default false.
+   */
+  showThemeToggle?: boolean;
 
   /**
    * Custom navigation handler
