@@ -60,6 +60,11 @@ nav:
   - Architecture:
     - Overview: architecture/overview.md
   - Specs:
+    - "INIT-SYSTEMFORGEWEB-001: Shell Foundations":
+      - PRD: specs/initiatives/INIT-SYSTEMFORGEWEB-001/PRD.md
+      - TRD: specs/initiatives/INIT-SYSTEMFORGEWEB-001/TRD.md
+      - Plan: specs/initiatives/INIT-SYSTEMFORGEWEB-001/PLAN.md
+      - Roadmap: specs/initiatives/INIT-SYSTEMFORGEWEB-001/ROADMAP.md
     - Invention:
       - PRD: specs/initiatives/invention/PRD.md
       - TRD: specs/initiatives/invention/TRD.md
