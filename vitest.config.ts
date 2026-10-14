@@ -1,6 +1,19 @@
+import { readdirSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
+// Tests import workspace packages by name. Resolve each to its source so a
+// test never runs against a stale or missing build.
+const packagesDir = fileURLToPath(new URL('./packages', import.meta.url));
+const alias = Object.fromEntries(
+  readdirSync(packagesDir).map((name) => [
+    `@plexusone/${name}`,
+    `${packagesDir}/${name}/src/index.ts`,
+  ])
+);
+
 export default defineConfig({
+  resolve: { alias },
   test: {
     globals: true,
     environment: 'jsdom',
