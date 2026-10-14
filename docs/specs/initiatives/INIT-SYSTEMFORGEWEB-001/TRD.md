@@ -5,12 +5,12 @@
 
 ## Current state
 
-| Package | Has | Missing for this initiative |
-|---|---|---|
-| `@plexusone/shell` | `AppShell`, `Navbar`, `Sidebar`, `OrgSwitcher`, `UserMenu`, `Breadcrumbs`, `ShellContext` | Product switcher, slots, theme, brand config, controlled organization switching, tests |
-| `@plexusone/auth` | `AuthProvider`, `BFFClient` (`/bff/api/v1/users/me`, `/bff/auth/login` with credentials, register, password, linked accounts) | `/bff/session`, per-application roles, the app catalog, redirect sign-in |
-| `@plexusone/tenant` | `TenantProvider` with the current organization in local storage | Organization from the URL, switching through the application |
-| `@plexusone/ui` | `Avatar`, `DropdownMenu`, `Tooltip`, `Button`, icons, Tailwind preset | Compiled CSS for consumers without Tailwind |
+| Package             | Has                                                                                                                           | Missing for this initiative                                                            |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `@plexusone/shell`  | `AppShell`, `Navbar`, `Sidebar`, `OrgSwitcher`, `UserMenu`, `Breadcrumbs`, `ShellContext`                                     | Product switcher, slots, theme, brand config, controlled organization switching, tests |
+| `@plexusone/auth`   | `AuthProvider`, `BFFClient` (`/bff/api/v1/users/me`, `/bff/auth/login` with credentials, register, password, linked accounts) | `/bff/session`, per-application roles, the app catalog, redirect sign-in               |
+| `@plexusone/tenant` | `TenantProvider` with the current organization in local storage                                                               | Organization from the URL, switching through the application                           |
+| `@plexusone/ui`     | `Avatar`, `DropdownMenu`, `Tooltip`, `Button`, icons, Tailwind preset                                                         | Compiled CSS for consumers without Tailwind                                            |
 
 All packages declare `react ^19.0.0` as a peer dependency.
 
@@ -19,12 +19,12 @@ All packages declare `react ^19.0.0` as a peer dependency.
 The shell supports two ways of composing applications. Everything in this
 initiative works in both.
 
-| | Single build | Per host |
-|---|---|---|
-| Applications | Registered into one front end (`ForgeApp`, `INIT-SYSTEMFORGE-001`) | Each built and deployed on its own host |
-| Moving between applications | Client-side route change | A link to another host, full page load |
-| Product switcher entries | Registered applications | The deployment's app catalog |
-| Session | One BFF session | One BFF session per host, one sign-in through the shared identity provider |
+|                             | Single build                                                       | Per host                                                                   |
+| --------------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| Applications                | Registered into one front end (`ForgeApp`, `INIT-SYSTEMFORGE-001`) | Each built and deployed on its own host                                    |
+| Moving between applications | Client-side route change                                           | A link to another host, full page load                                     |
+| Product switcher entries    | Registered applications                                            | The deployment's app catalog                                               |
+| Session                     | One BFF session                                                    | One BFF session per host, one sign-in through the shared identity provider |
 
 ## Session
 
@@ -34,23 +34,28 @@ A `SessionProvider` reads `/bff/session` from the relying-party BFF:
 interface Session {
   authenticated: boolean;
   user?: SessionUser;
-  apps: CatalogApp[];            // the deployment's application catalog
+  apps: CatalogApp[]; // the deployment's application catalog
 }
 interface SessionUser {
-  id: string;                    // principal ID
+  id: string; // principal ID
   name?: string;
   email?: string;
   avatarUrl?: string;
   memberships: Membership[];
 }
 interface Membership {
-  organizationId: string;        // the key; never a slug
+  organizationId: string; // the key; never a slug
   organizationName?: string;
-  organizationSlug?: string;     // display only
-  role?: string;                 // organization role
+  organizationSlug?: string; // display only
+  role?: string; // organization role
   applications: Record<string, string>; // application ID -> role
 }
-interface CatalogApp { id: string; name: string; url: string; icon?: string }
+interface CatalogApp {
+  id: string;
+  name: string;
+  url: string;
+  icon?: string;
+}
 ```
 
 - Field names map from the BFF's JSON in one adapter, so the BFF's wire
@@ -66,7 +71,7 @@ interface CatalogApp { id: string; name: string; url: string; icon?: string }
 ## Product switcher
 
 ```ts
-function switcherApps(apps: CatalogApp[], self: CatalogApp, membership?: Membership): CatalogApp[]
+function switcherApps(apps: CatalogApp[], self: CatalogApp, membership?: Membership): CatalogApp[];
 ```
 
 - Shows catalog applications in which the member holds a role for the
@@ -93,13 +98,13 @@ This rule is a pure function with unit tests, and the component renders it.
 
 `AppShell` and `Navbar` accept named slots:
 
-| Slot | Position | Typical content |
-|---|---|---|
-| `brand` | Start | Overrides the brand from configuration |
-| `command` | After the product switcher | Search or command bar |
-| `actions` | Before the profile menu | Product actions, notifications |
-| `breadcrumbs` | Below or beside the bar | Location within the application |
-| `profileItems` | Inside the profile menu | Application links |
+| Slot           | Position                   | Typical content                        |
+| -------------- | -------------------------- | -------------------------------------- |
+| `brand`        | Start                      | Overrides the brand from configuration |
+| `command`      | After the product switcher | Search or command bar                  |
+| `actions`      | Before the profile menu    | Product actions, notifications         |
+| `breadcrumbs`  | Below or beside the bar    | Location within the application        |
+| `profileItems` | Inside the profile menu    | Application links                      |
 
 A slot is `ReactNode`. The shell owns layout, spacing and responsive
 behavior; content is the application's.
@@ -125,10 +130,10 @@ behavior; content is the application's.
 
 ```ts
 interface BrandConfig {
-  name: string;                  // wordmark text
+  name: string; // wordmark text
   logo?: ReactNode;
-  tokens?: Partial<DesignTokens>;// from @plexusone/design-tokens
-  productLabel?: string;         // suffix such as "platform"
+  tokens?: Partial<DesignTokens>; // from @plexusone/design-tokens
+  productLabel?: string; // suffix such as "platform"
 }
 ```
 
@@ -138,13 +143,13 @@ never names a deployment.
 
 ## Baseline
 
-| Concern | Choice |
-|---|---|
-| React | 19, as the packages already require |
-| Router | Not required by the shell; `onNavigate` adapts to any router |
-| Styling | Tailwind preset for Tailwind consumers, plus compiled CSS in `@plexusone/shell/styles.css` for others (decided in an ADR under this initiative) |
-| Tests | Vitest and Testing Library, already configured at the workspace root |
-| Shared config | Published TypeScript, lint and test presets, so an application adopts the baseline with one dependency |
+| Concern       | Choice                                                                                                                                          |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| React         | 19, as the packages already require                                                                                                             |
+| Router        | Not required by the shell; `onNavigate` adapts to any router                                                                                    |
+| Styling       | Tailwind preset for Tailwind consumers, plus compiled CSS in `@plexusone/shell/styles.css` for others (decided in an ADR under this initiative) |
+| Tests         | Vitest and Testing Library, already configured at the workspace root                                                                            |
+| Shared config | Published TypeScript, lint and test presets, so an application adopts the baseline with one dependency                                          |
 
 ## Testing
 

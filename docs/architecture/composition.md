@@ -5,12 +5,12 @@ identity service, and the products people sign in to. The shell gives them
 one chrome (a product switcher, an organization switcher and a profile
 menu) in either of two ways of composing them.
 
-| | One build | One host per application |
-|---|---|---|
-| Applications | Registered into one front end | Each built and deployed on its own host |
-| Moving between applications | Client-side route change | A link to the other host; a full page load |
-| Product switcher entries | The deployment's app catalog | The deployment's app catalog |
-| Session | One BFF session | One BFF session per host, one sign-in through the shared identity service |
+|                             | One build                     | One host per application                                                  |
+| --------------------------- | ----------------------------- | ------------------------------------------------------------------------- |
+| Applications                | Registered into one front end | Each built and deployed on its own host                                   |
+| Moving between applications | Client-side route change      | A link to the other host; a full page load                                |
+| Product switcher entries    | The deployment's app catalog  | The deployment's app catalog                                              |
+| Session                     | One BFF session               | One BFF session per host, one sign-in through the shared identity service |
 
 Both read the same session from the relying-party BFF (`GET /bff/session`):
 the person, their memberships keyed by organization ID with the role they

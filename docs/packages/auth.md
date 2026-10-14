@@ -124,7 +124,8 @@ function Who({ org }: { org: string }) {
   const role = membershipFor(session, org)?.applications['reports'];
   return (
     <span>
-      {session.user?.name} ({role ?? 'no role'}) <button onClick={() => void signOut()}>Sign out</button>
+      {session.user?.name} ({role ?? 'no role'}){' '}
+      <button onClick={() => void signOut()}>Sign out</button>
     </span>
   );
 }

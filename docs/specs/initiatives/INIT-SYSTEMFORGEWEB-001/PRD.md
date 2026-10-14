@@ -37,11 +37,11 @@ bars instead. This initiative closes that gap.
 
 ## Users
 
-| User | Needs |
-|---|---|
+| User                  | Needs                                                                                                                                     |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | Application developer | Drop in the shell, pass the application's identity and slots, and get sign-in, switching and the profile menu working against SystemForge |
-| Deployment operator | Applications that look and behave as one product, with the catalog deciding what appears |
-| End user | One consistent way to move between products and organizations, see who is signed in, and sign out |
+| Deployment operator   | Applications that look and behave as one product, with the catalog deciding what appears                                                  |
+| End user              | One consistent way to move between products and organizations, see who is signed in, and sign out                                         |
 
 ## Goals
 
