@@ -4,6 +4,8 @@ import type { NavbarProps } from './types';
 import { OrgSwitcher } from './OrgSwitcher';
 import { OrganizationSwitcher } from './OrganizationSwitcher';
 import { ProductSwitcher } from './ProductSwitcher';
+import { useSessionOptional } from '@plexusone/auth';
+import { ProfileMenu } from './ProfileMenu';
 import { UserMenu } from './UserMenu';
 import { Breadcrumbs } from './Breadcrumbs';
 
@@ -40,7 +42,12 @@ export function Navbar({
   onNavigateApp,
   command,
   actions,
+  profileItems,
 }: NavbarProps): ReactNode {
+  // An application on SessionProvider gets the session's profile menu; one
+  // on AuthProvider keeps UserMenu.
+  const hasSession = useSessionOptional() !== undefined;
+
   return (
     <header className="h-16 bg-background border-b border-border flex items-center px-4 gap-4">
       {/* Mobile menu toggle */}
@@ -92,8 +99,16 @@ export function Navbar({
         </div>
       )}
 
-      {/* User menu */}
-      <UserMenu actions={userActions} onNavigate={onNavigate} />
+      {hasSession ? (
+        <ProfileMenu
+          appId={app?.id}
+          organizationId={organizationId}
+          items={profileItems ?? userActions}
+          onNavigate={onNavigate}
+        />
+      ) : (
+        <UserMenu actions={profileItems ?? userActions} onNavigate={onNavigate} />
+      )}
     </header>
   );
 }

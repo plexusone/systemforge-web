@@ -49,6 +49,8 @@ export { ProductSwitcher } from './ProductSwitcher';
 export type { ProductSwitcherProps } from './ProductSwitcher';
 export { switcherApps } from './switcher';
 export { UserMenu } from './UserMenu';
+export { ProfileMenu, initials } from './ProfileMenu';
+export type { ProfileMenuProps } from './ProfileMenu';
 export { Breadcrumbs } from './Breadcrumbs';
 
 // Types

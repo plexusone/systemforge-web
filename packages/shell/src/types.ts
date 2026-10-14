@@ -212,6 +212,11 @@ export interface AppShellConfig {
   actions?: ReactNode;
 
   /**
+   * The application's own entries in the profile menu, above sign-out.
+   */
+  profileItems?: UserAction[];
+
+  /**
    * Custom navigation handler (for SPA routing)
    */
   onNavigate?: (href: string) => void;
@@ -338,6 +343,11 @@ export interface NavbarProps {
    * notifications.
    */
   actions?: ReactNode;
+
+  /**
+   * The application's own entries in the profile menu, above sign-out.
+   */
+  profileItems?: UserAction[];
 
   /**
    * Custom navigation handler

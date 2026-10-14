@@ -24,6 +24,7 @@ function AppShellInner({
   onNavigateApp,
   command,
   actions,
+  profileItems,
 }: AppShellProps): ReactNode {
   const {
     sidebarCollapsed,
@@ -78,6 +79,7 @@ function AppShellInner({
           onNavigateApp={onNavigateApp}
           command={command}
           actions={actions}
+          profileItems={profileItems}
         />
 
         {/* Main content */}
