@@ -39,6 +39,10 @@ export { ProtectedRoute, usePermissions } from './ProtectedRoute';
 // Linked accounts
 export { useLinkedAccounts } from './useLinkedAccounts';
 
+// Session over the relying-party BFF: memberships with per-application
+// roles, and the deployment's app catalog
+export * from './session';
+
 // BFF client (for advanced use cases)
 export { BFFClient, defaultBFFClient } from './bff-client';
 
