@@ -1,8 +1,9 @@
 name: Release
 
+# Packages are published by hand with pnpm after signing in to npm, so this
+# runs only when started from the Actions tab.
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
