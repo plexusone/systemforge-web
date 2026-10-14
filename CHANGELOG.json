@@ -1,29 +1,183 @@
 {
   "irVersion": "1.0",
   "project": "systemforge-web",
-  "repository": "https://github.com/grokify/systemforge-web",
+  "repository": "https://github.com/plexusone/systemforge-web",
   "versioning": "semver",
   "commitConvention": "conventional",
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.2.0",
+      "date": "2026-10-15",
+      "highlights": [
+        {
+          "description": "A session over the relying-party BFF in `@plexusone/auth`: `SessionProvider` and `useSession` read `/bff/session`, with memberships keyed by organization ID, a role per application, and the deployment's app catalog",
+          "commit": "f2f7adc"
+        },
+        {
+          "description": "Shell chrome for composed applications: a product switcher from the app catalog, a controlled organization switcher, a session profile menu, named slots, and a light, dark and system theme",
+          "commit": "1c2c10c"
+        },
+        {
+          "description": "Organization management pages and a chat package with AI SDK integration",
+          "commit": "48ea9c9"
+        },
+        {
+          "description": "Packages are published under the `@plexusone` scope, publicly, and require React 19",
+          "commit": "1ec1707"
+        }
+      ],
+      "added": [
+        {
+          "description": "`SessionProvider`, `useSession`, `SessionClient`, `toSession`, `membershipFor` and `organizationLabel` in `@plexusone/auth`; sign-in is a redirect to the BFF and sign-out a same-origin POST",
+          "commit": "f2f7adc"
+        },
+        {
+          "description": "`ProductSwitcher` and the `switcherApps` rule: the current application first, then the catalog applications the person holds a role in for the current organization",
+          "commit": "9916412"
+        },
+        {
+          "description": "`OrganizationSwitcher`, a controlled organization picker keyed by organization ID",
+          "commit": "9807784"
+        },
+        {
+          "description": "Named slots in `Navbar` and `AppShell`: `brand`, `command`, `actions`, with `app`, `organizationId` and `onOrganizationChange` turning on the switchers, and `breadcrumbs` passed through",
+          "commit": "1c2c10c"
+        },
+        {
+          "description": "`ProfileMenu`: who is signed in, the current organization and the role in this application, the application's `profileItems`, and sign out; the navbar uses it under `SessionProvider`",
+          "commit": "e72116b"
+        },
+        {
+          "description": "`useTheme`, `ThemeToggle`, `applyStoredTheme` and `showThemeToggle`: light, dark and system themes applied as the `dark` class, surviving unavailable storage",
+          "commit": "8509c3f"
+        },
+        {
+          "description": "Sun, moon and monitor icons in `@plexusone/ui`",
+          "commit": "ad5c59a"
+        },
+        {
+          "description": "`OrganizationMembersPage`, `OrganizationInvitationsPage` and `OrganizationSettingsPage` in `@plexusone/pages`, with the `MemberRole`, `OrgSettingsTab`, `OrgMember` and `OrgInvitation` types",
+          "commit": "48ea9c9"
+        },
+        {
+          "description": "`@plexusone/chat` with AI SDK integration",
+          "commit": "cc736f3"
+        },
+        {
+          "description": "`@plexusone/ui`, the shared component library the shell is built on",
+          "commit": "d899623"
+        }
+      ],
+      "changed": [
+        {
+          "description": "The npm scope is `@plexusone`, renamed from `@systemforge`",
+          "commit": "1ec1707",
+          "breaking": true
+        },
+        {
+          "description": "CoreForge is renamed SystemForge",
+          "commit": "5ca5210",
+          "breaking": true
+        },
+        {
+          "description": "`UserMenu` no longer adds Profile and Settings links by default; pass them in `userActions`",
+          "commit": "a9c85c7",
+          "breaking": true
+        },
+        {
+          "description": "React 19 is required",
+          "commit": "4a2a31c",
+          "breaking": true
+        },
+        {
+          "description": "Internal ranges are caret ranges on the released version, and every package publishes publicly",
+          "commit": "126fcb0"
+        }
+      ],
+      "fixed": [
+        {
+          "description": "`Navbar`, `UserMenu` and `OrgSwitcher` render without an `AuthProvider` or `TenantProvider` instead of throwing",
+          "commit": "297a105"
+        },
+        {
+          "description": "`AuthProvider` no longer re-fetches the user in a loop",
+          "commit": "2f31398"
+        },
+        {
+          "description": "React hooks errors in the ProductGraph telemetry hooks",
+          "commit": "50f906c"
+        }
+      ],
+      "documentation": [
+        {
+          "description": "A guide to composing applications in one build or on one host each, and sections on the session, switchers, slots, profile menu and theme",
+          "commit": "64fab04"
+        },
+        {
+          "description": "The `AppShell` props table lists the props it has",
+          "commit": "351ac49"
+        },
+        {
+          "description": "Specs moved to `docs/specs/initiatives/`, with INIT-SYSTEMFORGEWEB-001 for the shell foundations",
+          "commit": "746951a"
+        }
+      ],
+      "tests": [
+        {
+          "description": "Session adapter, client and provider, both switchers, slots, profile menu and theme; tests resolve workspace packages to their source",
+          "commit": "5bc92f8"
+        }
+      ],
+      "infrastructure": [
+        {
+          "description": "The release workflow runs only when started by hand; packages are published with pnpm",
+          "commit": "b7c5719"
+        }
+      ],
+      "upgradeGuide": [
+        {
+          "description": "Import from `@plexusone/*` instead of `@systemforge/*`, and use React 19"
+        },
+        {
+          "description": "Pass Profile and Settings entries to `UserMenu` in `userActions` if you relied on the defaults"
+        },
+        {
+          "description": "For a SystemForge relying party, wrap the application in `SessionProvider` and pass `app`, `organizationId` and `onOrganizationChange` to `AppShell`"
+        }
+      ]
+    },
+    {
       "version": "v0.1.0",
       "date": "2026-04-27",
       "highlights": [
-        { "description": "Initial release of SystemForge Web component library monorepo" },
+        {
+          "description": "Initial release of SystemForge Web component library monorepo"
+        },
         {
           "description": "ProductGraph telemetry integration with session management and OTel compliance"
         },
-        { "description": "Multi-tenant primitives with organization context and tenant isolation" }
+        {
+          "description": "Multi-tenant primitives with organization context and tenant isolation"
+        }
       ],
       "added": [
-        { "description": "Monorepo setup with pnpm workspaces and Turborepo", "commit": "5f055db" },
+        {
+          "description": "Monorepo setup with pnpm workspaces and Turborepo",
+          "commit": "5f055db"
+        },
         {
           "description": "ESLint and Prettier configuration for consistent code style",
           "commit": "c1e86d4"
         },
-        { "description": "Vitest testing framework configuration", "commit": "1f736e2" },
-        { "description": "GitHub Actions CI/CD workflows", "commit": "bdee74f" },
+        {
+          "description": "Vitest testing framework configuration",
+          "commit": "1f736e2"
+        },
+        {
+          "description": "GitHub Actions CI/CD workflows",
+          "commit": "bdee74f"
+        },
         {
           "description": "Changesets for versioning and changelog generation",
           "commit": "e6dea5e"
@@ -74,15 +228,24 @@
         }
       ],
       "documentation": [
-        { "description": "Project documentation with architecture overview", "commit": "25a249d" },
-        { "description": "MkDocs documentation site with Material theme", "commit": "311a4f8" },
+        {
+          "description": "Project documentation with architecture overview",
+          "commit": "25a249d"
+        },
+        {
+          "description": "MkDocs documentation site with Material theme",
+          "commit": "311a4f8"
+        },
         {
           "description": "ProductGraph integration design documents (PRD, TRD, PLAN, TASKS)",
           "commit": "9363c0f"
         }
       ],
       "infrastructure": [
-        { "description": "Shared pnpm workflows from grokify/.github", "commit": "bb07c1d" }
+        {
+          "description": "Shared pnpm workflows from grokify/.github",
+          "commit": "bb07c1d"
+        }
       ]
     }
   ]
