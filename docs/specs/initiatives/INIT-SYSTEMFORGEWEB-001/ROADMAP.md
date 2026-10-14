@@ -21,7 +21,7 @@
 
 **Theme:** The top bar every application needs, with room for each application's own controls
 
-- [ ] `RMI-SYSTEMFORGEWEB-011` Named slots in AppShell and Navbar: brand, command, actions, breadcrumbs and profile items
+- [x] `RMI-SYSTEMFORGEWEB-011` Named slots in AppShell and Navbar: brand, command, actions, breadcrumbs and profile items
 - [ ] `RMI-SYSTEMFORGEWEB-012` Theme: light, dark and system on the root element, persisted with a fallback when storage is unavailable
 - [ ] `RMI-SYSTEMFORGEWEB-013` Profile menu: identity, current organization and application role, profile items and sign out, with no default links
   - Depends on: `RMI-SYSTEMFORGEWEB-006`
