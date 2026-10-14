@@ -17,12 +17,10 @@ import {
 import type { UserMenuProps, UserAction } from './types';
 
 /**
- * Default user actions
+ * Default user actions: none. Links to pages an application may not have
+ * are left to the application.
  */
-const defaultActions: UserAction[] = [
-  { id: 'profile', label: 'Profile', href: '/settings/profile' },
-  { id: 'settings', label: 'Settings', href: '/settings' },
-];
+const defaultActions: UserAction[] = [];
 
 /**
  * UserMenu - Dropdown menu for user actions
