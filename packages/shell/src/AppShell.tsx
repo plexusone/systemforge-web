@@ -16,6 +16,14 @@ function AppShellInner({
   userActions,
   sidebarCollapsible = true,
   showOrgSwitcher = true,
+  breadcrumbs,
+  brand,
+  app,
+  organizationId,
+  onOrganizationChange,
+  onNavigateApp,
+  command,
+  actions,
 }: AppShellProps): ReactNode {
   const {
     sidebarCollapsed,
@@ -62,6 +70,14 @@ function AppShellInner({
           userActions={userActions}
           onToggleSidebar={toggleSidebarVisible}
           onNavigate={navigate}
+          breadcrumbs={breadcrumbs}
+          brand={brand}
+          app={app}
+          organizationId={organizationId}
+          onOrganizationChange={onOrganizationChange}
+          onNavigateApp={onNavigateApp}
+          command={command}
+          actions={actions}
         />
 
         {/* Main content */}

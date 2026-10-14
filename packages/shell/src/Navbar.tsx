@@ -2,20 +2,28 @@ import { type ReactNode } from 'react';
 import { Button, MenuIcon } from '@plexusone/ui';
 import type { NavbarProps } from './types';
 import { OrgSwitcher } from './OrgSwitcher';
+import { OrganizationSwitcher } from './OrganizationSwitcher';
+import { ProductSwitcher } from './ProductSwitcher';
 import { UserMenu } from './UserMenu';
 import { Breadcrumbs } from './Breadcrumbs';
 
 /**
  * Navbar - Top navigation bar
  *
+ * From start to end: the brand, the product switcher, the organization
+ * switcher, the command slot, breadcrumbs, the actions slot and the
+ * profile menu. The shell owns the layout; slot content is the
+ * application's.
+ *
  * @example
  * ```tsx
  * <Navbar
- *   showOrgSwitcher
- *   breadcrumbs={[
- *     { label: 'Home', href: '/' },
- *     { label: 'Dashboard' },
- *   ]}
+ *   brand={<Logo />}
+ *   app={{ id: 'reports', name: 'Reports', url: '/' }}
+ *   organizationId={orgId}
+ *   onOrganizationChange={(id) => navigate(`/orgs/${id}`)}
+ *   command={<Search />}
+ *   actions={<Notifications />}
  * />
  * ```
  */
@@ -25,6 +33,13 @@ export function Navbar({
   breadcrumbs,
   onToggleSidebar,
   onNavigate,
+  brand,
+  app,
+  organizationId,
+  onOrganizationChange,
+  onNavigateApp,
+  command,
+  actions,
 }: NavbarProps): ReactNode {
   return (
     <header className="h-16 bg-background border-b border-border flex items-center px-4 gap-4">
@@ -41,18 +56,41 @@ export function Navbar({
         </Button>
       )}
 
-      {/* Org switcher */}
-      {showOrgSwitcher && <OrgSwitcher onNavigate={onNavigate} />}
-
-      {/* Breadcrumbs */}
-      {breadcrumbs && breadcrumbs.length > 0 && (
-        <div className="flex-1">
-          <Breadcrumbs items={breadcrumbs} onNavigate={onNavigate} />
+      {brand && (
+        <div className="flex items-center gap-2 shrink-0" data-slot="brand">
+          {brand}
         </div>
       )}
 
-      {/* Spacer if no breadcrumbs */}
-      {(!breadcrumbs || breadcrumbs.length === 0) && <div className="flex-1" />}
+      {app && (
+        <ProductSwitcher self={app} organizationId={organizationId} onNavigate={onNavigateApp} />
+      )}
+
+      {/* Organization switcher: controlled when the application owns the organization */}
+      {onOrganizationChange ? (
+        <OrganizationSwitcher value={organizationId} onChange={onOrganizationChange} />
+      ) : (
+        showOrgSwitcher && <OrgSwitcher onNavigate={onNavigate} />
+      )}
+
+      {command && (
+        <div className="flex items-center min-w-0" data-slot="command">
+          {command}
+        </div>
+      )}
+
+      {/* Breadcrumbs, or a spacer that pushes the end of the bar right */}
+      <div className="flex-1 min-w-0">
+        {breadcrumbs && breadcrumbs.length > 0 && (
+          <Breadcrumbs items={breadcrumbs} onNavigate={onNavigate} />
+        )}
+      </div>
+
+      {actions && (
+        <div className="flex items-center gap-1 shrink-0" data-slot="actions">
+          {actions}
+        </div>
+      )}
 
       {/* User menu */}
       <UserMenu actions={userActions} onNavigate={onNavigate} />

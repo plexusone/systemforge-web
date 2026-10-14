@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { CatalogApp } from '@plexusone/auth';
 
 /**
  * Navigation item
@@ -165,6 +166,52 @@ export interface AppShellConfig {
   showOrgSwitcher?: boolean;
 
   /**
+   * Breadcrumb items for the current page
+   */
+  breadcrumbs?: BreadcrumbItem[];
+
+  /**
+   * Brand at the start of the bar (logo and wordmark). Default: none.
+   */
+  brand?: ReactNode;
+
+  /**
+   * This application, as the product switcher shows it. When set, the bar
+   * shows the product switcher from the session's app catalog.
+   */
+  app?: CatalogApp;
+
+  /**
+   * The current organization's ID, for the product switcher's roles and the
+   * organization switcher.
+   */
+  organizationId?: string;
+
+  /**
+   * Called with the chosen organization's ID. When set, the bar shows the
+   * controlled OrganizationSwitcher instead of the TenantProvider-based
+   * OrgSwitcher.
+   */
+  onOrganizationChange?: (organizationId: string) => void;
+
+  /**
+   * Client-side navigation between applications composed in one build.
+   * Without it, the product switcher links to each application's URL.
+   */
+  onNavigateApp?: (url: string) => void;
+
+  /**
+   * After the switchers: a search or command bar.
+   */
+  command?: ReactNode;
+
+  /**
+   * Before the profile menu: the application's own actions, such as
+   * notifications.
+   */
+  actions?: ReactNode;
+
+  /**
    * Custom navigation handler (for SPA routing)
    */
   onNavigate?: (href: string) => void;
@@ -250,6 +297,47 @@ export interface NavbarProps {
    * Whether sidebar is visible (for mobile)
    */
   sidebarVisible?: boolean;
+
+  /**
+   * Brand at the start of the bar (logo and wordmark). Default: none.
+   */
+  brand?: ReactNode;
+
+  /**
+   * This application, as the product switcher shows it. When set, the bar
+   * shows the product switcher from the session's app catalog.
+   */
+  app?: CatalogApp;
+
+  /**
+   * The current organization's ID, for the product switcher's roles and the
+   * organization switcher.
+   */
+  organizationId?: string;
+
+  /**
+   * Called with the chosen organization's ID. When set, the bar shows the
+   * controlled OrganizationSwitcher instead of the TenantProvider-based
+   * OrgSwitcher.
+   */
+  onOrganizationChange?: (organizationId: string) => void;
+
+  /**
+   * Client-side navigation between applications composed in one build.
+   * Without it, the product switcher links to each application's URL.
+   */
+  onNavigateApp?: (url: string) => void;
+
+  /**
+   * After the switchers: a search or command bar.
+   */
+  command?: ReactNode;
+
+  /**
+   * Before the profile menu: the application's own actions, such as
+   * notifications.
+   */
+  actions?: ReactNode;
 
   /**
    * Custom navigation handler
