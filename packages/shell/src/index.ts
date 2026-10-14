@@ -43,6 +43,9 @@ export { ShellProvider, useShell, useShellOptional } from './ShellContext';
 export { Sidebar } from './Sidebar';
 export { Navbar } from './Navbar';
 export { OrgSwitcher } from './OrgSwitcher';
+export { ProductSwitcher } from './ProductSwitcher';
+export type { ProductSwitcherProps } from './ProductSwitcher';
+export { switcherApps } from './switcher';
 export { UserMenu } from './UserMenu';
 export { Breadcrumbs } from './Breadcrumbs';
 
