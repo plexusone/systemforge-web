@@ -9,7 +9,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "turbo run build",
+    "build": "turbo run build && pnpm run check:exports",
+    "check:exports": "node scripts/check-exports.mjs",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
