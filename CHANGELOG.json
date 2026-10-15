@@ -7,6 +7,26 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.2.1",
+      "date": "2026-10-15",
+      "highlights": [
+        {
+          "description": "Every package has a README and links to its repository and documentation on npm"
+        }
+      ],
+      "fixed": [
+        {
+          "description": "Package pages on npm showed no README, and five packages had no repository link",
+          "commit": "a8766af"
+        }
+      ],
+      "infrastructure": [
+        {
+          "description": "0.2.1 is the first release published for every package; `@plexusone/api-client` 0.2.0 was the only 0.2.0 published"
+        }
+      ]
+    },
+    {
       "version": "v0.2.0",
       "date": "2026-10-15",
       "highlights": [
