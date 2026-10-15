@@ -7,6 +7,38 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.3.1",
+      "date": "2026-10-15",
+      "highlights": [
+        {
+          "description": "`renderApp` from `@plexusone/host/testing` works with pages that call `useAppContext` from `@plexusone/host`"
+        }
+      ],
+      "fixed": [
+        {
+          "description": "The main and testing entries of `@plexusone/host` share one app context; in 0.3.0 each bundle had its own, so `useAppContext` threw inside `renderApp`",
+          "commit": "a3b7160"
+        }
+      ],
+      "tests": [
+        {
+          "description": "A test loads the built entries and checks they share the app context",
+          "commit": "b6e0379"
+        }
+      ],
+      "documentation": [
+        {
+          "description": "The releasing guide says to sign in right before publishing and to check staging before concluding a publish failed",
+          "commit": "767472c"
+        }
+      ],
+      "upgradeGuide": [
+        {
+          "description": "Use `@plexusone/host` 0.3.1; the other packages are unchanged"
+        }
+      ]
+    },
+    {
       "version": "v0.3.0",
       "date": "2026-10-15",
       "highlights": [
