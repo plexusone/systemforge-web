@@ -48,6 +48,8 @@ nav:
   - Getting Started:
       - Installation: getting-started/installation.md
       - Quick Start: getting-started/quickstart.md
+  - Guides:
+      - Releasing: guides/releasing.md
   - Packages:
       - Overview: packages/index.md
       - '@plexusone/api-client': packages/api-client.md
