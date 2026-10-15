@@ -7,6 +7,63 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.3.0",
+      "date": "2026-10-15",
+      "highlights": [
+        {
+          "description": "`@plexusone/host`: an application exports its pages as an `AppModule` and never imports a shell; a stack hosts it with its own `Shell` through `createHost`, and the same module runs on its own in `DevShell`",
+          "commit": "05744c3"
+        },
+        {
+          "description": "`DevShell` and a development session run an application's interface with no backend",
+          "commit": "ae98737"
+        },
+        {
+          "description": "`@plexusone/host/testing` renders an application as `createHost` would, for the application's own tests",
+          "commit": "eebf56c"
+        }
+      ],
+      "added": [
+        {
+          "description": "`AppModule`, `AppContext`, `useAppContext` and `Shell`",
+          "commit": "05744c3"
+        },
+        {
+          "description": "`DevShell`, `devSession` and `devSessionClient`",
+          "commit": "ae98737"
+        },
+        {
+          "description": "`createHost`, `HostRoutes` and `HostSession`: the session, the router under `/orgs/:org`, choosing an organization, not-found and no-access pages, and the sign-in redirect",
+          "commit": "e296d1f"
+        },
+        {
+          "description": "`renderApp` and `conformanceProblems` in `@plexusone/host/testing`",
+          "commit": "eebf56c"
+        }
+      ],
+      "tests": [
+        {
+          "description": "Hosting an example application in DevShell and, unchanged, in another stack's shell; routing, navigation, switching organizations and conformance",
+          "commit": "0f7a80e"
+        }
+      ],
+      "documentation": [
+        {
+          "description": "The `@plexusone/host` package page and a guide to writing an application",
+          "commit": "0866f1b"
+        },
+        {
+          "description": "INIT-SYSTEMFORGEWEB-001 adds the app contract and hosting",
+          "commit": "9b2a53b"
+        }
+      ],
+      "upgradeGuide": [
+        {
+          "description": "`@plexusone/host` is new at 0.3.0; it needs `@plexusone/shell` and `@plexusone/auth` 0.2.1 or later, React 19, and `react-router` 7 or 8. The other packages are unchanged"
+        }
+      ]
+    },
+    {
       "version": "v0.2.3",
       "date": "2026-10-15",
       "highlights": [
