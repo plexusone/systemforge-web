@@ -46,12 +46,12 @@
 
 **Theme:** An application exports its pages once and runs in any stack's shell, or on its own in DevShell
 
-- [ ] `RMI-SYSTEMFORGEWEB-002` App and shell contracts in @plexusone/host: AppModule, AppContext, useAppContext and Shell
-- [ ] `RMI-SYSTEMFORGEWEB-020` createHost: session, router under /orgs/:org, choosing an organization, and not-found and no-access pages
+- [x] `RMI-SYSTEMFORGEWEB-002` App and shell contracts in @plexusone/host: AppModule, AppContext, useAppContext and Shell
+- [x] `RMI-SYSTEMFORGEWEB-020` createHost: session, router under /orgs/:org, choosing an organization, and not-found and no-access pages
   - Depends on: `RMI-SYSTEMFORGEWEB-002`
-- [ ] `RMI-SYSTEMFORGEWEB-021` DevShell: a neutral shell for running one application on its own, with a fake session
+- [x] `RMI-SYSTEMFORGEWEB-021` DevShell: a neutral shell for running one application on its own, with a fake session
   - Depends on: `RMI-SYSTEMFORGEWEB-002`
-- [ ] `RMI-SYSTEMFORGEWEB-022` renderApp testing helper, an AppModule conformance check, and the guide to writing and hosting an application
+- [x] `RMI-SYSTEMFORGEWEB-022` renderApp testing helper, an AppModule conformance check, and the guide to writing and hosting an application
   - Depends on: `RMI-SYSTEMFORGEWEB-020`
   - Depends on: `RMI-SYSTEMFORGEWEB-021`
 - [ ] `RMI-SYSTEMFORGEWEB-023` One build: createHost with several applications in one front end
