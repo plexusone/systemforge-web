@@ -19,12 +19,118 @@ All packages declare `react ^19.0.0` as a peer dependency.
 The shell supports two ways of composing applications. Everything in this
 initiative works in both.
 
-|                             | Single build                                                       | Per host                                                                   |
-| --------------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------- |
-| Applications                | Registered into one front end (`ForgeApp`, `INIT-SYSTEMFORGE-001`) | Each built and deployed on its own host                                    |
-| Moving between applications | Client-side route change                                           | A link to another host, full page load                                     |
-| Product switcher entries    | Registered applications                                            | The deployment's app catalog                                               |
-| Session                     | One BFF session                                                    | One BFF session per host, one sign-in through the shared identity provider |
+|                             | Single build                                                   | Per host                                                                   |
+| --------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Applications                | Several `AppModule`s in one front end (`createHost({ apps })`) | Each `AppModule` built into its own front end, on its own host             |
+| Moving between applications | Client-side route change                                       | A link to another host, full page load                                     |
+| Product switcher entries    | Registered applications                                        | The deployment's app catalog                                               |
+| Session                     | One BFF session                                                | One BFF session per host, one sign-in through the shared identity provider |
+
+Both modes use the app contract below: an application is an `AppModule`,
+and a stack composes modules with a `Shell` through `createHost`.
+
+## App contract and hosting
+
+A new package, `@plexusone/host`, separates three things that today live in
+each application:
+
+| Piece           | Who provides it                                              | What it is                                                                                                                   |
+| --------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| The application | Each cloud app (for example an agents app, a dashboards app) | An `AppModule`: its pages and routes, navigation and top-bar contributions. No chrome, and no dependency on any stack        |
+| The shell       | A stack (for example a suite's brand package), or `DevShell` | A component implementing `Shell`: the chrome around an application                                                           |
+| The host        | A stack's web build, or an application's dev harness         | `createHost({ app, shell })`: the router, the organization in the URL and the session, with the shell around the application |
+
+`@plexusone/shell` stays router-free and chrome-only; `@plexusone/host`
+depends on it, on `@plexusone/auth`, and on react-router as a peer.
+
+### AppModule
+
+```ts
+interface AppModule {
+  id: string; // the application's ID in the app catalog and in roles
+  name: string;
+  routes: RouteObject[]; // the application's pages, relative to /orgs/:org
+  navigation?: (ctx: AppContext) => NavSection[];
+  profileItems?: (ctx: AppContext) => UserAction[];
+  command?: ReactNode;
+  actions?: ReactNode;
+}
+
+interface AppContext {
+  organizationId: string;
+  role?: string; // the role held in this application in that organization
+  navigate: (path: string) => void; // relative to the organization
+}
+
+function useAppContext(): AppContext;
+```
+
+- An application's pages read the organization and role from
+  `useAppContext()` and never import a shell.
+- An application depends only on `@plexusone/*` and React. It does not
+  know which stack hosts it.
+
+### Shell
+
+```ts
+interface ShellProps {
+  app: AppModule;
+  context: AppContext;
+  onOrganizationChange: (organizationId: string) => void;
+  children: ReactNode; // the application's routes
+}
+type Shell = (props: ShellProps) => ReactNode;
+```
+
+A stack's shell is any component with these props. It renders its chrome
+(usually `AppShell` with its brand) and puts the application's navigation,
+slots and profile items in it. Swapping a stack's look is swapping its
+shell; the application is unchanged.
+
+### createHost
+
+```ts
+function createHost(options: {
+  app: AppModule;
+  shell?: Shell; // default DevShell
+  sessionClient?: SessionClient; // default the BFF at /bff
+}): ReactNode;
+```
+
+- Provides the session, the router and `AppContext`.
+- `/` sends the person to the first organization they hold a role in this
+  application in, or explains that they hold none.
+- `/orgs/:org/*` renders the application's routes inside the shell. An
+  organization the person is not a member of renders "not found", as the
+  APIs answer `404`; a member without a role in this application sees "no
+  access".
+- Signed-out visitors are sent to sign in through the BFF.
+
+### DevShell
+
+A neutral shell in `@plexusone/host`, for running one application on its
+own: `AppShell` with the application's name as the brand, the product and
+organization switchers, the theme toggle and the profile menu.
+
+- With a fake session (`devSession`), it runs an application's interface
+  with no backend: a person, memberships with roles, and a catalog, so the
+  switchers and role-dependent controls can be exercised.
+- An application's dev harness is one line:
+  `createHost({ app, shell: DevShell })`.
+
+### Testing helper
+
+`renderApp(app, { session, path, shell })` from `@plexusone/host/testing`
+renders an application inside `createHost` with a fixture session, for an
+application's own tests. A conformance check confirms an `AppModule`
+renders at `/orgs/:org` in `DevShell` without a stack.
+
+### One build
+
+`createHost({ apps: [...], shell })` composes several applications into one
+front end on one host, for a stack that serves them together. The product
+switcher then navigates on the client. This is the mode
+`INIT-SYSTEMFORGE-001`'s reference host builds on.
 
 ## Session
 

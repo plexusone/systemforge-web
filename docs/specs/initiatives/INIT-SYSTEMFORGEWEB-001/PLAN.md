@@ -50,6 +50,23 @@ cover keyboard use and focus.
 Exit: a deployment's brand package changes the look with no shell fork, and
 the release notes cover every behavior change.
 
+## Phase 4 — App Contract and Hosting
+
+1. Add `@plexusone/host` with `AppModule`, `AppContext`, `useAppContext`
+   and `Shell`.
+2. Add `createHost`: the session, the router under `/orgs/:org`, choosing an
+   organization, and the not-found and no-access pages.
+3. Add `DevShell` and a fake session for running an application without a
+   backend.
+4. Add `renderApp` and a conformance check, and write the guide for
+   writing, running and hosting an application.
+5. Add `createHost({ apps })` for one front end with several applications.
+
+Exit: an example application runs in `DevShell` and, unchanged, in a
+second shell built from `AppShell` with another brand.
+
+Phase 4 runs before Phase 3's release item, which ships it.
+
 ## Testing
 
 Vitest and Testing Library at the workspace root. Every RMI adds or updates
@@ -58,5 +75,6 @@ tests in the package it changes; the session fixtures are shared.
 ## Dependencies
 
 - The relying-party BFF's `/bff/session` response, as served by SystemForge.
-- `INIT-SYSTEMFORGE-001` Phase 3 builds its registration contract and
-  reference host on this initiative's session, switchers and slots.
+- `INIT-SYSTEMFORGE-001` Phase 3 builds its reference composed host on this
+  initiative's app contract and one-build hosting (Phase 4); its contract
+  item moved here.

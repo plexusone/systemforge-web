@@ -30,6 +30,10 @@ bars instead. This initiative closes that gap.
   organization in the URL and in API paths, keyed by organization ID.
 - **No place for an application's own controls.** Search, notifications or a
   product's action menu can only be added by forking the navbar.
+- **Applications depend on the stack that hosts them.** Each application
+  builds its own front end around a stack's chrome, so an application cannot
+  be developed or tested without that stack, and a second stack composing a
+  different set of applications would need each application to change.
 - **Two composition modes, one shell.** Some deployments build several
   applications into one front end (the Forge composition of
   `INIT-SYSTEMFORGE-001`). Others serve each application from its own host
@@ -57,6 +61,11 @@ bars instead. This initiative closes that gap.
 6. A brand configuration interface, so a deployment can skin the shell
    without forking it.
 7. A documented baseline: React version, styling delivery and test setup.
+8. An app contract: an application exports its pages as an `AppModule`,
+   and a stack hosts it with its own `Shell` through `createHost`, so the
+   same application runs in any stack's chrome.
+9. A `DevShell` that runs one application on its own, with a fake session,
+   for development and tests without a stack.
 
 ## Non-goals
 
@@ -76,6 +85,8 @@ bars instead. This initiative closes that gap.
   every application, covered by the package's tests.
 - A deployment changes its look through brand configuration alone.
 - Both composition modes are documented and covered by an example.
+- An application runs on its own in `DevShell`, and the same `AppModule`
+  runs unchanged inside a stack's shell.
 
 ## Risks
 
