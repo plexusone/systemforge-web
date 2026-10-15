@@ -1,66 +1,55 @@
 # Packages Overview
 
-SystemForge Web is organized as a monorepo with focused, composable packages.
+SystemForge Web is a monorepo of focused packages, published to npm under
+`@plexusone`. Install only the ones an application needs.
 
-## Package Dependency Graph
+## How they depend on each other
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                      Application                             │
-└─────────────────────────────────────────────────────────────┘
-                              │
-        ┌─────────────────────┼─────────────────────┐
-        ▼                     ▼                     ▼
-┌───────────────┐     ┌───────────────┐     ┌───────────────┐
-│   @systemforge  │     │   @systemforge  │     │   @systemforge  │
-│     /shell    │     │    /pages     │     │  /telemetry   │
-└───────────────┘     └───────────────┘     └───────────────┘
-        │                     │                     │
-        └─────────────────────┼─────────────────────┘
-                              │
-        ┌─────────────────────┼─────────────────────┐
-        ▼                     ▼                     ▼
-┌───────────────┐     ┌───────────────┐     ┌───────────────┐
-│   @systemforge  │     │   @systemforge  │     │   @systemforge  │
-│     /auth     │     │    /tenant    │     │  /api-client  │
-└───────────────┘     └───────────────┘     └───────────────┘
-                              │
-                              ▼
-                    ┌───────────────┐
-                    │   @systemforge  │
-                    │ /design-tokens│
-                    └───────────────┘
+```text
+@plexusone/shell ──┬──▶ @plexusone/auth
+                   ├──▶ @plexusone/tenant ──▶ @plexusone/auth
+                   └──▶ @plexusone/ui
+
+@plexusone/pages ─────▶ @plexusone/auth
+
+Standalone: @plexusone/api-client, @plexusone/chat,
+            @plexusone/design-tokens, @plexusone/telemetry
 ```
 
-## Package Summary
+An arrow is a peer dependency: the application installs both, and they
+share one copy. Every package also needs React 19.
 
-| Package                                      | Purpose         | Key Exports                                        |
-| -------------------------------------------- | --------------- | -------------------------------------------------- |
-| [@plexusone/auth](auth.md)                   | Authentication  | `AuthProvider`, `ProtectedRoute`, `useAuth`        |
-| [@plexusone/tenant](tenant.md)               | Multi-tenancy   | `TenantProvider`, `RequireRole`, `useOrganization` |
-| [@plexusone/api-client](api-client.md)       | HTTP client     | `ApiProvider`, `useApi`, `createClient`            |
-| [@plexusone/telemetry](telemetry.md)         | Instrumentation | `TelemetryProvider`, `ErrorBoundary`               |
-| [@plexusone/shell](shell.md)                 | App layout      | `AppShell`, `Sidebar`, `Navbar`                    |
-| [@plexusone/pages](pages.md)                 | Pre-built pages | `LoginPage`, `ErrorPage`                           |
-| [@plexusone/design-tokens](design-tokens.md) | Design system   | Colors, typography, spacing                        |
+## Package summary
 
-## Choosing Packages
+| Package                                      | Purpose                            | Key exports                                                          |
+| -------------------------------------------- | ---------------------------------- | -------------------------------------------------------------------- |
+| [@plexusone/api-client](api-client.md)       | HTTP client                        | `ApiProvider`, `useApiClient`, `createApiClient`                     |
+| [@plexusone/auth](auth.md)                   | Authentication and the BFF session | `SessionProvider`, `useSession`, `AuthProvider`, `ProtectedRoute`    |
+| [@plexusone/chat](chat.md)                   | Chat components                    | `ChatProvider`, `ChatWidget`, `ChatEmbed`                            |
+| [@plexusone/design-tokens](design-tokens.md) | Design system                      | Colors, typography, spacing                                          |
+| [@plexusone/pages](pages.md)                 | Pre-built pages                    | `LoginPage`, `ErrorPage`, `OrganizationSettingsPage`                 |
+| [@plexusone/shell](shell.md)                 | Application chrome                 | `AppShell`, `ProductSwitcher`, `OrganizationSwitcher`, `ProfileMenu` |
+| [@plexusone/telemetry](telemetry.md)         | Instrumentation                    | `TelemetryProvider`, `ErrorBoundary`                                 |
+| [@plexusone/tenant](tenant.md)               | Multi-tenancy                      | `TenantProvider`, `RequireRole`, `useOrganization`                   |
+| [@plexusone/ui](ui.md)                       | UI components                      | `Button`, `Card`, `DropdownMenu`, `Tooltip`                          |
 
-**Minimal Setup:**
+## Choosing packages
+
+**An application on a SystemForge relying party** (the BFF at `/bff`), with
+the shared chrome:
 
 ```bash
-pnpm add @plexusone/auth @plexusone/tenant
+pnpm add @plexusone/shell @plexusone/auth @plexusone/tenant @plexusone/ui
 ```
 
-**Full Application:**
+**Authentication only:**
 
 ```bash
-pnpm add @plexusone/auth @plexusone/tenant @plexusone/api-client \
-         @plexusone/shell @plexusone/pages @plexusone/telemetry
+pnpm add @plexusone/auth
 ```
 
-**Design System Only:**
+**Components only:**
 
 ```bash
-pnpm add @plexusone/design-tokens
+pnpm add @plexusone/ui
 ```

@@ -46,43 +46,45 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Getting Started:
-    - Installation: getting-started/installation.md
-    - Quick Start: getting-started/quickstart.md
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quickstart.md
   - Packages:
-    - Overview: packages/index.md
-    - "@plexusone/auth": packages/auth.md
-    - "@plexusone/tenant": packages/tenant.md
-    - "@plexusone/api-client": packages/api-client.md
-    - "@plexusone/telemetry": packages/telemetry.md
-    - "@plexusone/shell": packages/shell.md
-    - "@plexusone/pages": packages/pages.md
-    - "@plexusone/design-tokens": packages/design-tokens.md
+      - Overview: packages/index.md
+      - '@plexusone/api-client': packages/api-client.md
+      - '@plexusone/auth': packages/auth.md
+      - '@plexusone/chat': packages/chat.md
+      - '@plexusone/design-tokens': packages/design-tokens.md
+      - '@plexusone/pages': packages/pages.md
+      - '@plexusone/shell': packages/shell.md
+      - '@plexusone/telemetry': packages/telemetry.md
+      - '@plexusone/tenant': packages/tenant.md
+      - '@plexusone/ui': packages/ui.md
   - Architecture:
-    - Overview: architecture/overview.md
-    - Composing Applications: architecture/composition.md
+      - Overview: architecture/overview.md
+      - Composing Applications: architecture/composition.md
   - Specs:
-    - "INIT-SYSTEMFORGEWEB-001: Shell Foundations":
-      - PRD: specs/initiatives/INIT-SYSTEMFORGEWEB-001/PRD.md
-      - TRD: specs/initiatives/INIT-SYSTEMFORGEWEB-001/TRD.md
-      - Plan: specs/initiatives/INIT-SYSTEMFORGEWEB-001/PLAN.md
-      - Roadmap: specs/initiatives/INIT-SYSTEMFORGEWEB-001/ROADMAP.md
-    - Invention:
-      - PRD: specs/initiatives/invention/PRD.md
-      - TRD: specs/initiatives/invention/TRD.md
-      - Plan: specs/initiatives/invention/PLAN.md
-      - Tasks: specs/initiatives/invention/TASKS.md
-      - ProductGraph:
-        - PRD: specs/initiatives/invention/productgraph/PRD.md
-        - TRD: specs/initiatives/invention/productgraph/TRD.md
-        - Plan: specs/initiatives/invention/productgraph/PLAN.md
-        - Tasks: specs/initiatives/invention/productgraph/TASKS.md
+      - 'INIT-SYSTEMFORGEWEB-001: Shell Foundations':
+          - PRD: specs/initiatives/INIT-SYSTEMFORGEWEB-001/PRD.md
+          - TRD: specs/initiatives/INIT-SYSTEMFORGEWEB-001/TRD.md
+          - Plan: specs/initiatives/INIT-SYSTEMFORGEWEB-001/PLAN.md
+          - Roadmap: specs/initiatives/INIT-SYSTEMFORGEWEB-001/ROADMAP.md
+      - Invention:
+          - PRD: specs/initiatives/invention/PRD.md
+          - TRD: specs/initiatives/invention/TRD.md
+          - Plan: specs/initiatives/invention/PLAN.md
+          - Tasks: specs/initiatives/invention/TASKS.md
+          - ProductGraph:
+              - PRD: specs/initiatives/invention/productgraph/PRD.md
+              - TRD: specs/initiatives/invention/productgraph/TRD.md
+              - Plan: specs/initiatives/invention/productgraph/PLAN.md
+              - Tasks: specs/initiatives/invention/productgraph/TASKS.md
   - Releases:
-    - Changelog: changelog.md
-    - v0.2.3: releases/v0.2.3.md
-    - v0.2.2: releases/v0.2.2.md
-    - v0.2.1: releases/v0.2.1.md
-    - v0.2.0: releases/v0.2.0.md
-    - v0.1.0: releases/v0.1.0.md
+      - Changelog: changelog.md
+      - v0.2.3: releases/v0.2.3.md
+      - v0.2.2: releases/v0.2.2.md
+      - v0.2.1: releases/v0.2.1.md
+      - v0.2.0: releases/v0.2.0.md
+      - v0.1.0: releases/v0.1.0.md
 
 extra:
   social:
