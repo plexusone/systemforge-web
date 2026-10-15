@@ -49,6 +49,7 @@ nav:
       - Installation: getting-started/installation.md
       - Quick Start: getting-started/quickstart.md
   - Guides:
+      - Writing an Application: guides/writing-an-application.md
       - Releasing: guides/releasing.md
   - Packages:
       - Overview: packages/index.md
@@ -56,6 +57,7 @@ nav:
       - '@plexusone/auth': packages/auth.md
       - '@plexusone/chat': packages/chat.md
       - '@plexusone/design-tokens': packages/design-tokens.md
+      - '@plexusone/host': packages/host.md
       - '@plexusone/pages': packages/pages.md
       - '@plexusone/shell': packages/shell.md
       - '@plexusone/telemetry': packages/telemetry.md
