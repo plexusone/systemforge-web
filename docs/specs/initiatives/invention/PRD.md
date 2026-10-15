@@ -76,7 +76,7 @@ SystemForge Web is an open-source React framework providing a complete **web app
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│ Top Menu Bar                                                         │
+│ Top Menu Bar                                                        │
 │ ┌─────────────┬────────────────────────────────┬──────────────────┐ │
 │ │ Logo/Brand  │  Search / Breadcrumbs          │ User Menu ▼      │ │
 │ │             │                                │ [Avatar] John    │ │
@@ -84,18 +84,18 @@ SystemForge Web is an open-source React framework providing a complete **web app
 ├────────────────┬────────────────────────────────────────────────────┤
 │ Left Nav       │ Main Content Area                                  │
 │                │                                                    │
-│ ┌────────────┐ │  ┌──────────────────────────────────────────────┐ │
-│ │ Org Switch │ │  │                                              │ │
-│ │ [▼ Acme]   │ │  │  Page content rendered here                  │ │
-│ ├────────────┤ │  │                                              │ │
-│ │ Dashboard  │ │  │  (Application-specific routes)               │ │
-│ │ [App Nav]  │ │  │                                              │ │
-│ │ ...        │ │  │                                              │ │
-│ │            │ │  │                                              │ │
-│ ├────────────┤ │  │                                              │ │
-│ │ Settings   │ │  │                                              │ │
-│ │ Help       │ │  │                                              │ │
-│ └────────────┘ │  └──────────────────────────────────────────────┘ │
+│ ┌────────────┐ │  ┌───────────────────────────────────────────────┐ │
+│ │ Org Switch │ │  │                                               │ │
+│ │ [▼ Acme]   │ │  │  Page content rendered here                   │ │
+│ ├────────────┤ │  │                                               │ │
+│ │ Dashboard  │ │  │  (Application-specific routes)                │ │
+│ │ [App Nav]  │ │  │                                               │ │
+│ │ ...        │ │  │                                               │ │
+│ │            │ │  │                                               │ │
+│ ├────────────┤ │  │                                               │ │
+│ │ Settings   │ │  │                                               │ │
+│ │ Help       │ │  │                                               │ │
+│ └────────────┘ │  └───────────────────────────────────────────────┘ │
 └────────────────┴────────────────────────────────────────────────────┘
 ```
 
