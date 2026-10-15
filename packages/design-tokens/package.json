@@ -2,6 +2,7 @@
   "name": "@plexusone/design-tokens",
   "version": "0.2.0",
   "description": "Design tokens and CSS custom properties for SystemForge applications",
+  "homepage": "https://plexusone.github.io/systemforge-web/packages/design-tokens/",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -37,5 +38,13 @@
     "theme"
   ],
   "author": "SystemForge Team",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/plexusone/systemforge-web.git",
+    "directory": "packages/design-tokens"
+  },
+  "bugs": {
+    "url": "https://github.com/plexusone/systemforge-web/issues"
+  }
 }

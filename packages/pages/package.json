@@ -2,6 +2,7 @@
   "name": "@plexusone/pages",
   "version": "0.2.0",
   "description": "Standard page components for SystemForge applications",
+  "homepage": "https://plexusone.github.io/systemforge-web/packages/pages/",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -43,5 +44,13 @@
     "settings"
   ],
   "author": "SystemForge Team",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/plexusone/systemforge-web.git",
+    "directory": "packages/pages"
+  },
+  "bugs": {
+    "url": "https://github.com/plexusone/systemforge-web/issues"
+  }
 }

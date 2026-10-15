@@ -2,6 +2,7 @@
   "name": "@plexusone/auth",
   "version": "0.2.0",
   "description": "Authentication primitives for SystemForge applications",
+  "homepage": "https://plexusone.github.io/systemforge-web/packages/auth/",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -54,5 +55,8 @@
     "authentication",
     "react",
     "bff"
-  ]
+  ],
+  "bugs": {
+    "url": "https://github.com/plexusone/systemforge-web/issues"
+  }
 }
