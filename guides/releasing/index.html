@@ -1801,6 +1801,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../releases/v0.3.1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.3.1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../releases/v0.3.0/" class="md-nav__link">
         
   
@@ -2156,7 +2184,10 @@ HEAD (<code>ERR_PNPM_GIT_UNKNOWN_BRANCH</code>), so check out <code>main</code>,
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>pnpm<span class="w"> </span>install<span class="w"> </span>--frozen-lockfile
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>pnpm<span class="w"> </span>build
 </code></pre></div>
-<p>Sign in, then publish <strong>each changed package with its own command</strong>, in
+<p>Sign in right before publishing: tokens from <code>npm login</code> are short-lived, and
+an expired one makes <code>publish</code> fail with <code>E404</code> on <code>PUT</code>. If <code>npm whoami</code>
+fails, run <code>npm login</code> again.</p>
+<p>Then publish <strong>each changed package with its own command</strong>, in
 dependency order: <code>ui</code> and <code>auth</code> before <code>tenant</code>, and all three before
 <code>shell</code>; <code>auth</code> before <code>pages</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>npm<span class="w"> </span>login
@@ -2172,6 +2203,9 @@ publishes that version again, npm answers <code>E409 Cannot publish over
 previously staged version</code>, and the run stops before the remaining
 packages.</p>
 <h3 id="a-new-package-goes-through-staging">A new package goes through staging<a class="headerlink" href="#a-new-package-goes-through-staging" title="Permanent link">&para;</a></h3>
+<p>Until it is approved, the version cannot be installed, and the registry may
+take a few minutes to show it after approval. Check <strong>Staged Packages</strong>
+before concluding a publish failed.</p>
 <p>The first version of a package that is not yet on npm is staged: npm
 publishes a public <code>0.0.0-stage</code> placeholder and holds the real version
 until a maintainer approves it. Approve it in <strong>Staged Packages</strong> on
