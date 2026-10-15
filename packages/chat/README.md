@@ -16,7 +16,7 @@ Requires `react`, `react-dom`.
 
 ## Documentation
 
-See the [SystemForge Web documentation](https://plexusone.github.io/systemforge-web/) for usage.
+See the [documentation](https://plexusone.github.io/systemforge-web/packages/chat/) for usage and the API reference.
 
 ## License
 

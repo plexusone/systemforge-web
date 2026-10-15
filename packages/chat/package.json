@@ -2,7 +2,7 @@
   "name": "@plexusone/chat",
   "version": "0.2.2",
   "description": "Chat UI components for SystemForge applications",
-  "homepage": "https://plexusone.github.io/systemforge-web/",
+  "homepage": "https://plexusone.github.io/systemforge-web/packages/chat/",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

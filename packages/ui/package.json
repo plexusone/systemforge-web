@@ -3,7 +3,7 @@
   "version": "0.2.2",
   "type": "module",
   "description": "Tailwind + Radix UI components for SystemForge applications",
-  "homepage": "https://plexusone.github.io/systemforge-web/",
+  "homepage": "https://plexusone.github.io/systemforge-web/packages/ui/",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
