@@ -466,6 +466,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../guides/writing-an-application/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing an Application
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../guides/releasing/" class="md-nav__link">
         
   
@@ -755,6 +783,34 @@
     
   
     @plexusone/design-tokens
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="host/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    @plexusone/host
   
 
     
@@ -1695,6 +1751,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../releases/v0.3.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.3.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../releases/v0.2.3/" class="md-nav__link">
         
   
@@ -1918,14 +2002,17 @@
 <p>SystemForge Web is a monorepo of focused packages, published to npm under
 <code>@plexusone</code>. Install only the ones an application needs.</p>
 <h2 id="how-they-depend-on-each-other">How they depend on each other<a class="headerlink" href="#how-they-depend-on-each-other" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@plexusone/shell ──┬──▶ @plexusone/auth
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                   ├──▶ @plexusone/tenant ──▶ @plexusone/auth
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>                   └──▶ @plexusone/ui
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>@plexusone/pages ─────▶ @plexusone/auth
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Standalone: @plexusone/api-client, @plexusone/chat,
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>            @plexusone/design-tokens, @plexusone/telemetry
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@plexusone/host ───┬──▶ @plexusone/shell
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                   └──▶ @plexusone/auth
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>@plexusone/shell ──┬──▶ @plexusone/auth
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                   ├──▶ @plexusone/tenant ──▶ @plexusone/auth
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                   └──▶ @plexusone/ui
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>@plexusone/pages ─────▶ @plexusone/auth
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Standalone: @plexusone/api-client, @plexusone/chat,
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>            @plexusone/design-tokens, @plexusone/telemetry
 </code></pre></div>
 <p>An arrow is a peer dependency: the application installs both, and they
 share one copy. Every package also needs React 19.</p>
@@ -1960,6 +2047,11 @@ share one copy. Every package also needs React 19.</p>
 <td>Colors, typography, spacing</td>
 </tr>
 <tr>
+<td><a href="host/">@plexusone/host</a></td>
+<td>Hosting applications</td>
+<td><code>AppModule</code>, <code>Shell</code>, <code>createHost</code>, <code>DevShell</code></td>
+</tr>
+<tr>
 <td><a href="pages/">@plexusone/pages</a></td>
 <td>Pre-built pages</td>
 <td><code>LoginPage</code>, <code>ErrorPage</code>, <code>OrganizationSettingsPage</code></td>
@@ -1991,11 +2083,14 @@ share one copy. Every package also needs React 19.</p>
 the shared chrome:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pnpm<span class="w"> </span>add<span class="w"> </span>@plexusone/shell<span class="w"> </span>@plexusone/auth<span class="w"> </span>@plexusone/tenant<span class="w"> </span>@plexusone/ui
 </code></pre></div>
+<p><strong>An application exported as a module,</strong> run on its own or hosted by a stack:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pnpm<span class="w"> </span>add<span class="w"> </span>@plexusone/host<span class="w"> </span>@plexusone/auth<span class="w"> </span>@plexusone/shell<span class="w"> </span>react-router
+</code></pre></div>
 <p><strong>Authentication only:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pnpm<span class="w"> </span>add<span class="w"> </span>@plexusone/auth
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pnpm<span class="w"> </span>add<span class="w"> </span>@plexusone/auth
 </code></pre></div>
 <p><strong>Components only:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pnpm<span class="w"> </span>add<span class="w"> </span>@plexusone/ui
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pnpm<span class="w"> </span>add<span class="w"> </span>@plexusone/ui
 </code></pre></div>
 
 

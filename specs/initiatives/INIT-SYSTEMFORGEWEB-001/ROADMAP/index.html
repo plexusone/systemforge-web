@@ -466,6 +466,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../../guides/writing-an-application/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing an Application
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../../guides/releasing/" class="md-nav__link">
         
   
@@ -675,6 +703,34 @@
     
   
     @plexusone/design-tokens
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../packages/host/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    @plexusone/host
   
 
     
@@ -1240,6 +1296,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#phase-4-app-contract-and-hosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — App Contract and Hosting
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1695,6 +1762,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../../releases/v0.3.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.3.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../../releases/v0.2.3/" class="md-nav__link">
         
   
@@ -1894,6 +1989,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#phase-4-app-contract-and-hosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — App Contract and Hosting
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1951,6 +2057,21 @@
 <li>Depends on: <code>RMI-SYSTEMFORGEWEB-016</code></li>
 <li>Depends on: <code>RMI-SYSTEMFORGEWEB-017</code></li>
 <li>Depends on: <code>RMI-SYSTEMFORGEWEB-018</code></li>
+<li>Depends on: <code>RMI-SYSTEMFORGEWEB-022</code></li>
+</ul>
+<h2 id="phase-4-app-contract-and-hosting">Phase 4 — App Contract and Hosting<a class="headerlink" href="#phase-4-app-contract-and-hosting" title="Permanent link">&para;</a></h2>
+<p><strong>Theme:</strong> An application exports its pages once and runs in any stack's shell, or on its own in DevShell</p>
+<ul>
+<li>[x] <code>RMI-SYSTEMFORGEWEB-002</code> App and shell contracts in @plexusone/host: AppModule, AppContext, useAppContext and Shell</li>
+<li>[x] <code>RMI-SYSTEMFORGEWEB-020</code> createHost: session, router under /orgs/:org, choosing an organization, and not-found and no-access pages</li>
+<li>Depends on: <code>RMI-SYSTEMFORGEWEB-002</code></li>
+<li>[x] <code>RMI-SYSTEMFORGEWEB-021</code> DevShell: a neutral shell for running one application on its own, with a fake session</li>
+<li>Depends on: <code>RMI-SYSTEMFORGEWEB-002</code></li>
+<li>[x] <code>RMI-SYSTEMFORGEWEB-022</code> renderApp testing helper, an AppModule conformance check, and the guide to writing and hosting an application</li>
+<li>Depends on: <code>RMI-SYSTEMFORGEWEB-020</code></li>
+<li>Depends on: <code>RMI-SYSTEMFORGEWEB-021</code></li>
+<li>[ ] <code>RMI-SYSTEMFORGEWEB-023</code> One build: createHost with several applications in one front end</li>
+<li>Depends on: <code>RMI-SYSTEMFORGEWEB-020</code></li>
 </ul>
 
 

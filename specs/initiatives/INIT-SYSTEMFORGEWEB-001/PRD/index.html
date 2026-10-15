@@ -466,6 +466,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../../guides/writing-an-application/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing an Application
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../../guides/releasing/" class="md-nav__link">
         
   
@@ -675,6 +703,34 @@
     
   
     @plexusone/design-tokens
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../packages/host/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    @plexusone/host
   
 
     
@@ -1739,6 +1795,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../../releases/v0.3.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.3.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../../releases/v0.2.3/" class="md-nav__link">
         
   
@@ -2030,6 +2114,10 @@ bars instead. This initiative closes that gap.</p>
   organization in the URL and in API paths, keyed by organization ID.</li>
 <li><strong>No place for an application's own controls.</strong> Search, notifications or a
   product's action menu can only be added by forking the navbar.</li>
+<li><strong>Applications depend on the stack that hosts them.</strong> Each application
+  builds its own front end around a stack's chrome, so an application cannot
+  be developed or tested without that stack, and a second stack composing a
+  different set of applications would need each application to change.</li>
 <li><strong>Two composition modes, one shell.</strong> Some deployments build several
   applications into one front end (the Forge composition of
   <code>INIT-SYSTEMFORGE-001</code>). Others serve each application from its own host
@@ -2072,6 +2160,11 @@ bars instead. This initiative closes that gap.</p>
 <li>A brand configuration interface, so a deployment can skin the shell
    without forking it.</li>
 <li>A documented baseline: React version, styling delivery and test setup.</li>
+<li>An app contract: an application exports its pages as an <code>AppModule</code>,
+   and a stack hosts it with its own <code>Shell</code> through <code>createHost</code>, so the
+   same application runs in any stack's chrome.</li>
+<li>A <code>DevShell</code> that runs one application on its own, with a fake session,
+   for development and tests without a stack.</li>
 </ol>
 <h2 id="non-goals">Non-goals<a class="headerlink" href="#non-goals" title="Permanent link">&para;</a></h2>
 <ul>
@@ -2091,6 +2184,8 @@ bars instead. This initiative closes that gap.</p>
   every application, covered by the package's tests.</li>
 <li>A deployment changes its look through brand configuration alone.</li>
 <li>Both composition modes are documented and covered by an example.</li>
+<li>An application runs on its own in <code>DevShell</code>, and the same <code>AppModule</code>
+  runs unchanged inside a stack's shell.</li>
 </ul>
 <h2 id="risks">Risks<a class="headerlink" href="#risks" title="Permanent link">&para;</a></h2>
 <ul>

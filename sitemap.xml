@@ -29,6 +29,10 @@
          <lastmod>2026-10-15</lastmod>
     </url>
     <url>
+         <loc>https://plexusone.github.io/systemforge-web/guides/writing-an-application/</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
          <loc>https://plexusone.github.io/systemforge-web/packages/</loc>
          <lastmod>2026-10-15</lastmod>
     </url>
@@ -46,6 +50,10 @@
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/packages/design-tokens/</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/packages/host/</loc>
          <lastmod>2026-10-15</lastmod>
     </url>
     <url>
@@ -86,6 +94,10 @@
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/releases/v0.2.3/</loc>
+         <lastmod>2026-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/releases/v0.3.0/</loc>
          <lastmod>2026-10-15</lastmod>
     </url>
     <url>

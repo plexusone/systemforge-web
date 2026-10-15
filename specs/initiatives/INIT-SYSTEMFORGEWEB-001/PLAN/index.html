@@ -466,6 +466,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../../guides/writing-an-application/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing an Application
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../../guides/releasing/" class="md-nav__link">
         
   
@@ -675,6 +703,34 @@
     
   
     @plexusone/design-tokens
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../packages/host/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    @plexusone/host
   
 
     
@@ -1224,6 +1280,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#phase-4-app-contract-and-hosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — App Contract and Hosting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#testing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1728,6 +1795,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../../releases/v0.3.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.3.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../../releases/v0.2.3/" class="md-nav__link">
         
   
@@ -1939,6 +2034,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#phase-4-app-contract-and-hosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — App Contract and Hosting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#testing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2025,14 +2131,30 @@ cover keyboard use and focus.</p>
 </ol>
 <p>Exit: a deployment's brand package changes the look with no shell fork, and
 the release notes cover every behavior change.</p>
+<h2 id="phase-4-app-contract-and-hosting">Phase 4 — App Contract and Hosting<a class="headerlink" href="#phase-4-app-contract-and-hosting" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Add <code>@plexusone/host</code> with <code>AppModule</code>, <code>AppContext</code>, <code>useAppContext</code>
+   and <code>Shell</code>.</li>
+<li>Add <code>createHost</code>: the session, the router under <code>/orgs/:org</code>, choosing an
+   organization, and the not-found and no-access pages.</li>
+<li>Add <code>DevShell</code> and a fake session for running an application without a
+   backend.</li>
+<li>Add <code>renderApp</code> and a conformance check, and write the guide for
+   writing, running and hosting an application.</li>
+<li>Add <code>createHost({ apps })</code> for one front end with several applications.</li>
+</ol>
+<p>Exit: an example application runs in <code>DevShell</code> and, unchanged, in a
+second shell built from <code>AppShell</code> with another brand.</p>
+<p>Phase 4 runs before Phase 3's release item, which ships it.</p>
 <h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
 <p>Vitest and Testing Library at the workspace root. Every RMI adds or updates
 tests in the package it changes; the session fixtures are shared.</p>
 <h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h2>
 <ul>
 <li>The relying-party BFF's <code>/bff/session</code> response, as served by SystemForge.</li>
-<li><code>INIT-SYSTEMFORGE-001</code> Phase 3 builds its registration contract and
-  reference host on this initiative's session, switchers and slots.</li>
+<li><code>INIT-SYSTEMFORGE-001</code> Phase 3 builds its reference composed host on this
+  initiative's app contract and one-build hosting (Phase 4); its contract
+  item moved here.</li>
 </ul>
 
 

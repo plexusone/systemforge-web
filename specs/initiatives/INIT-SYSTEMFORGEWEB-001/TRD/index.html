@@ -466,6 +466,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../../guides/writing-an-application/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing an Application
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../../guides/releasing/" class="md-nav__link">
         
   
@@ -675,6 +703,34 @@
     
   
     @plexusone/design-tokens
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../packages/host/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    @plexusone/host
   
 
     
@@ -1170,6 +1226,89 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#app-contract-and-hosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App contract and hosting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="App contract and hosting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#appmodule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AppModule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shell
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#createhost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        createHost
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#devshell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DevShell
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-helper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing helper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One build
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1783,6 +1922,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../../releases/v0.3.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.3.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../../releases/v0.2.3/" class="md-nav__link">
         
   
@@ -1972,6 +2139,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#app-contract-and-hosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App contract and hosting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="App contract and hosting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#appmodule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AppModule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shell
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#createhost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        createHost
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#devshell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DevShell
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-helper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing helper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One build
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#session" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2140,8 +2390,8 @@ initiative works in both.</p>
 <tbody>
 <tr>
 <td>Applications</td>
-<td>Registered into one front end (<code>ForgeApp</code>, <code>INIT-SYSTEMFORGE-001</code>)</td>
-<td>Each built and deployed on its own host</td>
+<td>Several <code>AppModule</code>s in one front end (<code>createHost({ apps })</code>)</td>
+<td>Each <code>AppModule</code> built into its own front end, on its own host</td>
 </tr>
 <tr>
 <td>Moving between applications</td>
@@ -2160,33 +2410,142 @@ initiative works in both.</p>
 </tr>
 </tbody>
 </table>
+<p>Both modes use the app contract below: an application is an <code>AppModule</code>,
+and a stack composes modules with a <code>Shell</code> through <code>createHost</code>.</p>
+<h2 id="app-contract-and-hosting">App contract and hosting<a class="headerlink" href="#app-contract-and-hosting" title="Permanent link">&para;</a></h2>
+<p>A new package, <code>@plexusone/host</code>, separates three things that today live in
+each application:</p>
+<table>
+<thead>
+<tr>
+<th>Piece</th>
+<th>Who provides it</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The application</td>
+<td>Each cloud app (for example an agents app, a dashboards app)</td>
+<td>An <code>AppModule</code>: its pages and routes, navigation and top-bar contributions. No chrome, and no dependency on any stack</td>
+</tr>
+<tr>
+<td>The shell</td>
+<td>A stack (for example a suite's brand package), or <code>DevShell</code></td>
+<td>A component implementing <code>Shell</code>: the chrome around an application</td>
+</tr>
+<tr>
+<td>The host</td>
+<td>A stack's web build, or an application's dev harness</td>
+<td><code>createHost({ app, shell })</code>: the router, the organization in the URL and the session, with the shell around the application</td>
+</tr>
+</tbody>
+</table>
+<p><code>@plexusone/shell</code> stays router-free and chrome-only; <code>@plexusone/host</code>
+depends on it, on <code>@plexusone/auth</code>, and on react-router as a peer.</p>
+<h3 id="appmodule">AppModule<a class="headerlink" href="#appmodule" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">AppModule</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="c1">// the application&#39;s ID in the app catalog and in roles</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nx">routes</span><span class="o">:</span><span class="w"> </span><span class="kt">RouteObject</span><span class="p">[];</span><span class="w"> </span><span class="c1">// the application&#39;s pages, relative to /orgs/:org</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nx">navigation</span><span class="o">?:</span><span class="w"> </span><span class="p">(</span><span class="nx">ctx</span><span class="o">:</span><span class="w"> </span><span class="kt">AppContext</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">NavSection</span><span class="p">[];</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nx">profileItems</span><span class="o">?:</span><span class="w"> </span><span class="p">(</span><span class="nx">ctx</span><span class="o">:</span><span class="w"> </span><span class="kt">AppContext</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">UserAction</span><span class="p">[];</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nx">command?</span><span class="o">:</span><span class="w"> </span><span class="kt">ReactNode</span><span class="p">;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nx">actions?</span><span class="o">:</span><span class="w"> </span><span class="kt">ReactNode</span><span class="p">;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">}</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">AppContext</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="nx">organizationId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="nx">role?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="c1">// the role held in this application in that organization</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="nx">navigate</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ow">void</span><span class="p">;</span><span class="w"> </span><span class="c1">// relative to the organization</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">}</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="kd">function</span><span class="w"> </span><span class="nx">useAppContext</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="nx">AppContext</span><span class="p">;</span>
+</code></pre></div>
+<ul>
+<li>An application's pages read the organization and role from
+  <code>useAppContext()</code> and never import a shell.</li>
+<li>An application depends only on <code>@plexusone/*</code> and React. It does not
+  know which stack hosts it.</li>
+</ul>
+<h3 id="shell">Shell<a class="headerlink" href="#shell" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">ShellProps</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nx">app</span><span class="o">:</span><span class="w"> </span><span class="kt">AppModule</span><span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">AppContext</span><span class="p">;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nx">onOrganizationChange</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">organizationId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ow">void</span><span class="p">;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nx">children</span><span class="o">:</span><span class="w"> </span><span class="kt">ReactNode</span><span class="p">;</span><span class="w"> </span><span class="c1">// the application&#39;s routes</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">}</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="kr">type</span><span class="w"> </span><span class="nx">Shell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">props</span><span class="o">:</span><span class="w"> </span><span class="kt">ShellProps</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">ReactNode</span><span class="p">;</span>
+</code></pre></div>
+<p>A stack's shell is any component with these props. It renders its chrome
+(usually <code>AppShell</code> with its brand) and puts the application's navigation,
+slots and profile items in it. Swapping a stack's look is swapping its
+shell; the application is unchanged.</p>
+<h3 id="createhost">createHost<a class="headerlink" href="#createhost" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">createHost</span><span class="p">(</span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nx">app</span><span class="o">:</span><span class="w"> </span><span class="kt">AppModule</span><span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nx">shell?</span><span class="o">:</span><span class="w"> </span><span class="kt">Shell</span><span class="p">;</span><span class="w"> </span><span class="c1">// default DevShell</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nx">sessionClient?</span><span class="o">:</span><span class="w"> </span><span class="kt">SessionClient</span><span class="p">;</span><span class="w"> </span><span class="c1">// default the BFF at /bff</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">})</span><span class="o">:</span><span class="w"> </span><span class="nx">ReactNode</span><span class="p">;</span>
+</code></pre></div>
+<ul>
+<li>Provides the session, the router and <code>AppContext</code>.</li>
+<li><code>/</code> sends the person to the first organization they hold a role in this
+  application in, or explains that they hold none.</li>
+<li><code>/orgs/:org/*</code> renders the application's routes inside the shell. An
+  organization the person is not a member of renders "not found", as the
+  APIs answer <code>404</code>; a member without a role in this application sees "no
+  access".</li>
+<li>Signed-out visitors are sent to sign in through the BFF.</li>
+</ul>
+<h3 id="devshell">DevShell<a class="headerlink" href="#devshell" title="Permanent link">&para;</a></h3>
+<p>A neutral shell in <code>@plexusone/host</code>, for running one application on its
+own: <code>AppShell</code> with the application's name as the brand, the product and
+organization switchers, the theme toggle and the profile menu.</p>
+<ul>
+<li>With a fake session (<code>devSession</code>), it runs an application's interface
+  with no backend: a person, memberships with roles, and a catalog, so the
+  switchers and role-dependent controls can be exercised.</li>
+<li>An application's dev harness is one line:
+  <code>createHost({ app, shell: DevShell })</code>.</li>
+</ul>
+<h3 id="testing-helper">Testing helper<a class="headerlink" href="#testing-helper" title="Permanent link">&para;</a></h3>
+<p><code>renderApp(app, { session, path, shell })</code> from <code>@plexusone/host/testing</code>
+renders an application inside <code>createHost</code> with a fixture session, for an
+application's own tests. A conformance check confirms an <code>AppModule</code>
+renders at <code>/orgs/:org</code> in <code>DevShell</code> without a stack.</p>
+<h3 id="one-build">One build<a class="headerlink" href="#one-build" title="Permanent link">&para;</a></h3>
+<p><code>createHost({ apps: [...], shell })</code> composes several applications into one
+front end on one host, for a stack that serves them together. The product
+switcher then navigates on the client. This is the mode
+<code>INIT-SYSTEMFORGE-001</code>'s reference host builds on.</p>
 <h2 id="session">Session<a class="headerlink" href="#session" title="Permanent link">&para;</a></h2>
 <p>A <code>SessionProvider</code> reads <code>/bff/session</code> from the relying-party BFF:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">Session</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nx">authenticated</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nx">user?</span><span class="o">:</span><span class="w"> </span><span class="kt">SessionUser</span><span class="p">;</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nx">apps</span><span class="o">:</span><span class="w"> </span><span class="kt">CatalogApp</span><span class="p">[];</span><span class="w"> </span><span class="c1">// the deployment&#39;s application catalog</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">}</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">SessionUser</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="c1">// principal ID</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nx">name?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="nx">email?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="nx">avatarUrl?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="nx">memberships</span><span class="o">:</span><span class="w"> </span><span class="kt">Membership</span><span class="p">[];</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">}</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">Membership</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="nx">organizationId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="c1">// the key; never a slug</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="nx">organizationName?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span><span class="nx">organizationSlug?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="c1">// display only</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span><span class="nx">role?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="c1">// organization role</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span><span class="nx">applications</span><span class="o">:</span><span class="w"> </span><span class="kt">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="p">;</span><span class="w"> </span><span class="c1">// application ID -&gt; role</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="p">}</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">CatalogApp</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span><span class="nx">icon?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">Session</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nx">authenticated</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nx">user?</span><span class="o">:</span><span class="w"> </span><span class="kt">SessionUser</span><span class="p">;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nx">apps</span><span class="o">:</span><span class="w"> </span><span class="kt">CatalogApp</span><span class="p">[];</span><span class="w"> </span><span class="c1">// the deployment&#39;s application catalog</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">SessionUser</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="c1">// principal ID</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="nx">name?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="nx">email?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="nx">avatarUrl?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="nx">memberships</span><span class="o">:</span><span class="w"> </span><span class="kt">Membership</span><span class="p">[];</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="p">}</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">Membership</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="nx">organizationId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="c1">// the key; never a slug</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span><span class="nx">organizationName?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span><span class="nx">organizationSlug?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="c1">// display only</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span><span class="nx">role?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="c1">// organization role</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span><span class="nx">applications</span><span class="o">:</span><span class="w"> </span><span class="kt">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="p">;</span><span class="w"> </span><span class="c1">// application ID -&gt; role</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="p">}</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">CatalogApp</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">  </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">  </span><span class="nx">icon?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="p">}</span>
 </code></pre></div>
 <ul>
 <li>Field names map from the BFF's JSON in one adapter, so the BFF's wire
@@ -2200,7 +2559,7 @@ initiative works in both.</p>
   deployments that use them; they are not the default.</li>
 </ul>
 <h2 id="product-switcher">Product switcher<a class="headerlink" href="#product-switcher" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">switcherApps</span><span class="p">(</span><span class="nx">apps</span><span class="o">:</span><span class="w"> </span><span class="kt">CatalogApp</span><span class="p">[],</span><span class="w"> </span><span class="nx">self</span><span class="o">:</span><span class="w"> </span><span class="kt">CatalogApp</span><span class="p">,</span><span class="w"> </span><span class="nx">membership?</span><span class="o">:</span><span class="w"> </span><span class="kt">Membership</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">CatalogApp</span><span class="p">[];</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">switcherApps</span><span class="p">(</span><span class="nx">apps</span><span class="o">:</span><span class="w"> </span><span class="kt">CatalogApp</span><span class="p">[],</span><span class="w"> </span><span class="nx">self</span><span class="o">:</span><span class="w"> </span><span class="kt">CatalogApp</span><span class="p">,</span><span class="w"> </span><span class="nx">membership?</span><span class="o">:</span><span class="w"> </span><span class="kt">Membership</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">CatalogApp</span><span class="p">[];</span>
 </code></pre></div>
 <ul>
 <li>Shows catalog applications in which the member holds a role for the
@@ -2281,12 +2640,12 @@ behavior; content is the application's.</p>
   application.</li>
 </ul>
 <h2 id="brand-configuration">Brand configuration<a class="headerlink" href="#brand-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">BrandConfig</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="c1">// wordmark text</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nx">logo?</span><span class="o">:</span><span class="w"> </span><span class="kt">ReactNode</span><span class="p">;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nx">tokens?</span><span class="o">:</span><span class="w"> </span><span class="kt">Partial</span><span class="o">&lt;</span><span class="nx">DesignTokens</span><span class="o">&gt;</span><span class="p">;</span><span class="w"> </span><span class="c1">// from @plexusone/design-tokens</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nx">productLabel?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="c1">// suffix such as &quot;platform&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">BrandConfig</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="c1">// wordmark text</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nx">logo?</span><span class="o">:</span><span class="w"> </span><span class="kt">ReactNode</span><span class="p">;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nx">tokens?</span><span class="o">:</span><span class="w"> </span><span class="kt">Partial</span><span class="o">&lt;</span><span class="nx">DesignTokens</span><span class="o">&gt;</span><span class="p">;</span><span class="w"> </span><span class="c1">// from @plexusone/design-tokens</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nx">productLabel?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span><span class="w"> </span><span class="c1">// suffix such as &quot;platform&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">}</span>
 </code></pre></div>
 <p>A deployment publishes its brand as a small package that exports a
 <code>BrandConfig</code> and, optionally, a preconfigured shell component. The shell
