@@ -1,6 +1,6 @@
 {
   "name": "@plexusone/telemetry",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Telemetry, error tracking, and performance monitoring for SystemForge applications",
   "homepage": "https://plexusone.github.io/systemforge-web/packages/telemetry/",
   "main": "./dist/index.js",
