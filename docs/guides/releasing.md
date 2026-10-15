@@ -68,7 +68,11 @@ pnpm install --frozen-lockfile
 pnpm build
 ```
 
-Sign in, then publish **each changed package with its own command**, in
+Sign in right before publishing: tokens from `npm login` are short-lived, and
+an expired one makes `publish` fail with `E404` on `PUT`. If `npm whoami`
+fails, run `npm login` again.
+
+Then publish **each changed package with its own command**, in
 dependency order: `ui` and `auth` before `tenant`, and all three before
 `shell`; `auth` before `pages`.
 
@@ -88,6 +92,10 @@ previously staged version`, and the run stops before the remaining
 packages.
 
 ### A new package goes through staging
+
+Until it is approved, the version cannot be installed, and the registry may
+take a few minutes to show it after approval. Check **Staged Packages**
+before concluding a publish failed.
 
 The first version of a package that is not yet on npm is staged: npm
 publishes a public `0.0.0-stage` placeholder and holds the real version
