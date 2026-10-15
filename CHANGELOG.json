@@ -7,6 +7,26 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.2.3",
+      "date": "2026-10-15",
+      "highlights": [
+        {
+          "description": "`@plexusone/shell` renders navigation in an application on `SessionProvider` alone"
+        }
+      ],
+      "fixed": [
+        {
+          "description": "Sidebar items no longer require a `TenantProvider`: items without roles always show, and items with roles are hidden when no `TenantProvider` can check them",
+          "commit": "8bc0142"
+        }
+      ],
+      "upgradeGuide": [
+        {
+          "description": "Use `@plexusone/shell` 0.2.3; the other packages are unchanged"
+        }
+      ]
+    },
+    {
       "version": "v0.2.2",
       "date": "2026-10-15",
       "highlights": [
