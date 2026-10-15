@@ -1,6 +1,6 @@
 {
   "name": "@plexusone/ui",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "type": "module",
   "description": "Tailwind + Radix UI components for SystemForge applications",
   "homepage": "https://plexusone.github.io/systemforge-web/",
