@@ -12,3 +12,12 @@ export { AppContextProvider, useAppContext } from './context';
 export { DevShell } from './DevShell';
 export { devSession, devSessionClient } from './devSession';
 export type { DevSessionOptions } from './devSession';
+export { createHost, HostRoutes, HostSession } from './createHost';
+export type { HostOptions } from './createHost';
+export {
+  HostPanel,
+  NoAccessPage,
+  NoOrganizationPage,
+  NotFoundPage,
+  SessionErrorPage,
+} from './pages';
