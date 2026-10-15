@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react';
-import { useRoleCheck } from '@plexusone/tenant';
+import { ROLE_LEVELS, type Role } from '@plexusone/auth';
+import { useTenantOptional, type TenantContextValue } from '@plexusone/tenant';
 import {
   Badge,
   Button,
@@ -13,6 +14,19 @@ import type { SidebarProps, NavItem, NavSection } from './types';
 /**
  * NavItem component
  */
+/**
+ * Whether the current membership may see an item that requires one of
+ * roles. Without a TenantProvider the roles cannot be checked, so the item
+ * is hidden; items without roles are always shown.
+ */
+function mayView(tenant: TenantContextValue | null, roles: Role[]): boolean {
+  if (!tenant) return false;
+  if (tenant.isPlatformAdmin) return true;
+  if (!tenant.membership) return false;
+  const required = Math.min(...roles.map((r) => ROLE_LEVELS[r]));
+  return ROLE_LEVELS[tenant.membership.role as Role] >= required;
+}
+
 function NavItemComponent({
   item,
   isCollapsed,
@@ -24,10 +38,10 @@ function NavItemComponent({
   onNavigate?: (href: string) => void;
   currentPath?: string;
 }): ReactNode {
-  const { hasRole } = useRoleCheck();
+  const tenant = useTenantOptional();
 
   // Check role access
-  if (item.roles && !hasRole(item.roles as ('member' | 'admin' | 'owner')[])) {
+  if (item.roles && !mayView(tenant, item.roles as Role[])) {
     return null;
   }
 
