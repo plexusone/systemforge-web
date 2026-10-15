@@ -7,6 +7,36 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.2.2",
+      "date": "2026-10-15",
+      "highlights": [
+        {
+          "description": "`@plexusone/ui` loads: 0.2.1's exports named files its build does not write, so neither import nor require worked, and `@plexusone/shell` could not load"
+        }
+      ],
+      "fixed": [
+        {
+          "description": "`@plexusone/ui` exports point at the ESM `.js` and CommonJS `.cjs` files the build writes",
+          "commit": "eba8cad"
+        },
+        {
+          "description": "`@plexusone/chat` no longer exports a `styles.css` that nothing builds",
+          "commit": "af4c4f8"
+        }
+      ],
+      "infrastructure": [
+        {
+          "description": "The build checks that every package entry point loads with import() and require(), so CI fails on a broken export",
+          "commit": "a2e8571"
+        }
+      ],
+      "upgradeGuide": [
+        {
+          "description": "Use `@plexusone/ui` 0.2.2; `@plexusone/shell` 0.2.1 accepts it through its `^0.2.1` peer range. Other packages are unchanged at 0.2.1"
+        }
+      ]
+    },
+    {
       "version": "v0.2.1",
       "date": "2026-10-15",
       "highlights": [
