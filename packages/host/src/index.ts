@@ -9,11 +9,11 @@
  */
 export type { AppContext, AppModule, Shell, ShellProps } from './types';
 export { AppContextProvider, useAppContext } from './context';
+export { createHost, HostRoutes, HostSession } from './createHost';
+export type { HostOptions } from './createHost';
 export { DevShell } from './DevShell';
 export { devSession, devSessionClient } from './devSession';
 export type { DevSessionOptions } from './devSession';
-export { createHost, HostRoutes, HostSession } from './createHost';
-export type { HostOptions } from './createHost';
 export {
   HostPanel,
   NoAccessPage,
