@@ -360,11 +360,14 @@ function Connected({
 
   async function goBack() {
     if (!returnTo) return;
+    let allowed: string;
     try {
-      window.location.assign(await api.returnTo(returnTo));
+      allowed = await api.returnTo(returnTo);
     } catch {
       setError('That return address is not allowed.');
+      return;
     }
+    window.location.assign(withConnection(allowed, connection.id));
   }
 
   return (
@@ -394,4 +397,15 @@ function Connected({
       </div>
     </>
   );
+}
+
+/**
+ * withConnection adds the new connection's ID to an allowed return address,
+ * as `connection_id`, so the application that linked here can select it.
+ */
+export function withConnection(url: string, connectionId: string): string {
+  const u = new URL(url, window.location.origin);
+  u.searchParams.set('connection_id', connectionId);
+  // A path on this host stays a path; an absolute URL stays absolute.
+  return url.startsWith('/') ? `${u.pathname}${u.search}${u.hash}` : u.toString();
 }
