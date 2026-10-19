@@ -5,12 +5,15 @@ import { defineConfig } from 'vitest/config';
 // Tests import workspace packages by name. Resolve each to its source so a
 // test never runs against a stale or missing build.
 const packagesDir = fileURLToPath(new URL('./packages', import.meta.url));
-const alias = Object.fromEntries(
-  readdirSync(packagesDir).map((name) => [
-    `@plexusone/${name}`,
-    `${packagesDir}/${name}/src/index.ts`,
-  ])
-);
+// Exact matches, so a subpath export such as @plexusone/host/testing gets
+// its own entry instead of being appended to the package's index.
+const alias = [
+  { find: /^@plexusone\/host\/testing$/, replacement: `${packagesDir}/host/src/testing.tsx` },
+  ...readdirSync(packagesDir).map((name) => ({
+    find: new RegExp(`^@plexusone/${name}$`),
+    replacement: `${packagesDir}/${name}/src/index.ts`,
+  })),
+];
 
 export default defineConfig({
   resolve: { alias },
