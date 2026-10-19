@@ -34,6 +34,11 @@ export interface HostOptions {
    * devSession), or the session to use.
    */
   devSession?: boolean | WireSession;
+  /**
+   * The path the application is served under, such as `/console`. Routes,
+   * links and navigation are relative to it. Default the site root.
+   */
+  basename?: string;
 }
 
 const orgPath = (organizationId: string, rest = '') =>
@@ -51,7 +56,7 @@ const orgPath = (organizationId: string, rest = '') =>
 export function createHost(options: HostOptions): ReactNode {
   return (
     <HostSession options={options}>
-      <BrowserRouter>
+      <BrowserRouter basename={options.basename}>
         <HostRoutes app={options.app} shell={options.shell} />
       </BrowserRouter>
     </HostSession>
