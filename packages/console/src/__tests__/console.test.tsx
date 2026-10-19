@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { devSession } from '@plexusone/host';
 import { conformanceProblems, renderApp } from '@plexusone/host/testing';
 import { consoleApp } from '../app';
+import { withConnection } from '../pages/Connect';
 import { expiryText } from '../components/ui';
 import type { Connection, Manifest } from '../types';
 
@@ -286,7 +287,9 @@ describe('Connect', () => {
     fireEvent.change(await screen.findByLabelText('Token'), { target: { value: 'gh-token' } });
     fireEvent.click(screen.getByRole('button', { name: 'Connect GitHub' }));
     fireEvent.click(await screen.findByRole('button', { name: 'Continue' }));
-    await waitFor(() => expect(assign).toHaveBeenCalledWith('https://app.example.com/sites/new'));
+    await waitFor(() =>
+      expect(assign).toHaveBeenCalledWith('https://app.example.com/sites/new?connection_id=c1')
+    );
   });
 
   it('names a service the deployment does not offer', async () => {
@@ -319,5 +322,14 @@ describe('expiryText', () => {
       text: expect.stringMatching(/^Expired on/),
       soon: true,
     });
+  });
+});
+
+describe('withConnection', () => {
+  it('adds the connection to an absolute or relative return address', () => {
+    expect(withConnection('https://app.example.com/sites/new?tab=cf#top', 'c 1')).toBe(
+      'https://app.example.com/sites/new?tab=cf&connection_id=c+1#top'
+    );
+    expect(withConnection('/console/orgs/x', 'c1')).toBe('/console/orgs/x?connection_id=c1');
   });
 });

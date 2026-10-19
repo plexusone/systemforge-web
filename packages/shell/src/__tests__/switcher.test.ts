@@ -37,6 +37,23 @@ describe('switcherApps', () => {
     ).toEqual(['build', 'portfolio']);
   });
 
+  it('leaves out the organization console, which grants no product role', () => {
+    const console: CatalogApp = {
+      id: 'console',
+      name: 'Organization',
+      url: 'https://auth.example.com/console',
+    };
+    expect(ids(switcherApps([...catalog, console], build, member({ build: 'admin' })))).toEqual([
+      'build',
+    ]);
+    // In the console itself, the products the person holds a role in are listed after it.
+    expect(
+      ids(
+        switcherApps([...catalog, console], console, member({ console: 'owner', build: 'admin' }))
+      )
+    ).toEqual(['console', 'build']);
+  });
+
   it('always shows the current application, even without a role there', () => {
     expect(ids(switcherApps(catalog, portfolio, member({ agents: 'viewer' })))).toEqual([
       'portfolio',
