@@ -1,4 +1,5 @@
 import { useMemo, useState, type FormEvent, type ReactNode } from 'react';
+import { NextStepLinks } from '../components/NextSteps';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { useAppContext } from '@plexusone/host';
 import { Button, Input, Label } from '@plexusone/ui';
@@ -388,6 +389,7 @@ function Connected({
       )}
       <div className="mt-6 flex gap-3">
         {returnTo && <Button onClick={goBack}>Continue</Button>}
+        {!returnTo && <NextStepLinks connection={connection} primary />}
         <Link
           to={orgHref(org, 'connections')}
           className="inline-flex items-center rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-accent"

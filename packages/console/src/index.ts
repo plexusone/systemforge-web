@@ -18,7 +18,8 @@
  *
  * @packageDocumentation
  */
-export { consoleApp, CONSOLE_APP_ID } from './app';
+export { consoleApp, createConsoleApp, CONSOLE_APP_ID } from './app';
+export type { ConsoleOptions, NextStep, NextSteps } from './options';
 export { consoleSessionClient, CONSOLE_BFF_BASE, CONSOLE_BASENAME } from './session';
 export { api, ApiError, API_BASE } from './api';
 export { Connections } from './pages/Connections';

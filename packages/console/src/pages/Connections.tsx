@@ -1,4 +1,5 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
+import { NextStepLinks } from '../components/NextSteps';
 import { Link } from 'react-router';
 import { useAppContext } from '@plexusone/host';
 import { Button, Input, Label } from '@plexusone/ui';
@@ -147,6 +148,9 @@ function ConnectionRow({
           >
             {expiry.text}
             {expiry.soon && manage && ' — replace the token before then'}
+          </p>
+          <p className="mt-2 flex flex-wrap gap-3">
+            <NextStepLinks connection={c} />
           </p>
           {c.health.lastError && c.state === 'needs_attention' && (
             <p className="mt-1 text-sm text-destructive">Last check failed: {c.health.lastError}</p>
