@@ -1,0 +1,67 @@
+{
+  "name": "@plexusone/console",
+  "version": "0.1.0",
+  "description": "The SystemForge organization console: connect and manage an organization's services, guided step by step",
+  "homepage": "https://plexusone.github.io/systemforge-web/packages/console/",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router": "^7.0.0 || ^8.0.0",
+    "@plexusone/auth": "workspace:^",
+    "@plexusone/host": "workspace:^",
+    "@plexusone/ui": "workspace:^"
+  },
+  "devDependencies": {
+    "@plexusone/auth": "workspace:*",
+    "@plexusone/host": "workspace:*",
+    "@plexusone/shell": "workspace:*",
+    "@plexusone/ui": "workspace:*",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router": "^8.4.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "keywords": [
+    "systemforge",
+    "console",
+    "connections",
+    "react"
+  ],
+  "author": "SystemForge Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/plexusone/systemforge-web.git",
+    "directory": "packages/console"
+  },
+  "bugs": {
+    "url": "https://github.com/plexusone/systemforge-web/issues"
+  }
+}
