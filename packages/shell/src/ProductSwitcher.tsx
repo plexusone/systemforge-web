@@ -5,7 +5,7 @@ import { switcherApps } from './switcher';
 
 /** Props for {@link ProductSwitcher}. */
 export interface ProductSwitcherProps {
-  /** The application rendering the switcher. Always shown, first. */
+  /** The application rendering the switcher. Always shown, in its catalog place. */
   self: CatalogApp;
   /** The current organization's ID; roles are per organization. */
   organizationId?: string;
