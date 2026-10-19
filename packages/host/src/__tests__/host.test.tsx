@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 import { SessionClient, SessionProvider } from '@plexusone/auth';
-import { HostRoutes } from '../createHost';
+import { HostRoutes, createHost } from '../createHost';
 import { useAppContext } from '../context';
 import { devSession } from '../devSession';
 import { conformanceProblems, renderApp } from '../testing';
@@ -172,5 +172,14 @@ describe('devSession', () => {
     const s = devSession(reportsApp);
     expect(s.user?.memberships?.[0].applications).toEqual({ reports: 'admin' });
     expect(s.apps?.map((a) => a.id)).toEqual(['reports']);
+  });
+});
+
+describe('serving under a path', () => {
+  it('routes relative to the basename', async () => {
+    window.history.pushState({}, '', '/console/orgs/org-1/reports/7');
+    render(createHost({ app: reportsApp, devSession: twoOrgs, basename: '/console' }));
+    expect(await screen.findByRole('heading', { name: 'Report 7 in org-1' })).toBeInTheDocument();
+    window.history.pushState({}, '', '/');
   });
 });
