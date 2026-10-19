@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { devSession } from '@plexusone/host';
 import { conformanceProblems, renderApp } from '@plexusone/host/testing';
-import { consoleApp } from '../app';
+import { consoleApp, createConsoleApp } from '../app';
 import { withConnection } from '../pages/Connect';
 import { expiryText } from '../components/ui';
 import type { Connection, Manifest } from '../types';
@@ -331,5 +331,51 @@ describe('withConnection', () => {
       'https://app.example.com/sites/new?tab=cf&connection_id=c+1#top'
     );
     expect(withConnection('/console/orgs/x', 'c1')).toBe('/console/orgs/x?connection_id=c1');
+  });
+});
+
+describe('next steps', () => {
+  const withSteps = createConsoleApp({
+    nextSteps: (c, { organizationId, apps }) => {
+      const portfolio = apps.find((a) => a.id === 'portfolio');
+      return c.provider === 'cloudflare' && portfolio
+        ? [
+            {
+              label: 'Add sites in Portfolio',
+              href: `${portfolio.url}/orgs/${organizationId}/sites/new?connection_id=${c.id}`,
+            },
+          ]
+        : [];
+    },
+  });
+  const catalogSession = {
+    ...devSession(withSteps, { organizations: [{ id: 'org-1', name: 'Acme', role: 'admin' }] }),
+    apps: [{ id: 'portfolio', name: 'Portfolio', url: 'https://portfolio.example.com' }],
+  };
+
+  it('links each usable connection to what uses it', async () => {
+    renderApp(withSteps, { session: catalogSession, path: '/orgs/org-1/connections' });
+    const row = await screen.findByRole('article', { name: 'Cloudflare' });
+    expect(within(row).getByRole('link', { name: 'Add sites in Portfolio' })).toHaveAttribute(
+      'href',
+      'https://portfolio.example.com/orgs/org-1/sites/new?connection_id=c1'
+    );
+  });
+
+  it('offers the next step after connecting, when no application sent the person here', async () => {
+    respond = (c) => (c.method === 'POST' ? json(201, connection()) : undefined);
+    renderApp(withSteps, {
+      session: catalogSession,
+      path: '/orgs/org-1/connections/new/cloudflare',
+    });
+    fireEvent.change(await screen.findByLabelText('API token'), { target: { value: 't' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Connect Cloudflare' }));
+    expect(await screen.findByRole('link', { name: 'Add sites in Portfolio' })).toBeInTheDocument();
+  });
+
+  it('shows none without next steps from the host', async () => {
+    renderApp(consoleApp, { session: session('admin'), path: '/orgs/org-1/connections' });
+    const row = await screen.findByRole('article', { name: 'Cloudflare' });
+    expect(within(row).queryByRole('link')).toBeNull();
   });
 });
