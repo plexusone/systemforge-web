@@ -29,6 +29,7 @@ share one copy. Every package also needs React 19.
 | [@plexusone/api-client](api-client.md)       | HTTP client                        | `ApiProvider`, `useApiClient`, `createApiClient`                     |
 | [@plexusone/auth](auth.md)                   | Authentication and the BFF session | `SessionProvider`, `useSession`, `AuthProvider`, `ProtectedRoute`    |
 | [@plexusone/chat](chat.md)                   | Chat components                    | `ChatProvider`, `ChatWidget`, `ChatEmbed`                            |
+| [@plexusone/console](console.md)             | The organization console           | `consoleApp`, `consoleSessionClient`, `Connections`, `Connect`       |
 | [@plexusone/design-tokens](design-tokens.md) | Design system                      | Colors, typography, spacing                                          |
 | [@plexusone/host](host.md)                   | Hosting applications               | `AppModule`, `Shell`, `createHost`, `DevShell`                       |
 | [@plexusone/pages](pages.md)                 | Pre-built pages                    | `LoginPage`, `ErrorPage`, `OrganizationSettingsPage`                 |

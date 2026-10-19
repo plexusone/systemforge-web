@@ -41,12 +41,13 @@ import { createHost } from '@plexusone/host';
 createRoot(root).render(createHost({ app: reportsApp, shell: StackShell }));
 ```
 
-| Option          | Meaning                                      |
-| --------------- | -------------------------------------------- |
-| `app`           | The application                              |
-| `shell`         | The chrome around it. Default `DevShell`     |
-| `sessionClient` | The BFF client, when it is not at `/bff`     |
-| `devSession`    | `true`, or a session, to run with no backend |
+| Option          | Meaning                                         |
+| --------------- | ----------------------------------------------- |
+| `app`           | The application                                 |
+| `shell`         | The chrome around it. Default `DevShell`        |
+| `sessionClient` | The BFF client, when it is not at `/bff`        |
+| `devSession`    | `true`, or a session, to run with no backend    |
+| `basename`      | The path it is served under, such as `/console` |
 
 It provides the session and the router, then:
 
