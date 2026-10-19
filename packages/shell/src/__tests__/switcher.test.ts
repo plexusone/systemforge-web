@@ -19,7 +19,7 @@ const member = (applications: Record<string, string>): SessionMembership => ({
 const ids = (apps: CatalogApp[]) => apps.map((a) => a.id);
 
 describe('switcherApps', () => {
-  it('shows the current application first, then those the member holds a role in, in catalog order', () => {
+  it('shows the applications the member holds a role in, and the current one, in catalog order', () => {
     expect(
       ids(
         switcherApps(
@@ -28,7 +28,13 @@ describe('switcherApps', () => {
           member({ build: 'admin', agents: 'viewer', portfolio: 'viewer' })
         )
       )
-    ).toEqual(['build', 'agents', 'portfolio']);
+    ).toEqual(['agents', 'build', 'portfolio']);
+  });
+
+  it('keeps the same order whichever application is current', () => {
+    const m = member({ build: 'admin', agents: 'viewer', portfolio: 'viewer' });
+    const orders = [build, agents, portfolio].map((self) => ids(switcherApps(catalog, self, m)));
+    expect(orders).toEqual([orders[0], orders[0], orders[0]]);
   });
 
   it('hides applications the member holds no role in', () => {
@@ -46,17 +52,25 @@ describe('switcherApps', () => {
     expect(ids(switcherApps([...catalog, console], build, member({ build: 'admin' })))).toEqual([
       'build',
     ]);
-    // In the console itself, the products the person holds a role in are listed after it.
+    // In the console itself, the products the person holds a role in are listed with it.
     expect(
       ids(
         switcherApps([...catalog, console], console, member({ console: 'owner', build: 'admin' }))
       )
-    ).toEqual(['console', 'build']);
+    ).toEqual(['build', 'console']);
   });
 
   it('always shows the current application, even without a role there', () => {
     expect(ids(switcherApps(catalog, portfolio, member({ agents: 'viewer' })))).toEqual([
+      'agents',
       'portfolio',
+    ]);
+  });
+
+  it('puts an application the catalog does not list first', () => {
+    const other: CatalogApp = { id: 'reports', name: 'Reports', url: '/' };
+    expect(ids(switcherApps(catalog, other, member({ agents: 'viewer' })))).toEqual([
+      'reports',
       'agents',
     ]);
   });
@@ -71,6 +85,8 @@ describe('switcherApps', () => {
 
   it('keeps the caller’s name for itself over the catalog entry', () => {
     const self = { ...build, name: 'Build (dev)' };
-    expect(switcherApps(catalog, self, member({}))[0].name).toBe('Build (dev)');
+    expect(switcherApps(catalog, self, member({})).find((a) => a.id === 'build')?.name).toBe(
+      'Build (dev)'
+    );
   });
 });
