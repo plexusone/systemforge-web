@@ -59,6 +59,31 @@ saved. A service without guidance gets the form and its help link.
 **Expiry.** When the service reports when a token expires, the list shows it
 and flags the last two weeks, so it can be replaced in time.
 
+## Next steps
+
+The console does not know the products. A host that does can point each
+connection at what uses it, shown after connecting and on each usable
+connection:
+
+```tsx
+const app = createConsoleApp({
+  nextSteps: (connection, { organizationId, apps }) => {
+    const portfolio = apps.find((a) => a.id === 'portfolio');
+    return connection.provider === 'cloudflare' && portfolio
+      ? [
+          {
+            label: 'Add sites in Portfolio',
+            href: `${portfolio.url}/orgs/${organizationId}/sites/new?connection_id=${connection.id}`,
+          },
+        ]
+      : [];
+  },
+});
+```
+
+`apps` is the app catalog from the session. `consoleApp` is
+`createConsoleApp()`, without next steps.
+
 ## Linking from an application
 
 An application sends people to the wizard and gets them back:
