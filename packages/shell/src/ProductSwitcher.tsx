@@ -1,6 +1,7 @@
 import { type MouseEvent, type ReactNode } from 'react';
 import { membershipFor, useSessionOptional, type CatalogApp } from '@plexusone/auth';
 import { cn } from '@plexusone/ui';
+import { carryPreferences } from './preferences';
 import { switcherApps } from './switcher';
 
 /** Props for {@link ProductSwitcher}. */
@@ -13,7 +14,8 @@ export interface ProductSwitcherProps {
   apps?: CatalogApp[];
   /**
    * Client-side navigation, for applications composed in one build. Without
-   * it, entries are plain links to each application's URL.
+   * it, entries are plain links to each application's URL, carrying the
+   * sidebar state and theme so the next application opens the same way.
    */
   onNavigate?: (url: string) => void;
   className?: string;
@@ -42,6 +44,9 @@ export function ProductSwitcher({
   const entries = switcherApps(catalog, self, membership);
 
   const follow = (url: string) => (e: MouseEvent<HTMLAnchorElement>) => {
+    // Read the preferences when the link is followed, not when it rendered:
+    // the sidebar may have been toggled since.
+    if (!onNavigate) e.currentTarget.href = carryPreferences(url);
     if (
       !onNavigate ||
       e.defaultPrevented ||
@@ -72,6 +77,7 @@ export function ProductSwitcher({
             key={app.id}
             href={app.url}
             onClick={follow(app.url)}
+            onAuxClick={follow(app.url)}
             className="px-3 py-1.5 rounded-md text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
           >
             {app.name}

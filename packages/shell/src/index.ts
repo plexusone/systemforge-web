@@ -64,6 +64,8 @@ export {
 } from './theme';
 export type { Theme } from './theme';
 export { Breadcrumbs } from './Breadcrumbs';
+export { carryPreferences, adoptCarriedPreferences, COLLAPSED_KEY } from './preferences';
+export type { CarriedPreferences } from './preferences';
 
 // Types
 export type {

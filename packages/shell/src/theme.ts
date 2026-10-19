@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { adoptCarriedPreferences } from './preferences';
 
 /** A theme choice. `system` follows the operating system's preference. */
 export type Theme = 'light' | 'dark' | 'system';
@@ -57,10 +58,14 @@ export function applyTheme(theme: Theme, root: HTMLElement = document.documentEl
 }
 
 /**
- * Applies the stored theme. Call it before the first render, so the page
- * does not flash the other theme.
+ * Applies the stored theme, after adopting preferences carried in the link.
+ * Call it before the first render, so the page does not flash the other
+ * theme and the sidebar opens as it was in the application linking here.
  */
 export function applyStoredTheme(): void {
+  // Preferences another application of the suite carried in the link come
+  // first, so the page opens as the person left the other one.
+  adoptCarriedPreferences();
   applyTheme(readStoredTheme());
 }
 

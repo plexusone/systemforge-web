@@ -1,3 +1,4 @@
+import { COLLAPSED_KEY, adoptCarriedPreferences } from './preferences';
 import {
   createContext,
   useContext,
@@ -21,10 +22,6 @@ export interface ShellProviderProps extends Partial<AppShellConfig> {
   children: ReactNode;
 }
 
-/**
- * Storage key for collapsed state
- */
-const COLLAPSED_KEY = 'systemforge:sidebar-collapsed';
 
 /**
  * ShellProvider - Provides shell state to components
@@ -35,9 +32,11 @@ export function ShellProvider({
   onNavigate,
   onCollapseChange,
 }: ShellProviderProps) {
-  // Initialize collapsed state from localStorage
+  // Initialize collapsed state from localStorage, after adopting a state
+  // another application of the suite carried in the link
   const [sidebarCollapsed, setSidebarCollapsedState] = useState(() => {
     if (typeof window !== 'undefined') {
+      adoptCarriedPreferences();
       const stored = localStorage.getItem(COLLAPSED_KEY);
       return stored ? stored === 'true' : defaultCollapsed;
     }
