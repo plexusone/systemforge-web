@@ -1,6 +1,6 @@
 {
   "name": "@plexusone/host",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Host SystemForge applications: the app and shell contracts, createHost and a standalone DevShell",
   "homepage": "https://plexusone.github.io/systemforge-web/packages/host/",
   "main": "./dist/index.js",

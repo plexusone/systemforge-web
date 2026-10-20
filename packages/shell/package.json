@@ -1,6 +1,6 @@
 {
   "name": "@plexusone/shell",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Application shell components for SystemForge applications",
   "homepage": "https://plexusone.github.io/systemforge-web/packages/shell/",
   "main": "./dist/index.js",
