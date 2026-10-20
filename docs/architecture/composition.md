@@ -16,7 +16,8 @@ Both read the same session from the relying-party BFF (`GET /bff/session`):
 the person, their memberships keyed by organization ID with the role they
 hold in each application, and the deployment's app catalog. The product
 switcher shows the applications the person holds a role in for the current
-organization, with the current application first.
+organization, in the catalog's order, with the current application
+highlighted in its place.
 
 ## One host per application
 

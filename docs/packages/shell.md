@@ -103,8 +103,10 @@ function ProjectPage() {
 ### Product and organization switchers
 
 `ProductSwitcher` lists the deployment's applications the person holds a
-role in for the current organization, from the session's app catalog, with
-the current application first. `OrganizationSwitcher` is controlled: it
+role in for the current organization, from the session's app catalog, in
+the catalog's `order`. The current application is highlighted in its place,
+so the switcher looks the same in every application of a suite; an
+application the catalog does not list comes first. `OrganizationSwitcher` is controlled: it
 reports the chosen organization's ID and the application navigates. Both
 read the session from `SessionProvider` in `@plexusone/auth`. See
 [Composing applications](../architecture/composition.md).
@@ -116,6 +118,31 @@ read the session from `SessionProvider` in `@plexusone/auth`. See
 
 `OrgSwitcher` remains for applications that keep the current organization
 in `TenantProvider`.
+
+#### Carrying the sidebar and theme between applications
+
+Each application of a suite runs on its own host, so its stored sidebar state
+and theme are its own. A product switcher link to another application carries
+both as a URL fragment (`#sf-sidebar=collapsed&sf-theme=dark`), set when the
+link is followed so it reflects the sidebar as it is then. The application it
+opens adopts them before its first render, stores them, and removes the
+fragment from the address bar. A fragment never reaches a server. An
+application that navigates with `onNavigate` stays in one build and shares its
+storage, so nothing is carried.
+
+An application that builds its own links to another application, such as a
+settings entry, wraps the URL with `carryPreferences`:
+
+```tsx
+import { carryPreferences } from '@plexusone/shell';
+
+window.location.assign(carryPreferences('https://agents.example.com/settings'));
+```
+
+`carryPreferences(url, prefs?)` leaves a URL that already has a fragment alone,
+and reads any preference not passed from storage. `adoptCarriedPreferences()`
+is called for you by `ShellProvider`, so by `AppShell`, and by
+`applyStoredTheme()`; call it yourself only in a shell that does neither.
 
 ### Profile menu
 
