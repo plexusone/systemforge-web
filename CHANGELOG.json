@@ -7,6 +7,82 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.4.0",
+      "date": "2026-10-20",
+      "highlights": [
+        {
+          "description": "`@plexusone/console` 0.1.0: the organization console's pages, to connect and manage an organization's services, served by SystemAuth under `/console`",
+          "commit": "9bdc143"
+        },
+        {
+          "description": "Product switchers list applications in catalog order everywhere, and carry the sidebar state and theme to the application they open",
+          "commit": "91708c1"
+        }
+      ],
+      "added": [
+        {
+          "description": "`@plexusone/console`: `consoleApp` lists an organization's connections with their account, rotation and expiry, tests, replaces, renames and disconnects them, and offers a gallery and a wizard built from each service's manifest",
+          "commit": "9bdc143"
+        },
+        {
+          "description": "`createConsoleApp({ nextSteps })` links a connection to the products that use it, after connecting and on each usable connection",
+          "commit": "1a8729e"
+        },
+        {
+          "description": "The console adds `connection_id` to the return address, so the linking application can select the connection just made",
+          "commit": "ff92711"
+        },
+        {
+          "description": "`createHost` accepts `basename` to serve an application under a path such as `/console`",
+          "commit": "5e2e513"
+        },
+        {
+          "description": "`carryPreferences` and `adoptCarriedPreferences` carry the sidebar state and theme between applications as a URL fragment; `ProductSwitcher` links carry them",
+          "commit": "91708c1"
+        }
+      ],
+      "changed": [
+        {
+          "description": "`ProductSwitcher` highlights the current application in its catalog place instead of moving it first; an application the catalog does not list still comes first",
+          "commit": "07f5e9e"
+        }
+      ],
+      "tests": [
+        {
+          "description": "Cover the console's list, gallery, wizard, returned connection and next steps",
+          "commit": "4227bd2"
+        },
+        {
+          "description": "Cover routing relative to the basename",
+          "commit": "f368cee"
+        },
+        {
+          "description": "Cover the switcher's stable order",
+          "commit": "5365a3e"
+        },
+        {
+          "description": "Resolve workspace packages by exact name, so subpath exports such as `@plexusone/host/testing` resolve to their own source",
+          "commit": "aae9977"
+        }
+      ],
+      "documentation": [
+        {
+          "description": "`@plexusone/console` package guide and `createHost`'s `basename`",
+          "commit": "10b56ea"
+        },
+        {
+          "description": "Console next steps",
+          "commit": "8514a17"
+        },
+        {
+          "description": "Shell guide covers the switcher's order and carrying the sidebar and theme; composition and README updated"
+        },
+        {
+          "description": "v0.4.0 release notes"
+        }
+      ]
+    },
+    {
       "version": "v0.3.1",
       "date": "2026-10-15",
       "highlights": [
