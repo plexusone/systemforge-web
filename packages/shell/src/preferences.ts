@@ -61,11 +61,16 @@ export function adoptCarriedPreferences(): void {
   const sidebar = p.get(SIDEBAR_PARAM);
   const theme = p.get(THEME_PARAM);
   if (sidebar === null && theme === null) return;
-  if (sidebar === 'collapsed' || sidebar === 'expanded') write(COLLAPSED_KEY, String(sidebar === 'collapsed'));
+  if (sidebar === 'collapsed' || sidebar === 'expanded')
+    write(COLLAPSED_KEY, String(sidebar === 'collapsed'));
   if (theme === 'light' || theme === 'dark' || theme === 'system') write(THEME_STORAGE_KEY, theme);
   p.delete(SIDEBAR_PARAM);
   p.delete(THEME_PARAM);
   const rest = p.toString();
   const { pathname, search } = window.location;
-  window.history.replaceState(window.history.state, '', `${pathname}${search}${rest ? `#${rest}` : ''}`);
+  window.history.replaceState(
+    window.history.state,
+    '',
+    `${pathname}${search}${rest ? `#${rest}` : ''}`
+  );
 }

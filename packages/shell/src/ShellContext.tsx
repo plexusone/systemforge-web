@@ -22,7 +22,6 @@ export interface ShellProviderProps extends Partial<AppShellConfig> {
   children: ReactNode;
 }
 
-
 /**
  * ShellProvider - Provides shell state to components
  */
