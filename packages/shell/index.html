@@ -695,6 +695,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../console/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    @plexusone/console
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../design-tokens/" class="md-nav__link">
         
   
@@ -924,6 +952,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Product and organization switchers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#carrying-the-sidebar-and-theme-between-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Carrying the sidebar and theme between applications
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1895,6 +1940,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../releases/v0.4.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.4.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../releases/v0.3.1/" class="md-nav__link">
         
   
@@ -2204,6 +2277,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Product and organization switchers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#carrying-the-sidebar-and-theme-between-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Carrying the sidebar and theme between applications
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2399,8 +2489,10 @@
 </code></pre></div>
 <h3 id="product-and-organization-switchers">Product and organization switchers<a class="headerlink" href="#product-and-organization-switchers" title="Permanent link">&para;</a></h3>
 <p><code>ProductSwitcher</code> lists the deployment's applications the person holds a
-role in for the current organization, from the session's app catalog, with
-the current application first. <code>OrganizationSwitcher</code> is controlled: it
+role in for the current organization, from the session's app catalog, in
+the catalog's <code>order</code>. The current application is highlighted in its place,
+so the switcher looks the same in every application of a suite; an
+application the catalog does not list comes first. <code>OrganizationSwitcher</code> is controlled: it
 reports the chosen organization's ID and the application navigates. Both
 read the session from <code>SessionProvider</code> in <code>@plexusone/auth</code>. See
 <a href="../../architecture/composition/">Composing applications</a>.</p>
@@ -2409,21 +2501,40 @@ read the session from <code>SessionProvider</code> in <code>@plexusone/auth</cod
 </code></pre></div>
 <p><code>OrgSwitcher</code> remains for applications that keep the current organization
 in <code>TenantProvider</code>.</p>
+<h4 id="carrying-the-sidebar-and-theme-between-applications">Carrying the sidebar and theme between applications<a class="headerlink" href="#carrying-the-sidebar-and-theme-between-applications" title="Permanent link">&para;</a></h4>
+<p>Each application of a suite runs on its own host, so its stored sidebar state
+and theme are its own. A product switcher link to another application carries
+both as a URL fragment (<code>#sf-sidebar=collapsed&amp;sf-theme=dark</code>), set when the
+link is followed so it reflects the sidebar as it is then. The application it
+opens adopts them before its first render, stores them, and removes the
+fragment from the address bar. A fragment never reaches a server. An
+application that navigates with <code>onNavigate</code> stays in one build and shares its
+storage, so nothing is carried.</p>
+<p>An application that builds its own links to another application, such as a
+settings entry, wraps the URL with <code>carryPreferences</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">carryPreferences</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@plexusone/shell&#39;</span><span class="p">;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="nx">carryPreferences</span><span class="p">(</span><span class="s1">&#39;https://agents.example.com/settings&#39;</span><span class="p">));</span>
+</code></pre></div>
+<p><code>carryPreferences(url, prefs?)</code> leaves a URL that already has a fragment alone,
+and reads any preference not passed from storage. <code>adoptCarriedPreferences()</code>
+is called for you by <code>ShellProvider</code>, so by <code>AppShell</code>, and by
+<code>applyStoredTheme()</code>; call it yourself only in a shell that does neither.</p>
 <h3 id="profile-menu">Profile menu<a class="headerlink" href="#profile-menu" title="Permanent link">&para;</a></h3>
 <p>Under <code>SessionProvider</code>, the bar shows <code>ProfileMenu</code>: who is signed in, the
 current organization, the role held in this application (falling back to
 the organization role), the application's <code>profileItems</code>, and sign out. It
 has no default links. Applications on <code>AuthProvider</code> keep <code>UserMenu</code>, whose
 default links were removed for the same reason.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">&lt;</span><span class="nt">AppShell</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="na">appName</span><span class="o">=</span><span class="s">&quot;Reports&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="na">app</span><span class="o">=</span><span class="p">{{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;reports&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Reports&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/&#39;</span><span class="w"> </span><span class="p">}}</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="na">organizationId</span><span class="o">=</span><span class="p">{</span><span class="nx">org</span><span class="p">}</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="na">onOrganizationChange</span><span class="o">=</span><span class="p">{(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">navigate</span><span class="p">(</span><span class="sb">`/orgs/</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">)}</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="na">profileItems</span><span class="o">=</span><span class="p">{[{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;keys&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;API keys&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="sb">`/orgs/</span><span class="si">${</span><span class="nx">org</span><span class="si">}</span><span class="sb">/keys`</span><span class="w"> </span><span class="p">}]}</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">&gt;</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="p">{</span><span class="nx">children</span><span class="p">}</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">&lt;/</span><span class="nt">AppShell</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">&lt;</span><span class="nt">AppShell</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="na">appName</span><span class="o">=</span><span class="s">&quot;Reports&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="na">app</span><span class="o">=</span><span class="p">{{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;reports&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Reports&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/&#39;</span><span class="w"> </span><span class="p">}}</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="na">organizationId</span><span class="o">=</span><span class="p">{</span><span class="nx">org</span><span class="p">}</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="na">onOrganizationChange</span><span class="o">=</span><span class="p">{(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">navigate</span><span class="p">(</span><span class="sb">`/orgs/</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">)}</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="na">profileItems</span><span class="o">=</span><span class="p">{[{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;keys&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;API keys&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="sb">`/orgs/</span><span class="si">${</span><span class="nx">org</span><span class="si">}</span><span class="sb">/keys`</span><span class="w"> </span><span class="p">}]}</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">&gt;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="p">{</span><span class="nx">children</span><span class="p">}</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="p">&lt;/</span><span class="nt">AppShell</span><span class="p">&gt;</span>
 </code></pre></div>
 <h3 id="theme">Theme<a class="headerlink" href="#theme" title="Permanent link">&para;</a></h3>
 <p><code>showThemeToggle</code> adds a toggle that cycles light, dark and the system's
@@ -2433,10 +2544,10 @@ on system it follows the operating system's preference as it changes. If
 storage is unavailable the choice lasts for the page.</p>
 <p>Call <code>applyStoredTheme()</code> before the first render so the page does not
 flash the other theme:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">applyStoredTheme</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@plexusone/shell&#39;</span><span class="p">;</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nx">applyStoredTheme</span><span class="p">();</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nx">createRoot</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">)</span><span class="o">!</span><span class="p">).</span><span class="nx">render</span><span class="p">(&lt;</span><span class="nt">App</span><span class="w"> </span><span class="p">/&gt;);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">applyStoredTheme</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@plexusone/shell&#39;</span><span class="p">;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nx">applyStoredTheme</span><span class="p">();</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nx">createRoot</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">)</span><span class="o">!</span><span class="p">).</span><span class="nx">render</span><span class="p">(&lt;</span><span class="nt">App</span><span class="w"> </span><span class="p">/&gt;);</span>
 </code></pre></div>
 <p><code>useTheme()</code> returns the choice and a setter for an application that
 renders its own control.</p>
@@ -2556,13 +2667,13 @@ renders its own control.</p>
 <p>The bar, from start to end: brand, product switcher, organization switcher,
 command, breadcrumbs, actions, profile menu.</p>
 <h3 id="navitem-type">NavItem Type<a class="headerlink" href="#navitem-type" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">NavItem</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nx">icon?</span><span class="o">:</span><span class="w"> </span><span class="kt">ComponentType</span><span class="p">;</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nx">children?</span><span class="o">:</span><span class="w"> </span><span class="kt">NavItem</span><span class="p">[];</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nx">badge?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kd">interface</span><span class="w"> </span><span class="nx">NavItem</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nx">href</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nx">icon?</span><span class="o">:</span><span class="w"> </span><span class="kt">ComponentType</span><span class="p">;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="nx">children?</span><span class="o">:</span><span class="w"> </span><span class="kt">NavItem</span><span class="p">[];</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="nx">badge?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="sidebar-props">Sidebar Props<a class="headerlink" href="#sidebar-props" title="Permanent link">&para;</a></h3>
 <table>
