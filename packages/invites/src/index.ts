@@ -2,6 +2,8 @@
 
 export { createInvitesApi, ApiError } from './api';
 export type { InvitesApi } from './api';
+export { InviteAdminPage, splitEmails } from './pages/InviteAdminPage';
+export type { InviteAdminPageProps } from './pages/InviteAdminPage';
 export type {
   Allowance,
   CodeKind,
