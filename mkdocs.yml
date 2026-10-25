@@ -59,6 +59,7 @@ nav:
       - '@plexusone/console': packages/console.md
       - '@plexusone/design-tokens': packages/design-tokens.md
       - '@plexusone/host': packages/host.md
+      - '@plexusone/invites': packages/invites.md
       - '@plexusone/pages': packages/pages.md
       - '@plexusone/shell': packages/shell.md
       - '@plexusone/telemetry': packages/telemetry.md

@@ -32,6 +32,7 @@ share one copy. Every package also needs React 19.
 | [@plexusone/console](console.md)             | The organization console           | `consoleApp`, `consoleSessionClient`, `Connections`, `Connect`       |
 | [@plexusone/design-tokens](design-tokens.md) | Design system                      | Colors, typography, spacing                                          |
 | [@plexusone/host](host.md)                   | Hosting applications               | `AppModule`, `Shell`, `createHost`, `DevShell`                       |
+| [@plexusone/invites](invites.md)             | Invite-gated sign-up pages         | `InviteAdminPage`, `InvitePeoplePage`, `createInvitesApi`            |
 | [@plexusone/pages](pages.md)                 | Pre-built pages                    | `LoginPage`, `ErrorPage`, `OrganizationSettingsPage`                 |
 | [@plexusone/shell](shell.md)                 | Application chrome                 | `AppShell`, `ProductSwitcher`, `OrganizationSwitcher`, `ProfileMenu` |
 | [@plexusone/telemetry](telemetry.md)         | Instrumentation                    | `TelemetryProvider`, `ErrorBoundary`                                 |

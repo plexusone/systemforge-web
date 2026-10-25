@@ -483,5 +483,28 @@
         }
       ]
     }
-  ]
+  ],
+  "unreleased": {
+    "highlights": [
+      {
+        "description": "`@plexusone/invites`: pages for SystemForge invite-gated sign-up, an operator page for invite codes, email invites, the waitlist and member allowances, and a member page to invite people"
+      }
+    ],
+    "added": [
+      {
+        "description": "`createInvitesApi`: a typed client for SystemForge's invite API, with snake_case wire types and `ApiError`"
+      },
+      {
+        "description": "`InviteAdminPage`: codes, email invites, waitlist, allowances and joined accounts, with new codes and links shown once and inline revoke"
+      },
+      {
+        "description": "`InvitePeoplePage`: a member's allowance, create and copy an invite link, and revoke unused ones"
+      }
+    ],
+    "documentation": [
+      {
+        "description": "`@plexusone/invites` package page"
+      }
+    ]
+  }
 }
