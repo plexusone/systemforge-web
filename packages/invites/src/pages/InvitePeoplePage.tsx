@@ -88,6 +88,7 @@ export function InvitePeoplePage({
   );
 }
 
+/** MyCodeRow shows one of the member's invite links, with revoke while unused. */
 function MyCodeRow({
   code: c,
   api,

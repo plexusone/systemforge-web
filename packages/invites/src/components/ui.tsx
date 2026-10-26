@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { Button, Input } from '@plexusone/ui';
 import type { CodeStatus, CreatedCode, InviteStatus } from '../types';
 
+/** PageHeader shows a page's title, an optional subtitle, and its actions. */
 export function PageHeader({
   title,
   subtitle,
@@ -22,6 +23,7 @@ export function PageHeader({
   );
 }
 
+/** ErrorNote shows an error as an alert. */
 export function ErrorNote({ children }: { children: ReactNode }): ReactNode {
   return (
     <p
@@ -33,6 +35,7 @@ export function ErrorNote({ children }: { children: ReactNode }): ReactNode {
   );
 }
 
+/** Note shows the result of an action. */
 export function Note({ children }: { children: ReactNode }): ReactNode {
   return (
     <p role="status" className="rounded-md border px-3 py-2 text-sm">
@@ -41,10 +44,12 @@ export function Note({ children }: { children: ReactNode }): ReactNode {
   );
 }
 
+/** Loading says what is being loaded. */
 export function Loading({ what }: { what: string }): ReactNode {
   return <p className="text-sm text-muted-foreground">Loading {what}…</p>;
 }
 
+/** Empty shows a message in place of a list that has no entries. */
 export function Empty({ children }: { children: ReactNode }): ReactNode {
   return (
     <p className="rounded-md border border-dashed px-4 py-6 text-center text-sm text-muted-foreground">
@@ -71,6 +76,7 @@ const TONE: Record<CodeStatus | InviteStatus, string> = {
   revoked: 'bg-destructive/15 text-destructive',
 };
 
+/** StatusBadge shows a code's or an invite's status. */
 export function StatusBadge({ status }: { status: CodeStatus | InviteStatus }): ReactNode {
   return (
     <span

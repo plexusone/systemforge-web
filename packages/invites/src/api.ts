@@ -55,6 +55,7 @@ export interface InvitesApi {
   joined(filter?: { codeId?: string; label?: string; inviter?: string }): Promise<JoinedAccount[]>;
 }
 
+/** query encodes the set parameters as a query string, with its leading "?". */
 function query(params: Record<string, string | undefined>): string {
   const q = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) if (v) q.set(k, v);

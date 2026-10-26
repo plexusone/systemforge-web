@@ -104,11 +104,13 @@ export function splitEmails(text: string): string[] {
     .filter(Boolean);
 }
 
+/** days parses a number of days from a form field, or returns 0. */
 function days(value: string): number {
   const n = Number.parseInt(value, 10);
   return Number.isFinite(n) && n > 0 ? n : 0;
 }
 
+/** Field labels a form control. */
 function Field({
   id,
   label,
@@ -126,6 +128,7 @@ function Field({
   );
 }
 
+/** ConfirmRow asks before a destructive action, with confirm and cancel buttons. */
 function ConfirmRow({
   prompt,
   action,
@@ -154,6 +157,7 @@ function ConfirmRow({
 
 // --- Invite codes ---
 
+/** CodesSection creates operator invite codes and lists every code. */
 function CodesSection({ api }: { api: InvitesApi }): ReactNode {
   const codes = useLoad(() => api.codes({ kind: 'operator' }), [api]);
   const [created, setCreated] = useState<CreatedCode>();
@@ -244,6 +248,7 @@ function CodesSection({ api }: { api: InvitesApi }): ReactNode {
   );
 }
 
+/** CodeRow shows one invite code's use and status, with revoke. */
 function CodeRow({
   code: c,
   api,
@@ -303,6 +308,7 @@ function CodeRow({
 
 // --- Email invites ---
 
+/** InvitesSection invites people by email address and lists the invites. */
 function InvitesSection({ api }: { api: InvitesApi }): ReactNode {
   const invites = useLoad(() => api.invites(true), [api]);
   const [emails, setEmails] = useState('');
@@ -379,6 +385,7 @@ function InvitesSection({ api }: { api: InvitesApi }): ReactNode {
   );
 }
 
+/** InviteRow shows one email invite, with revoke while it is pending. */
 function InviteRow({
   invite: i,
   api,
@@ -437,6 +444,7 @@ function InviteRow({
 
 // --- Waitlist ---
 
+/** WaitlistSection lists the waitlist and invites the selected addresses. */
 function WaitlistSection({ api }: { api: InvitesApi }): ReactNode {
   const waitlist = useLoad(() => api.waitlist(), [api]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -515,6 +523,7 @@ function WaitlistSection({ api }: { api: InvitesApi }): ReactNode {
   );
 }
 
+/** WaitlistRow shows one waitlist entry, with select and remove. */
 function WaitlistRow({
   entry: e,
   api,
@@ -574,6 +583,7 @@ function WaitlistRow({
 
 // --- Member allowances ---
 
+/** AllowancesSection sets how many people a member may invite. */
 function AllowancesSection({ api }: { api: InvitesApi }): ReactNode {
   const allowances = useLoad(() => api.allowances(), [api]);
   const settings = useLoad(() => api.settings(), [api]);
@@ -667,6 +677,7 @@ function AllowancesSection({ api }: { api: InvitesApi }): ReactNode {
 
 // --- Joined ---
 
+/** JoinedSection lists accounts created with invite codes. */
 function JoinedSection({ api }: { api: InvitesApi }): ReactNode {
   const joined = useLoad(() => api.joined(), [api]);
   const state = loadState(joined, 'joined accounts');
