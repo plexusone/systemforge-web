@@ -1,0 +1,61 @@
+{
+  "name": "@plexusone/invites",
+  "version": "0.1.0",
+  "description": "Pages for SystemForge invite-gated sign-up: an operator page for invite codes, email invites, the waitlist and member allowances, and a member page to invite people",
+  "homepage": "https://plexusone.github.io/systemforge-web/packages/invites/",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@plexusone/ui": "workspace:^"
+  },
+  "devDependencies": {
+    "@plexusone/ui": "workspace:*",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "keywords": [
+    "systemforge",
+    "invites",
+    "signup",
+    "waitlist",
+    "react"
+  ],
+  "author": "SystemForge Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/plexusone/systemforge-web.git",
+    "directory": "packages/invites"
+  },
+  "bugs": {
+    "url": "https://github.com/plexusone/systemforge-web/issues"
+  }
+}

@@ -14,6 +14,7 @@ Alphabetical; see [Packages](docs/packages/index.md) for how they depend on each
 | `@plexusone/console`       | Organization console pages          | [![npm](https://img.shields.io/npm/v/@plexusone/console)](https://www.npmjs.com/package/@plexusone/console)             |
 | `@plexusone/design-tokens` | Design system tokens                | [![npm](https://img.shields.io/npm/v/@plexusone/design-tokens)](https://www.npmjs.com/package/@plexusone/design-tokens) |
 | `@plexusone/host`          | App and shell contracts, createHost | [![npm](https://img.shields.io/npm/v/@plexusone/host)](https://www.npmjs.com/package/@plexusone/host)                   |
+| `@plexusone/invites`       | Invite-gated sign-up pages          | [![npm](https://img.shields.io/npm/v/@plexusone/invites)](https://www.npmjs.com/package/@plexusone/invites)             |
 | `@plexusone/pages`         | Pre-built pages                     | [![npm](https://img.shields.io/npm/v/@plexusone/pages)](https://www.npmjs.com/package/@plexusone/pages)                 |
 | `@plexusone/shell`         | Application shell                   | [![npm](https://img.shields.io/npm/v/@plexusone/shell)](https://www.npmjs.com/package/@plexusone/shell)                 |
 | `@plexusone/telemetry`     | Event instrumentation               | [![npm](https://img.shields.io/npm/v/@plexusone/telemetry)](https://www.npmjs.com/package/@plexusone/telemetry)         |
