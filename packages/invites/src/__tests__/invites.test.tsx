@@ -7,6 +7,7 @@ interface Call {
   method: string;
   url: string;
   body?: unknown;
+  credentials?: RequestCredentials;
 }
 
 let calls: Call[];
@@ -48,6 +49,7 @@ beforeEach(() => {
       method: init?.method ?? 'GET',
       url: String(input),
       body: init?.body ? JSON.parse(String(init.body)) : undefined,
+      credentials: init?.credentials,
     };
     calls.push(c);
     const custom = respond(c);
@@ -81,6 +83,7 @@ describe('createInvitesApi', () => {
       message: 'platform administrators only',
     });
     expect(calls[0].url).toBe('/invites/api/admin/codes?kind=operator&status=active');
+    expect(calls[0].credentials).toBe('include');
 
     respond = (c) => (c.method === 'DELETE' ? new Response(null, { status: 204 }) : undefined);
     await api.revokeInvite('a+b@example.com');
@@ -121,6 +124,29 @@ describe('InvitePeoplePage', () => {
       'https://auth.example.com/signup?code=AAAA-BBBB-CCCC-ABCD'
     );
     expect(within(shown).getByText(/will not be shown again/)).toBeInTheDocument();
+  });
+
+  it('keeps a new link on screen when reloading the list fails', async () => {
+    let loads = 0;
+    respond = (c) => {
+      if (c.method === 'GET' && c.url.endsWith('/me/invites')) {
+        loads++;
+        return loads > 1 ? json(500, { error: 'database unavailable' }) : undefined;
+      }
+      if (c.method === 'POST' && c.url.endsWith('/me/codes'))
+        return json(201, {
+          code: code({ id: 'code-2', hint: 'ABCD' }),
+          invite_code: 'AAAA-BBBB-CCCC-ABCD',
+          link: 'https://auth.example.com/signup?code=AAAA-BBBB-CCCC-ABCD',
+        });
+      return undefined;
+    };
+    render(<InvitePeoplePage api={api} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Create invite link' }));
+    expect(await screen.findByText(/Could not load your invites/)).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Invite' })).toHaveValue(
+      'https://auth.example.com/signup?code=AAAA-BBBB-CCCC-ABCD'
+    );
   });
 
   it('cannot create a link with none left, and says so', async () => {
@@ -171,6 +197,39 @@ describe('InviteAdminPage', () => {
     expect(screen.getByRole('textbox', { name: 'Invite' })).toHaveValue('AAAA-BBBB-CCCC-DDDD');
   });
 
+  it('does not show a new code as copied', async () => {
+    const writeText = vi.fn(async () => undefined);
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    let made = 0;
+    respond = (c) => {
+      if (c.url.includes('/admin/codes') && c.method === 'GET') return json(200, { codes: [] });
+      if (c.url.endsWith('/admin/codes') && c.method === 'POST') {
+        made++;
+        return json(201, {
+          code: code({ kind: 'operator' }),
+          invite_code: `AAAA-BBBB-CCCC-000${made}`,
+        });
+      }
+      return undefined;
+    };
+    try {
+      render(<InviteAdminPage api={api} />);
+      await screen.findByText(/No invite codes yet/);
+      const create = screen.getByRole('button', { name: 'Create invite code' });
+      fireEvent.click(create);
+      await screen.findByDisplayValue('AAAA-BBBB-CCCC-0001');
+      fireEvent.click(screen.getByRole('button', { name: 'Copy' }));
+      expect(await screen.findByText('Copied.')).toBeInTheDocument();
+      expect(writeText).toHaveBeenCalledWith('AAAA-BBBB-CCCC-0001');
+
+      fireEvent.click(create);
+      await screen.findByDisplayValue('AAAA-BBBB-CCCC-0002');
+      expect(screen.queryByText('Copied.')).not.toBeInTheDocument();
+    } finally {
+      Reflect.deleteProperty(navigator, 'clipboard');
+    }
+  });
+
   it('tells a non-administrator they cannot manage invites', async () => {
     respond = (c) =>
       c.url.includes('/admin/') ? json(403, { error: 'platform administrators only' }) : undefined;
@@ -218,6 +277,51 @@ describe('InviteAdminPage', () => {
     expect(await screen.findByText(/Invited 1\./)).toBeInTheDocument();
     expect(calls.find((c) => c.url.endsWith('/admin/waitlist/invite'))?.body).toEqual({
       emails: ['ada@example.com'],
+    });
+  });
+
+  it('does not invite an address removed after it was selected', async () => {
+    const entry = (email: string) => ({
+      email,
+      consent_version: '1',
+      joined_at: '2026-10-01T00:00:00Z',
+      last_submitted_at: '2026-10-01T00:00:00Z',
+    });
+    let removed = false;
+    respond = (c) => {
+      if (c.url.includes('/admin/codes')) return json(200, { codes: [] });
+      if (c.method === 'DELETE') {
+        removed = true;
+        return new Response(null, { status: 204 });
+      }
+      if (c.url.endsWith('/admin/waitlist'))
+        return json(200, {
+          waitlist: removed
+            ? [entry('lin@example.com')]
+            : [entry('ada@example.com'), entry('lin@example.com')],
+        });
+      if (c.url.endsWith('/admin/waitlist/invite'))
+        return json(200, {
+          invites: [
+            { email: 'lin@example.com', status: 'pending', created_at: '2026-10-04T00:00:00Z' },
+          ],
+        });
+      return undefined;
+    };
+    render(<InviteAdminPage api={api} />);
+    fireEvent.click(screen.getByRole('tab', { name: 'Waitlist' }));
+    const ada = await screen.findByRole('listitem', { name: 'Waiting ada@example.com' });
+    fireEvent.click(screen.getByRole('button', { name: 'Select everyone not yet invited' }));
+    expect(screen.getByRole('button', { name: 'Invite selected (2)' })).toBeEnabled();
+    fireEvent.click(within(ada).getByRole('button', { name: 'Remove' }));
+    fireEvent.click(within(ada).getByRole('button', { name: 'Remove ada@example.com' }));
+    await waitFor(() =>
+      expect(screen.queryByRole('listitem', { name: 'Waiting ada@example.com' })).toBeNull()
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Invite selected (1)' }));
+    await screen.findByText(/Invited 1\./);
+    expect(calls.find((c) => c.url.endsWith('/admin/waitlist/invite'))?.body).toEqual({
+      emails: ['lin@example.com'],
     });
   });
 
