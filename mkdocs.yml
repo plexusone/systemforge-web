@@ -50,6 +50,7 @@ nav:
       - Quick Start: getting-started/quickstart.md
   - Guides:
       - Writing an Application: guides/writing-an-application.md
+      - Adding Invite Pages: guides/invite-gated-signup.md
       - Releasing: guides/releasing.md
   - Packages:
       - Overview: packages/index.md

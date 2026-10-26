@@ -4,6 +4,8 @@ Pages for SystemForge's invite-gated sign-up: an operator page to manage
 invite codes, email invites, the waitlist and member allowances, and a member
 page to invite people. Both call SystemForge's invite API (`signupapi`); see
 SystemForge's [invite-gated sign-up guide](https://plexusone.github.io/systemforge/guides/invite-gated-signup/).
+[Adding invite pages](../guides/invite-gated-signup.md) walks through wiring
+them into an application.
 
 ```bash
 pnpm add @plexusone/invites @plexusone/ui
