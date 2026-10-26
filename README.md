@@ -45,6 +45,23 @@ function App() {
 }
 ```
 
+## Invite-gated sign-up
+
+`@plexusone/invites` adds the pages for launching invite-only with
+SystemForge: operators issue invite codes and email invites and work through
+the waitlist, and members invite people from their allowance.
+
+```tsx
+import { createInvitesApi, InviteAdminPage, InvitePeoplePage } from '@plexusone/invites';
+
+const invites = createInvitesApi('/invites/api');
+
+<Route path="/invite" element={<InvitePeoplePage api={invites} />} />
+<Route path="/admin/invites" element={<InviteAdminPage api={invites} />} />
+```
+
+See [Adding invite pages](docs/guides/invite-gated-signup.md).
+
 ## Telemetry with ProductGraph
 
 Track user behavior, journeys, and performance with ProductGraph integration:

@@ -50,6 +50,7 @@ nav:
       - Quick Start: getting-started/quickstart.md
   - Guides:
       - Writing an Application: guides/writing-an-application.md
+      - Adding Invite Pages: guides/invite-gated-signup.md
       - Releasing: guides/releasing.md
   - Packages:
       - Overview: packages/index.md
@@ -86,6 +87,7 @@ nav:
               - Tasks: specs/initiatives/invention/productgraph/TASKS.md
   - Releases:
       - Changelog: changelog.md
+      - v0.5.0: releases/v0.5.0.md
       - v0.4.0: releases/v0.4.0.md
       - v0.3.1: releases/v0.3.1.md
       - v0.3.0: releases/v0.3.0.md
