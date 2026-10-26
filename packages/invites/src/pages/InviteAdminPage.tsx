@@ -450,27 +450,36 @@ function WaitlistSection({ api }: { api: InvitesApi }): ReactNode {
     setSelected(next);
   }
 
+  function drop(email: string) {
+    const next = new Set(selected);
+    next.delete(email);
+    setSelected(next);
+  }
+
   const state = loadState(waitlist, 'the waitlist');
   if (state) return state;
   const entries = waitlist.data!;
   const waiting = entries.filter((e) => !e.invited_at).map((e) => e.email);
+  // Only addresses still on the list are invited and counted.
+  const listed = new Set(entries.map((e) => e.email));
+  const chosen = [...selected].filter((email) => listed.has(email));
 
   return (
     <>
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <Button
           type="button"
-          disabled={action.busy || selected.size === 0}
+          disabled={action.busy || chosen.length === 0}
           onClick={() =>
             void action.run('Invite', async () => {
-              const r = await api.inviteFromWaitlist([...selected]);
+              const r = await api.inviteFromWaitlist(chosen);
               setResult(`Invited ${r.invites.length}.${r.error ? ` ${r.error}` : ''}`);
               setSelected(new Set());
               waitlist.reload();
             })
           }
         >
-          Invite selected ({selected.size})
+          Invite selected ({chosen.length})
         </Button>
         <Button
           type="button"
@@ -494,7 +503,10 @@ function WaitlistSection({ api }: { api: InvitesApi }): ReactNode {
               api={api}
               checked={selected.has(e.email)}
               onToggle={() => toggle(e.email)}
-              onChange={waitlist.reload}
+              onRemoved={() => {
+                drop(e.email);
+                waitlist.reload();
+              }}
             />
           ))}
         </ul>
@@ -508,13 +520,13 @@ function WaitlistRow({
   api,
   checked,
   onToggle,
-  onChange,
+  onRemoved,
 }: {
   entry: WaitlistEntry;
   api: InvitesApi;
   checked: boolean;
   onToggle: () => void;
-  onChange: () => void;
+  onRemoved: () => void;
 }): ReactNode {
   const [confirm, setConfirm] = useState(false);
   const action = useRun();
@@ -550,7 +562,7 @@ function WaitlistRow({
           onConfirm={() =>
             void action.run('Remove', async () => {
               await api.removeFromWaitlist(e.email);
-              onChange();
+              onRemoved();
             })
           }
         />
