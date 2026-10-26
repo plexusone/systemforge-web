@@ -108,13 +108,17 @@ export function ShowOnce({
   onDone: () => void;
 }): ReactNode {
   const value = created.link ?? created.invite_code;
-  const [copied, setCopied] = useState<boolean>();
+  // The copy result belongs to the value copied, so a new code that replaces
+  // this one does not show "Copied." before it is copied.
+  const [copiedResult, setCopiedResult] = useState<{ value: string; ok: boolean }>();
+  const copied = copiedResult?.value === value ? copiedResult.ok : undefined;
   async function copy() {
+    const copying = value;
     try {
-      await navigator.clipboard.writeText(value);
-      setCopied(true);
+      await navigator.clipboard.writeText(copying);
+      setCopiedResult({ value: copying, ok: true });
     } catch {
-      setCopied(false);
+      setCopiedResult({ value: copying, ok: false });
     }
   }
   return (
