@@ -38,6 +38,7 @@ export function InvitePeoplePage({
     return (
       <>
         <PageHeader title={title} />
+        {created && <ShowOnce created={created} onDone={() => setCreated(undefined)} />}
         <ErrorNote>Could not load your invites: {mine.error.message}</ErrorNote>
       </>
     );
