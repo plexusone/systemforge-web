@@ -815,6 +815,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#signing-out-of-systemauth-too" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signing out of SystemAuth too
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1946,6 +1957,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../releases/v0.5.1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.5.1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../releases/v0.5.0/" class="md-nav__link">
         
   
@@ -2313,6 +2352,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#signing-out-of-systemauth-too" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signing out of SystemAuth too
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2502,6 +2552,19 @@ catalog. Sign-in is a redirect; sign-out is a same-origin POST.</p>
 <p>The session is re-read when the window regains focus and every five
 minutes (<code>refreshInterval</code>, <code>refreshOnFocus</code>). <code>onUnauthorized</code> runs when a
 signed-in session is found signed out, not after a deliberate sign-out.</p>
+<h3 id="signing-out-of-systemauth-too">Signing out of SystemAuth too<a class="headerlink" href="#signing-out-of-systemauth-too" title="Permanent link">&para;</a></h3>
+<p>Signing out ends the app's session at the BFF, then SystemAuth's login
+session, so the next sign-in asks who the person is instead of resuming
+it. <code>signOut</code> (and <code>logout</code>) asks the BFF for JSON; a BFF on SystemForge
+v0.30.1 or later answers with SystemAuth's sign-out page, and the provider
+submits a form there with <code>return_to</code>. SystemAuth ends its login session,
+revokes the person's tokens, ends their sessions in the other apps, and
+returns the browser signed out. An older BFF answers <code>204</code>, and the page
+stays as before.</p>
+<p><code>endSession</code> on <code>SessionProvider</code> or <code>AuthProvider</code> replaces that step;
+<code>null</code> leaves it out. SystemAuth must list the app's origin in
+<code>social_login.allowed_redirect_origins</code>, and the app and SystemAuth must
+share a site, such as <code>app.example.com</code> and <code>auth.example.com</code>.</p>
 <h2 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h2>
 <h3 id="authprovider-props">AuthProvider Props<a class="headerlink" href="#authprovider-props" title="Permanent link">&para;</a></h3>
 <table>
@@ -2527,6 +2590,11 @@ signed-in session is found signed out, not after a deliberate sign-out.</p>
 <td><code>onAuthError</code></td>
 <td><code>(error: Error) =&gt; void</code></td>
 <td>Error callback</td>
+</tr>
+<tr>
+<td><code>endSession</code></td>
+<td><code>((target) =&gt; void) \| null</code></td>
+<td>Ends SystemAuth's login session after logout (default: a form POST to its sign-out page)</td>
 </tr>
 </tbody>
 </table>
