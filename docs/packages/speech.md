@@ -1,8 +1,10 @@
 # @plexusone/speech
 
 Text-to-speech and speech-to-text with the browser's own speech (the Web
-Speech API). No service, no key, no cost: useful for previews, read-aloud,
-and voice input.
+Speech API). Nothing to run and no key to manage: useful for previews,
+read-aloud and voice input. The browser decides where speech is processed:
+some voices and Chrome's speech recognition use an online service (see
+[Listening](#listening)).
 
 The main entry point has no dependencies and works without React. React
 hooks are in `@plexusone/speech/react`. A standalone build,
@@ -144,7 +146,10 @@ from time to time; `listen` restarts it until `stop()`, a fatal error (no
 permission, no microphone, no service), or `maxSilences` silences in a row
 (default 3). `abort()` stops at once and drops text still being recognized.
 Speech recognition is available in Chrome, Edge and Safari; check
-`isRecognitionSupported()`.
+`isRecognitionSupported()`. Where the audio goes depends on the browser:
+Chrome sends it to Google's speech service, so say so near the control if
+your users would want to know, and do not promise that dictation stays on
+the device.
 
 ## React
 
@@ -177,17 +182,20 @@ re-renders the component on every word; `onWord` alone does not:
 function Highlighted({ text }: { text: string }) {
   const { speak, word } = useSpeech({ trackWords: true });
   return (
-    <p onClick={() => speak(text)}>
-      {word ? (
-        <>
-          {text.slice(0, word.start)}
-          <mark>{text.slice(word.start, word.end)}</mark>
-          {text.slice(word.end)}
-        </>
-      ) : (
-        text
-      )}
-    </p>
+    <>
+      <button onClick={() => speak(text)}>Read aloud</button>
+      <p>
+        {word ? (
+          <>
+            {text.slice(0, word.start)}
+            <mark>{text.slice(word.start, word.end)}</mark>
+            {text.slice(word.end)}
+          </>
+        ) : (
+          text
+        )}
+      </p>
+    </>
   );
 }
 ```

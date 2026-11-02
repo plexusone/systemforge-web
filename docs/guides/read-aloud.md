@@ -1,7 +1,7 @@
 # Adding read-aloud and voice input
 
 `@plexusone/speech` lets an application read text aloud and take dictation
-with the browser's own speech: no service, no key and no cost. This guide
+with the browser's own speech: nothing to run and no key to manage. This guide
 adds a read-aloud control with word highlighting, a voice picker and voice
 input to an application. The [package page](../packages/speech.md) is the
 reference for every option.
@@ -31,7 +31,7 @@ after it, and `segment` says which one is being read:
 import { useSpeech } from '@plexusone/speech/react';
 
 function ReadAloud({ paragraphs }: { paragraphs: string[] }) {
-  const { speak, stop, pause, resume, state, segment, supported } = useSpeech({
+  const { speak, stop, pause, resume, state, segment, error, supported } = useSpeech({
     lang: 'en-US',
   });
   if (!supported) return null;
@@ -47,6 +47,9 @@ function ReadAloud({ paragraphs }: { paragraphs: string[] }) {
         <button onClick={() => speak(segments).catch(() => undefined)}>Read aloud</button>
       )}
       {(state === 'speaking' || state === 'paused') && <button onClick={stop}>Stop</button>}
+      {error?.code === 'start-timeout' && (
+        <p>Your browser's voice isn't responding. Here is the text.</p>
+      )}
       {paragraphs.map((p, i) => (
         <p key={i} className={i === segment ? 'reading' : undefined}>
           {p}
@@ -127,14 +130,8 @@ rather than a silent button:
 | `start-timeout` | The browser accepted speech but never started it | The text to read, or a recording               |
 | anything else   | The voice failed                                 | The text, and let the person try another voice |
 
-```tsx
-const { error } = useSpeech();
-{
-  error?.code === 'start-timeout' && (
-    <p>Your browser's voice isn't responding. Here is the text.</p>
-  );
-}
-```
+`ReadAloud` above shows the `start-timeout` message from the same hook that
+started the speech.
 
 ## 5. Let people choose a voice
 
