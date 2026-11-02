@@ -68,6 +68,13 @@ pnpm install --frozen-lockfile
 pnpm build
 ```
 
+Each package's `prepublishOnly` script builds it again as it is published,
+so `pnpm publish` never uploads a `dist/` left from an earlier commit. A
+build from before a `git pull` once shipped `@plexusone/speech` 0.1.0
+without its release's fixes. Run the full `pnpm build` first all the same:
+a package's type declarations are built against the other packages'
+`dist/`.
+
 Sign in right before publishing: tokens from `npm login` are short-lived, and
 an expired one makes `publish` fail with `E404` on `PUT`. If `npm whoami`
 fails, run `npm login` again.
