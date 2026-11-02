@@ -16,11 +16,13 @@ SystemForge Web is a monorepo of focused packages, published to npm under
 @plexusone/pages ─────▶ @plexusone/auth
 
 Standalone: @plexusone/api-client, @plexusone/chat,
-            @plexusone/design-tokens, @plexusone/telemetry
+            @plexusone/design-tokens, @plexusone/speech,
+            @plexusone/telemetry
 ```
 
 An arrow is a peer dependency: the application installs both, and they
-share one copy. Every package also needs React 19.
+share one copy. Every package also needs React 19, except
+`@plexusone/design-tokens` and the main entry point of `@plexusone/speech`.
 
 ## Package summary
 
@@ -35,6 +37,7 @@ share one copy. Every package also needs React 19.
 | [@plexusone/invites](invites.md)             | Invite-gated sign-up pages         | `InviteAdminPage`, `InvitePeoplePage`, `createInvitesApi`            |
 | [@plexusone/pages](pages.md)                 | Pre-built pages                    | `LoginPage`, `ErrorPage`, `OrganizationSettingsPage`                 |
 | [@plexusone/shell](shell.md)                 | Application chrome                 | `AppShell`, `ProductSwitcher`, `OrganizationSwitcher`, `ProfileMenu` |
+| [@plexusone/speech](speech.md)               | Browser speech in and out          | `speak`, `listen`, `getVoices`, `useSpeech`, `useListen`             |
 | [@plexusone/telemetry](telemetry.md)         | Instrumentation                    | `TelemetryProvider`, `ErrorBoundary`                                 |
 | [@plexusone/tenant](tenant.md)               | Multi-tenancy                      | `TenantProvider`, `RequireRole`, `useOrganization`                   |
 | [@plexusone/ui](ui.md)                       | UI components                      | `Button`, `Card`, `DropdownMenu`, `Tooltip`                          |

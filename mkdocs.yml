@@ -51,6 +51,7 @@ nav:
   - Guides:
       - Writing an Application: guides/writing-an-application.md
       - Adding Invite Pages: guides/invite-gated-signup.md
+      - Adding Read-Aloud and Voice Input: guides/read-aloud.md
       - Releasing: guides/releasing.md
   - Packages:
       - Overview: packages/index.md
@@ -63,6 +64,7 @@ nav:
       - '@plexusone/invites': packages/invites.md
       - '@plexusone/pages': packages/pages.md
       - '@plexusone/shell': packages/shell.md
+      - '@plexusone/speech': packages/speech.md
       - '@plexusone/telemetry': packages/telemetry.md
       - '@plexusone/tenant': packages/tenant.md
       - '@plexusone/ui': packages/ui.md
@@ -87,6 +89,7 @@ nav:
               - Tasks: specs/initiatives/invention/productgraph/TASKS.md
   - Releases:
       - Changelog: changelog.md
+      - v0.6.0: releases/v0.6.0.md
       - v0.5.1: releases/v0.5.1.md
       - v0.5.0: releases/v0.5.0.md
       - v0.4.0: releases/v0.4.0.md

@@ -296,6 +296,22 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/speech:
+    dependencies:
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
+    devDependencies:
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.14
+      tsup:
+        specifier: ^8.0.1
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.9)(typescript@5.9.3)(yaml@2.8.4)
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/telemetry:
     dependencies:
       react:

@@ -17,6 +17,7 @@ Alphabetical; see [Packages](docs/packages/index.md) for how they depend on each
 | `@plexusone/invites`       | Invite-gated sign-up pages          | [![npm](https://img.shields.io/npm/v/@plexusone/invites)](https://www.npmjs.com/package/@plexusone/invites)             |
 | `@plexusone/pages`         | Pre-built pages                     | [![npm](https://img.shields.io/npm/v/@plexusone/pages)](https://www.npmjs.com/package/@plexusone/pages)                 |
 | `@plexusone/shell`         | Application shell                   | [![npm](https://img.shields.io/npm/v/@plexusone/shell)](https://www.npmjs.com/package/@plexusone/shell)                 |
+| `@plexusone/speech`        | Browser speech in and out           | [![npm](https://img.shields.io/npm/v/@plexusone/speech)](https://www.npmjs.com/package/@plexusone/speech)               |
 | `@plexusone/telemetry`     | Event instrumentation               | [![npm](https://img.shields.io/npm/v/@plexusone/telemetry)](https://www.npmjs.com/package/@plexusone/telemetry)         |
 | `@plexusone/tenant`        | Multi-tenant context                | [![npm](https://img.shields.io/npm/v/@plexusone/tenant)](https://www.npmjs.com/package/@plexusone/tenant)               |
 | `@plexusone/ui`            | UI components                       | [![npm](https://img.shields.io/npm/v/@plexusone/ui)](https://www.npmjs.com/package/@plexusone/ui)                       |
