@@ -5,9 +5,13 @@ export default defineConfig([
     entry: { index: 'src/index.ts', react: 'src/react.ts' },
     format: ['cjs', 'esm'],
     dts: true,
-    splitting: false,
+    // One copy of the speech code shared by both entry points, so
+    // stopSpeaking() and new speech see speech started through the hooks.
+    splitting: true,
     sourcemap: true,
-    clean: true,
+    // Only this build's files: the two builds run at once, and cleaning
+    // everything could delete the standalone build.
+    clean: ['**/*', '!speech.global.js'],
     external: ['react'],
   },
   {
