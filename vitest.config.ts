@@ -9,6 +9,7 @@ const packagesDir = fileURLToPath(new URL('./packages', import.meta.url));
 // its own entry instead of being appended to the package's index.
 const alias = [
   { find: /^@plexusone\/host\/testing$/, replacement: `${packagesDir}/host/src/testing.tsx` },
+  { find: /^@plexusone\/speech\/react$/, replacement: `${packagesDir}/speech/src/react.ts` },
   ...readdirSync(packagesDir).map((name) => ({
     find: new RegExp(`^@plexusone/${name}$`),
     replacement: `${packagesDir}/${name}/src/index.ts`,
