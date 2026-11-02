@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { endLoginSession, type SystemAuthSignOut } from '../signout';
 import { SessionClient, type SignInOptions } from './client';
 import type { Session } from './types';
 
@@ -42,6 +43,12 @@ export interface SessionProviderProps {
   onUnauthorized?: () => void;
   /** Navigation for sign-in, for tests. Default `window.location.assign`. */
   navigate?: (url: string) => void;
+  /**
+   * Ends SystemAuth's login session after the app's sign-out, when the BFF
+   * names its sign-out page. Default: a form POST there, which navigates
+   * away; `null` stays on the page, signed out of the app only.
+   */
+  endSession?: ((target: SystemAuthSignOut) => void) | null;
 }
 
 const SessionContext = createContext<SessionContextValue | null>(null);
@@ -59,6 +66,7 @@ export function SessionProvider({
   refreshOnFocus = true,
   onUnauthorized,
   navigate,
+  endSession = endLoginSession,
 }: SessionProviderProps) {
   const bff = useMemo(() => client ?? new SessionClient(), [client]);
   const [status, setStatus] = useState<SessionStatusKind>('loading');
@@ -111,11 +119,16 @@ export function SessionProvider({
   );
 
   const signOut = useCallback(async () => {
-    await bff.signOut();
+    const next = await bff.signOut();
     // Signing out on purpose is not an unauthorized surprise.
     wasAuthenticated.current = false;
+    if (next && endSession) {
+      // SystemAuth ends its login session too, then returns here signed out.
+      endSession(next);
+      return;
+    }
     await refresh();
-  }, [bff, refresh]);
+  }, [bff, refresh, endSession]);
 
   const value = useMemo<SessionContextValue>(
     () => ({ status, session, error, refresh, signIn, signOut }),

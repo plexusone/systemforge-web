@@ -1,3 +1,5 @@
+import type { SystemAuthSignOut } from './signout';
+
 /**
  * User representation from the SystemForge backend
  */
@@ -120,6 +122,13 @@ export interface AuthConfig {
    * Callback on auth errors
    */
   onAuthError?: (error: AuthError) => void;
+
+  /**
+   * Ends SystemAuth's login session after logout, when the BFF names its
+   * sign-out page. Default: a form POST there, which navigates away; `null`
+   * stays on the page, signed out of the app only.
+   */
+  endSession?: ((target: SystemAuthSignOut) => void) | null;
 
   /**
    * Interval to check session validity in ms (default: 60000)

@@ -139,15 +139,32 @@ The session is re-read when the window regains focus and every five
 minutes (`refreshInterval`, `refreshOnFocus`). `onUnauthorized` runs when a
 signed-in session is found signed out, not after a deliberate sign-out.
 
+### Signing out of SystemAuth too
+
+Signing out ends the app's session at the BFF, then SystemAuth's login
+session, so the next sign-in asks who the person is instead of resuming
+it. `signOut` (and `logout`) asks the BFF for JSON; a BFF on SystemForge
+v0.30.1 or later answers with SystemAuth's sign-out page, and the provider
+submits a form there with `return_to`. SystemAuth ends its login session,
+revokes the person's tokens, ends their sessions in the other apps, and
+returns the browser signed out. An older BFF answers `204`, and the page
+stays as before.
+
+`endSession` on `SessionProvider` or `AuthProvider` replaces that step;
+`null` leaves it out. SystemAuth must list the app's origin in
+`social_login.allowed_redirect_origins`, and the app and SystemAuth must
+share a site, such as `app.example.com` and `auth.example.com`.
+
 ## API Reference
 
 ### AuthProvider Props
 
-| Prop          | Type                     | Description                                    |
-| ------------- | ------------------------ | ---------------------------------------------- |
-| `bffBaseUrl`  | `string`                 | Base URL for BFF auth endpoints                |
-| `loginPath`   | `string`                 | Path to redirect for login (default: `/login`) |
-| `onAuthError` | `(error: Error) => void` | Error callback                                 |
+| Prop          | Type                         | Description                                                                              |
+| ------------- | ---------------------------- | ---------------------------------------------------------------------------------------- |
+| `bffBaseUrl`  | `string`                     | Base URL for BFF auth endpoints                                                          |
+| `loginPath`   | `string`                     | Path to redirect for login (default: `/login`)                                           |
+| `onAuthError` | `(error: Error) => void`     | Error callback                                                                           |
+| `endSession`  | `((target) => void) \| null` | Ends SystemAuth's login session after logout (default: a form POST to its sign-out page) |
 
 ### useAuth Return Value
 

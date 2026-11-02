@@ -7,6 +7,40 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.5.1",
+      "date": "2026-11-02",
+      "highlights": [
+        {
+          "description": "`@plexusone/auth` 0.2.2: signing out also ends the SystemAuth login session, so the next sign-in asks who the person is instead of resuming it",
+          "commit": "c9661d5"
+        }
+      ],
+      "security": [
+        {
+          "description": "`signOut` and `logout` follow the BFF's SystemAuth sign-out with a form POST, so a person who signs out, for example on a shared computer, is no longer signed straight back in by the still-open login session",
+          "commit": "c9661d5"
+        }
+      ],
+      "added": [
+        {
+          "description": "`endSession` on `SessionProvider` and `AuthProvider`, and the exported `readSignOut`, `endLoginSession` and `SystemAuthSignOut`",
+          "commit": "c9661d5"
+        }
+      ],
+      "tests": [
+        {
+          "description": "Cover the sign-out target, the form post, the session client's JSON sign-out and the provider leaving for SystemAuth",
+          "commit": "4290823"
+        }
+      ],
+      "documentation": [
+        {
+          "description": "The auth package's guide describes signing out of SystemAuth too, and its requirements",
+          "commit": "0415449"
+        }
+      ]
+    },
+    {
       "version": "v0.5.0",
       "date": "2026-10-26",
       "highlights": [

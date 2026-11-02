@@ -1,3 +1,4 @@
+import { endLoginSession } from './signout';
 import {
   createContext,
   useContext,
@@ -57,6 +58,7 @@ export function AuthProvider({
   onSessionExpired,
   onAuthError,
   checkInterval = 60000,
+  endSession = endLoginSession,
 }: AuthProviderProps) {
   // loginUrl and defaultRedirect are stored in config for other components
   void _loginUrl;
@@ -181,9 +183,13 @@ export function AuthProvider({
   const logout = useCallback(async () => {
     setIsLoading(true);
     try {
-      await client.logout();
+      const next = await client.logout();
       setUser(null);
       setError(null);
+      if (next && endSession) {
+        // SystemAuth ends its login session too, then returns here signed out.
+        endSession(next);
+      }
     } catch (err) {
       // Even if logout fails on server, clear local state
       setUser(null);
@@ -191,7 +197,7 @@ export function AuthProvider({
     } finally {
       setIsLoading(false);
     }
-  }, [client, handleError]);
+  }, [client, handleError, endSession]);
 
   /**
    * Refresh user data

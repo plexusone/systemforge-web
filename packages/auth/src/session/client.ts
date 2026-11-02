@@ -1,3 +1,4 @@
+import { readSignOut, type SystemAuthSignOut } from '../signout';
 import { toSession } from './adapter';
 import type { Session, WireSession } from './types';
 
@@ -64,15 +65,22 @@ export class SessionClient {
     return returnTo ? `${path}?return_to=${encodeURIComponent(returnTo)}` : path;
   }
 
-  /** Ends the session. The BFF requires a same-origin request, which this is. */
-  async signOut(): Promise<void> {
+  /**
+   * Ends the app's session. The BFF requires a same-origin request, which
+   * this is. Returns SystemAuth's sign-out, where the browser goes next to
+   * end its login session, when the BFF names one.
+   */
+  async signOut(): Promise<SystemAuthSignOut | undefined> {
     const res = await this.doFetch(`${this.base}/auth/logout`, {
       method: 'POST',
       credentials: 'include',
+      headers: { Accept: 'application/json' },
     });
     if (!res.ok) {
       throw await errorFrom(res);
     }
+    if (res.status === 204) return undefined;
+    return readSignOut(await res.json().catch(() => undefined));
   }
 }
 

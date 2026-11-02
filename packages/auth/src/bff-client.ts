@@ -1,3 +1,4 @@
+import { readSignOut, type SystemAuthSignOut } from './signout';
 import type {
   User,
   SessionStatus,
@@ -88,10 +89,12 @@ export class BFFClient {
   /**
    * Logout current session
    */
-  async logout(): Promise<void> {
-    await this.request<void>('/bff/auth/logout', {
+  async logout(): Promise<SystemAuthSignOut | undefined> {
+    const body = await this.request<unknown>('/bff/auth/logout', {
       method: 'POST',
+      headers: { Accept: 'application/json' },
     });
+    return readSignOut(body);
   }
 
   /**

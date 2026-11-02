@@ -87,6 +87,34 @@ describe('SessionProvider', () => {
     expect(onUnauthorized).not.toHaveBeenCalled();
   });
 
+  it('ends the SystemAuth login session after signing out', async () => {
+    const signOut = {
+      url: 'https://auth.example.com/logout',
+      returnTo: 'https://app.example.com/',
+    };
+    const f = fakeFetch({
+      '/bff/session': () => json(twoOrgs),
+      '/bff/auth/logout': () => json({ signOut }),
+    });
+    const endSession = vi.fn();
+    render(
+      <SessionProvider
+        client={new SessionClient({ fetch: f.fn })}
+        refreshInterval={0}
+        endSession={endSession}
+      >
+        <Probe />
+      </SessionProvider>
+    );
+    await waitFor(() => expect(screen.getByTestId('status').textContent).toBe('authenticated'));
+    await act(async () => {
+      screen.getByText('out').click();
+    });
+    await waitFor(() => expect(endSession).toHaveBeenCalledWith(signOut));
+    // The browser leaves for SystemAuth: the session is not read again here.
+    expect(f.calls.filter((c) => c.url.endsWith('/bff/session'))).toHaveLength(1);
+  });
+
   it('signs in by navigating to the BFF', async () => {
     const f = fakeFetch({ '/bff/session': () => json(signedOut) });
     const navigate = vi.fn();
