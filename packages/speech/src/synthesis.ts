@@ -366,8 +366,10 @@ export function speak(input: SpeakInput, options: SpeakOptions = {}): Speaking {
   return handle;
 }
 
-// Characters that end a word when the browser gives no word length.
-const WORD_END = /[\s.,;:!?…"')\]]/;
+// Characters that end a word when the browser gives no word length: spaces
+// and dashes between words. Punctuation inside a word, as in "don't" or
+// "3.5", is kept, and punctuation at its end is trimmed below.
+const WORD_END = /[\s–—]/;
 // Punctuation trimmed from either end of a word, so every browser marks the
 // same span: Chrome includes it in the word's length, Safari gives no length.
 // An apostrophe is kept at the end, as in "users'".
