@@ -38,6 +38,7 @@
   },
   "scripts": {
     "build": "tsup && pnpm run build:css",
+    "prepublishOnly": "pnpm run build",
     "build:css": "node scripts/build-css.js",
     "dev": "tsup --watch",
     "lint": "eslint src/",

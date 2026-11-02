@@ -7,6 +7,37 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.6.1",
+      "date": "2026-11-02",
+      "highlights": [
+        {
+          "description": "`@plexusone/speech` 0.1.1: the first build with everything v0.6.0 describes; 0.1.0 on npm was built from an earlier commit",
+          "commit": "d56049f"
+        }
+      ],
+      "fixed": [
+        {
+          "description": "`@plexusone/speech` 0.1.0 was published from a `dist/` built before v0.6.0's last changes. 0.1.1 has them: words without the punctuation around them and no dashes reported as words, dictation that does not repeat Android's partial results, whole words such as \"don't\" in Safari, and one copy of the speaking code shared by the main and React entry points",
+          "commit": "872a64c"
+        }
+      ],
+      "infrastructure": [
+        {
+          "description": "Every package rebuilds in `prepublishOnly`, so `pnpm publish` cannot upload a `dist/` from an earlier commit",
+          "commit": "d56049f"
+        }
+      ],
+      "documentation": [
+        {
+          "description": "The release guide notes that publishing rebuilds each package",
+          "commit": "e605282"
+        },
+        {
+          "description": "v0.6.1 release notes"
+        }
+      ]
+    },
+    {
       "version": "v0.6.0",
       "date": "2026-11-02",
       "highlights": [
