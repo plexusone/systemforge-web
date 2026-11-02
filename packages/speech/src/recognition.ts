@@ -3,6 +3,8 @@ import { SpeechError } from './errors';
 /** One recognition alternative, as the browser reports it. */
 interface AlternativeLike {
   readonly transcript: string;
+  /** 0 on Android for partial results that it still marks final. */
+  readonly confidence?: number;
 }
 
 /** One recognition result: alternatives, and whether it is final. */
@@ -176,8 +178,12 @@ export function listen(options: ListenOptions = {}): Listening {
     interim = '';
     for (let i = e.resultIndex; i < e.results.length; i++) {
       const res = e.results[i];
-      const text = res.length > 0 ? res[0].transcript : '';
-      if (res.isFinal) final = join(final, text);
+      const alt = res.length > 0 ? res[0] : undefined;
+      const text = alt?.transcript ?? '';
+      // Chrome on Android marks partial results final, with confidence 0;
+      // taking them as final repeats the text. They stay interim, and the
+      // last of them is kept when the session ends (see onend).
+      if (res.isFinal && (alt?.confidence ?? 1) > 0) final = join(final, text);
       else interim += text;
     }
     options.onResult?.({
@@ -198,6 +204,13 @@ export function listen(options: ListenOptions = {}): Listening {
     }
   };
   r.onend = () => {
+    // Text still interim when a session ends is all there is of it: a
+    // browser that never sends a final result, or the next session starting
+    // over. Keep it.
+    if (interim) {
+      final = join(final, interim);
+      interim = '';
+    }
     if (active && continuous) {
       try {
         r.start();
