@@ -92,6 +92,19 @@ describe('speak', () => {
     ]);
   });
 
+  it('leaves punctuation out of words', () => {
+    const text = 'Promote, (twice!). It grew 3.5%, "users\' guess."';
+    const words: string[] = [];
+    speak(text, { ...env(), onWord: (w) => words.push(text.slice(w.start, w.end)) });
+    synthesis.boundary(0, 8); // "Promote," as Chrome reports it
+    synthesis.boundary(9, 9); // "(twice!)."
+    synthesis.boundary(27, 5); // "3.5%,"
+    synthesis.boundary(33, 7); // the quote and "users'"
+    synthesis.boundary(41, 7); // "guess." and the quote
+    synthesis.boundary(17, 1); // "." alone, as some voices report it
+    expect(words).toEqual(['Promote', 'twice', '3.5%', "users'", 'guess']);
+  });
+
   it('ignores words from an utterance that is no longer spoken', () => {
     const words: number[] = [];
     const s = speak('One. Two.', {

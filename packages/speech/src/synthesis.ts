@@ -368,27 +368,33 @@ export function speak(input: SpeakInput, options: SpeakOptions = {}): Speaking {
 
 // Characters that end a word when the browser gives no word length.
 const WORD_END = /[\s.,;:!?…"')\]]/;
+// Punctuation trimmed from either end of a word, so every browser marks the
+// same span: Chrome includes it in the word's length, Safari gives no length.
+// An apostrophe is kept at the end, as in "users'".
+const LEADING = /[([{"'“‘¿¡]/;
+const TRAILING = /[.,;:!?…)\]}"”]/;
 
 // Maps a word the browser reports in an utterance back to the segment's
-// text. Some browsers (Safari) report no length; the word then runs to the
-// next space or punctuation.
+// text, without surrounding punctuation. A word that is only punctuation,
+// as some voices report, is no word.
 function locateWord(
   s: { text: string; source: number[]; segment: number },
   charIndex: number,
   charLength: number | undefined
 ): SpeakWord | undefined {
-  if (!(charIndex >= 0 && charIndex < s.text.length)) return undefined;
-  if (s.text[charIndex] === ' ') {
-    charLength = charLength ? charLength - 1 : charLength;
-    charIndex++;
-    if (charIndex >= s.text.length) return undefined;
+  const { text } = s;
+  if (!(charIndex >= 0 && charIndex < text.length)) return undefined;
+  let start = charIndex;
+  let end = charLength && charLength > 0 ? Math.min(charIndex + charLength, text.length) : 0;
+  while (start < text.length && text[start] === ' ') start++;
+  if (!end || end <= start) {
+    end = start + 1;
+    while (end < text.length && !WORD_END.test(text[end])) end++;
   }
-  let end = charLength && charLength > 0 ? Math.min(charIndex + charLength, s.text.length) : 0;
-  if (!end) {
-    end = charIndex + 1;
-    while (end < s.text.length && !WORD_END.test(s.text[end])) end++;
-  }
-  return { segment: s.segment, start: s.source[charIndex], end: s.source[end - 1] + 1 };
+  while (start < end && LEADING.test(text[start])) start++;
+  while (end > start && TRAILING.test(text[end - 1])) end--;
+  if (start >= end) return undefined;
+  return { segment: s.segment, start: s.source[start], end: s.source[end - 1] + 1 };
 }
 
 /** Stops any speech this package started. */
