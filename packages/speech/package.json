@@ -1,0 +1,65 @@
+{
+  "name": "@plexusone/speech",
+  "version": "0.1.0",
+  "description": "Browser text-to-speech and speech-to-text, with React hooks and a standalone build",
+  "homepage": "https://plexusone.github.io/systemforge-web/packages/speech/",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.js"
+    },
+    "./browser": "./dist/speech.global.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "keywords": [
+    "systemforge",
+    "speech",
+    "text-to-speech",
+    "speech-to-text",
+    "web-speech-api"
+  ],
+  "author": "SystemForge Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/plexusone/systemforge-web.git",
+    "directory": "packages/speech"
+  },
+  "bugs": {
+    "url": "https://github.com/plexusone/systemforge-web/issues"
+  }
+}
