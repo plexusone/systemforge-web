@@ -20,6 +20,34 @@ describe('listen', () => {
     expect(l.listening).toBe(true);
   });
 
+  it('does not repeat partial results that Android marks final', async () => {
+    const { rec, results, l } = setup();
+    // Chrome on Android: each partial result is final, with confidence 0.
+    rec.say('hello', true, 0);
+    rec.say('hello world', true, 0);
+    rec.say('hello world how', true, 0);
+    expect(results.at(-1)?.text).toBe('hello world how');
+    l.stop();
+    await expect(l.done).resolves.toBe('hello world how');
+  });
+
+  it('keeps final results that report a confidence', async () => {
+    const { rec, l } = setup();
+    rec.say('hello', true, 0.92);
+    rec.say('world', true, 0.88);
+    l.stop();
+    await expect(l.done).resolves.toBe('hello world');
+  });
+
+  it('keeps interim text when a session ends without a final result', async () => {
+    const { rec, l } = setup();
+    rec.say('first part', false);
+    rec.endSession(); // the browser ends the session; listening restarts
+    rec.say('second', true);
+    l.stop();
+    await expect(l.done).resolves.toBe('first part second');
+  });
+
   it('reports final and interim text', () => {
     const { rec, results } = setup();
     rec.say('hello', false);

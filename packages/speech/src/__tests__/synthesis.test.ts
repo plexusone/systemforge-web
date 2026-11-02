@@ -92,6 +92,14 @@ describe('speak', () => {
     ]);
   });
 
+  it('keeps punctuation inside a word when the browser reports no length', () => {
+    const text = "I don't know: 3.5 times, e.g. well—done.";
+    const words: string[] = [];
+    speak(text, { ...env(), onWord: (w) => words.push(text.slice(w.start, w.end)) });
+    for (const w of ["don't", '3.5', 'e.g.', 'well', 'done']) synthesis.boundary(text.indexOf(w));
+    expect(words).toEqual(["don't", '3.5', 'e.g', 'well', 'done']);
+  });
+
   it('leaves punctuation out of words', () => {
     const text = 'Promote, (twice!). It grew 3.5%, "users\' guess."';
     const words: string[] = [];

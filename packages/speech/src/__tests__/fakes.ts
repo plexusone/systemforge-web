@@ -124,7 +124,11 @@ export class FakeRecognition implements RecognitionLike {
   onspeechstart: (() => void) | null = null;
   starts = 0;
   running = false;
-  private results: Array<{ isFinal: boolean; length: number; 0: { transcript: string } }> = [];
+  private results: Array<{
+    isFinal: boolean;
+    length: number;
+    0: { transcript: string; confidence?: number };
+  }> = [];
 
   start() {
     if (this.running) throw new Error('already started');
@@ -139,10 +143,10 @@ export class FakeRecognition implements RecognitionLike {
     this.endSession();
   }
   /** Reports a result, replacing the interim one when there is one. */
-  say(transcript: string, isFinal: boolean) {
+  say(transcript: string, isFinal: boolean, confidence?: number) {
     const last = this.results[this.results.length - 1];
     const index = last && !last.isFinal ? this.results.length - 1 : this.results.length;
-    this.results[index] = { isFinal, length: 1, 0: { transcript } };
+    this.results[index] = { isFinal, length: 1, 0: { transcript, confidence } };
     this.onresult?.({ resultIndex: index, results: this.results });
   }
   error(error: string) {
