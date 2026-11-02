@@ -7,6 +7,61 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.6.0",
+      "date": "2026-11-02",
+      "highlights": [
+        {
+          "description": "`@plexusone/speech` 0.1.0: read text aloud and take dictation with the browser's own speech, with word highlighting, React hooks and a standalone build for pages without a build step",
+          "commit": "7cdc6a3"
+        }
+      ],
+      "added": [
+        {
+          "description": "`speak`: text or segments with pauses, split into short utterances, with pause and resume, a cancel before new speech and one retry when the browser accepts speech but never starts it (`start-timeout`); speech cancelled by another script ends as `stopped`",
+          "commit": "7cdc6a3"
+        },
+        {
+          "description": "`listen`: speech recognition with final and interim text, restarted across the browser's own stops until `stop()`, a fatal error or `maxSilences` silences in a row",
+          "commit": "7cdc6a3"
+        },
+        {
+          "description": "`getVoices`, `pickVoice`, `langMatches`, `splitText`, `isSynthesisSupported`, `isRecognitionSupported`, `stopSpeaking` and `SpeechError`",
+          "commit": "7cdc6a3"
+        },
+        {
+          "description": "`useSpeech`, `useListen` and `useVoices` in `@plexusone/speech/react`, and `@plexusone/speech/browser`, one file defining `window.PlexusSpeech`",
+          "commit": "7cdc6a3"
+        },
+        {
+          "description": "`onWord` on `speak`, with each word's segment and its offsets in the text passed, without surrounding punctuation; pieces with no letter or digit, such as a dash, are not reported",
+          "commit": "c160f17"
+        },
+        {
+          "description": "`trackWords` on `useSpeech`, which keeps the word being spoken in `word`",
+          "commit": "c160f17"
+        }
+      ],
+      "tests": [
+        {
+          "description": "Cover speaking, pausing, retrying, listening, text splitting and the hooks with fake browser speech",
+          "commit": "8d3028d"
+        },
+        {
+          "description": "Cover word offsets across chunks, words without a length, punctuation, dashes and `trackWords`",
+          "commit": "170ba5c"
+        }
+      ],
+      "documentation": [
+        {
+          "description": "`@plexusone/speech` package page, with highlighting words and how voices differ",
+          "commit": "cd7f540"
+        },
+        {
+          "description": "Adding read-aloud and voice input guide, and v0.6.0 release notes"
+        }
+      ]
+    },
+    {
       "version": "v0.5.1",
       "date": "2026-11-02",
       "highlights": [
