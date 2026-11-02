@@ -7,6 +7,7 @@ import type {
   SpeakInput,
   SpeakOptions,
   SpeakResult,
+  SpeakWord,
   Speaking,
   SpeechState,
   SynthesisEnv,
@@ -28,9 +29,17 @@ export function useVoices(lang?: string, env: SynthesisEnv = {}): SpeechSynthesi
   return voices;
 }
 
+export interface UseSpeechOptions extends SpeakOptions {
+  /**
+   * Track the word being spoken in `word`, for highlighting. Off by default:
+   * it re-renders the component on every word.
+   */
+  trackWords?: boolean;
+}
+
 export interface UseSpeechResult {
   /** Speaks, stopping anything already speaking. Options add to the hook's. */
-  speak: (input: SpeakInput, options?: SpeakOptions) => Promise<SpeakResult>;
+  speak: (input: SpeakInput, options?: UseSpeechOptions) => Promise<SpeakResult>;
   stop: () => void;
   pause: () => void;
   resume: () => void;
@@ -38,14 +47,20 @@ export interface UseSpeechResult {
   state: SpeechState | 'idle';
   /** The segment being spoken, or -1. */
   segment: number;
+  /**
+   * The word being spoken, with `trackWords`; undefined between segments,
+   * after speech, and with voices that do not report words.
+   */
+  word: SpeakWord | undefined;
   error: SpeechError | undefined;
   supported: boolean;
 }
 
 /** Text-to-speech in a component. Speech stops when the component unmounts. */
-export function useSpeech(defaults: SpeakOptions = {}): UseSpeechResult {
+export function useSpeech(defaults: UseSpeechOptions = {}): UseSpeechResult {
   const [state, setState] = useState<SpeechState | 'idle'>('idle');
   const [segment, setSegment] = useState(-1);
+  const [word, setWord] = useState<SpeakWord>();
   const [error, setError] = useState<SpeechError>();
   const handle = useRef<Speaking | undefined>(undefined);
   // Identifies the latest speech, so callbacks from earlier speech are ignored.
@@ -57,18 +72,28 @@ export function useSpeech(defaults: SpeakOptions = {}): UseSpeechResult {
 
   useEffect(() => () => handle.current?.stop(), []);
 
-  const run = useCallback((input: SpeakInput, options: SpeakOptions = {}) => {
-    const merged = { ...defaultsRef.current, ...options };
+  const run = useCallback((input: SpeakInput, options: UseSpeechOptions = {}) => {
+    const { trackWords, ...merged } = { ...defaultsRef.current, ...options };
     const id = ++seq.current;
     const latest = () => seq.current === id;
     setError(undefined);
     setSegment(-1);
+    setWord(undefined);
     const h = speak(input, {
       ...merged,
       onSegment: (i, seg) => {
-        if (latest()) setSegment(i);
+        if (latest()) {
+          setSegment(i);
+          setWord(undefined);
+        }
         merged.onSegment?.(i, seg);
       },
+      onWord: trackWords
+        ? (w) => {
+            if (latest()) setWord(w);
+            merged.onWord?.(w);
+          }
+        : merged.onWord,
     });
     handle.current = h;
     setState(h.state);
@@ -77,6 +102,7 @@ export function useSpeech(defaults: SpeakOptions = {}): UseSpeechResult {
         if (latest()) {
           setState(r.status);
           setSegment(-1);
+          setWord(undefined);
         }
         return r;
       },
@@ -84,6 +110,7 @@ export function useSpeech(defaults: SpeakOptions = {}): UseSpeechResult {
         if (latest()) {
           setState('error');
           setSegment(-1);
+          setWord(undefined);
           setError(e);
         }
         throw e;
@@ -108,6 +135,7 @@ export function useSpeech(defaults: SpeakOptions = {}): UseSpeechResult {
     resume,
     state,
     segment,
+    word,
     error,
     supported: isSynthesisSupported(defaults),
   };

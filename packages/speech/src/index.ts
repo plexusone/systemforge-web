@@ -14,6 +14,7 @@ export type {
   SpeakOptions,
   SpeakResult,
   SpeakSegment,
+  SpeakWord,
   Speaking,
   SpeechState,
   SynthesisEnv,

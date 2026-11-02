@@ -12,8 +12,57 @@ export const DEFAULT_MAX_CHUNK_CHARS = 180;
  * word longer than `maxChars` is kept whole. Whitespace is collapsed.
  */
 export function splitText(text: string, maxChars: number = DEFAULT_MAX_CHUNK_CHARS): string[] {
-  const t = text.replace(/\s+/g, ' ').trim();
+  return chunkText(text, maxChars).map((c) => c.text);
+}
+
+/** A chunk of text to speak, and where each of its characters came from. */
+export interface TextChunk {
+  text: string;
+  /** For each character of `text`, its index in the original text. */
+  source: number[];
+}
+
+/**
+ * Splits text like splitText, keeping for each chunk the position of every
+ * character in the original text, so a position the browser reports in a
+ * chunk can be mapped back to the text the caller passed.
+ */
+export function chunkText(text: string, maxChars: number = DEFAULT_MAX_CHUNK_CHARS): TextChunk[] {
+  const { t, source } = collapse(text);
   if (!t) return [];
+  // Each chunk is a run of t: its parts are adjacent in t and were joined
+  // with the single space that separated them there.
+  let from = 0;
+  return split(t, maxChars).map((chunk) => {
+    const at = t.indexOf(chunk, from);
+    from = at + chunk.length;
+    return { text: chunk, source: source.slice(at, at + chunk.length) };
+  });
+}
+
+// Collapses runs of whitespace to one space and trims, recording the
+// original index of every character kept.
+function collapse(text: string): { t: string; source: number[] } {
+  let t = '';
+  const source: number[] = [];
+  let space = false;
+  for (let i = 0; i < text.length; i++) {
+    if (/\s/.test(text[i])) {
+      space = t.length > 0;
+      continue;
+    }
+    if (space) {
+      t += ' ';
+      source.push(i - 1);
+      space = false;
+    }
+    t += text[i];
+    source.push(i);
+  }
+  return { t, source };
+}
+
+function split(t: string, maxChars: number): string[] {
   if (maxChars <= 0 || t.length <= maxChars) return [t];
 
   const parts: string[] = [];

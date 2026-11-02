@@ -1,5 +1,5 @@
 import { SpeechError } from './errors';
-import { DEFAULT_MAX_CHUNK_CHARS, splitText } from './text';
+import { chunkText, DEFAULT_MAX_CHUNK_CHARS } from './text';
 
 /** A piece of text to speak, and the silence after it. */
 export interface SpeakSegment {
@@ -34,6 +34,17 @@ export interface SynthesisEnv {
   Utterance?: UtteranceConstructor;
 }
 
+/**
+ * A word being spoken: `start` and `end` are UTF-16 offsets into the text of
+ * segment `segment`, as passed to speak, so `text.slice(start, end)` is the
+ * word.
+ */
+export interface SpeakWord {
+  segment: number;
+  start: number;
+  end: number;
+}
+
 export interface SpeakOptions extends SynthesisEnv {
   /** BCP 47 language, such as `en-US`. Picks a voice when `voice` is not set. */
   lang?: string;
@@ -56,6 +67,11 @@ export interface SpeakOptions extends SynthesisEnv {
   startTimeoutMs?: number;
   /** Called as each segment starts, including one that is only a pause. */
   onSegment?: (index: number, segment: SpeakSegment) => void;
+  /**
+   * Called as each word is spoken, for highlighting. Only some voices report
+   * words; with others this is never called, and speech is the same.
+   */
+  onWord?: (word: SpeakWord) => void;
 }
 
 export type SpeechState = 'speaking' | 'paused' | 'ended' | 'stopped' | 'error';
@@ -80,7 +96,7 @@ export interface Speaking {
 export const DEFAULT_START_TIMEOUT_MS = 3000;
 
 type Step =
-  | { kind: 'say'; text: string; segment: number; first: boolean }
+  | { kind: 'say'; text: string; source: number[]; segment: number; first: boolean }
   | { kind: 'wait'; ms: number; segment: number; first: boolean };
 
 // The browser speaks one thing at a time, so starting new speech stops the
@@ -121,8 +137,8 @@ function plan(segments: readonly SpeakSegment[], maxChars: number): Step[] {
   const steps: Step[] = [];
   segments.forEach((seg, segment) => {
     let first = true;
-    for (const text of splitText(seg.text ?? '', maxChars)) {
-      steps.push({ kind: 'say', text, segment, first });
+    for (const { text, source } of chunkText(seg.text ?? '', maxChars)) {
+      steps.push({ kind: 'say', text, source, segment, first });
       first = false;
     }
     const ms = Math.max(0, seg.pauseMs ?? 0);
@@ -237,11 +253,12 @@ export function speak(input: SpeakInput, options: SpeakOptions = {}): Speaking {
       startWait();
       return;
     }
-    say(s.text, false);
+    say(s, false);
   }
 
   // Speaks one utterance. A retry is the second try after it failed to start.
-  function say(text: string, retry: boolean) {
+  function say(s: Extract<Step, { kind: 'say' }>, retry: boolean) {
+    const { text } = s;
     const u = new Utterance!(text);
     if (voice) u.voice = voice;
     const lang = options.lang ?? voice?.lang;
@@ -252,6 +269,14 @@ export function speak(input: SpeakInput, options: SpeakOptions = {}): Speaking {
     u.onstart = () => {
       if (utterance === u) clearStartTimer();
     };
+    const onWord = options.onWord;
+    if (onWord) {
+      u.onboundary = (e: SpeechSynthesisEvent) => {
+        if (utterance !== u || e.name === 'sentence') return;
+        const word = locateWord(s, e.charIndex, e.charLength);
+        if (word) onWord(word);
+      };
+    }
     u.onend = () => {
       if (utterance !== u) return;
       clearStartTimer();
@@ -287,7 +312,7 @@ export function speak(input: SpeakInput, options: SpeakOptions = {}): Speaking {
           );
           return;
         }
-        say(text, true);
+        say(s, true);
       }, startTimeoutMs);
     }
   }
@@ -332,13 +357,38 @@ export function speak(input: SpeakInput, options: SpeakOptions = {}): Speaking {
     if (repeat) {
       repeat = false;
       const s = steps[next - 1];
-      if (s.kind === 'say') say(s.text, false);
+      if (s.kind === 'say') say(s, false);
     } else if (waitLeft > 0) startWait();
     else step();
   }
 
   step();
   return handle;
+}
+
+// Characters that end a word when the browser gives no word length.
+const WORD_END = /[\s.,;:!?…"')\]]/;
+
+// Maps a word the browser reports in an utterance back to the segment's
+// text. Some browsers (Safari) report no length; the word then runs to the
+// next space or punctuation.
+function locateWord(
+  s: { text: string; source: number[]; segment: number },
+  charIndex: number,
+  charLength: number | undefined
+): SpeakWord | undefined {
+  if (!(charIndex >= 0 && charIndex < s.text.length)) return undefined;
+  if (s.text[charIndex] === ' ') {
+    charLength = charLength ? charLength - 1 : charLength;
+    charIndex++;
+    if (charIndex >= s.text.length) return undefined;
+  }
+  let end = charLength && charLength > 0 ? Math.min(charIndex + charLength, s.text.length) : 0;
+  if (!end) {
+    end = charIndex + 1;
+    while (end < s.text.length && !WORD_END.test(s.text[end])) end++;
+  }
+  return { segment: s.segment, start: s.source[charIndex], end: s.source[end - 1] + 1 };
 }
 
 /** Stops any speech this package started. */
