@@ -17,6 +17,7 @@ export class FakeUtterance {
   onstart: (() => void) | null = null;
   onend: (() => void) | null = null;
   onerror: ((e: { error: string }) => void) | null = null;
+  onboundary: ((e: { name: string; charIndex: number; charLength?: number }) => void) | null = null;
 
   constructor(text: string) {
     this.text = text;
@@ -70,6 +71,10 @@ export class FakeSynthesis implements SynthesisLike {
     const u = this.current;
     this.current = undefined;
     u?.onend?.();
+  }
+  /** Reports a boundary in the current utterance, as the browser does. */
+  boundary(charIndex: number, charLength?: number, name = 'word') {
+    this.current?.onboundary?.({ name, charIndex, charLength });
   }
   fail(error: string) {
     const u = this.current;

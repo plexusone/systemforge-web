@@ -59,6 +59,57 @@ describe('speak', () => {
     expect(synthesis.texts()).toEqual(['One.']);
   });
 
+  it('reports words as offsets into the text passed, across chunks', () => {
+    const words: string[] = [];
+    const text = 'One  two. Three four.';
+    speak([{ text: 'Intro.' }, { text }], {
+      ...env(),
+      maxChunkChars: 10,
+      onWord: (w) => words.push(`${w.segment}:${text.slice(w.start, w.end)}`),
+    });
+    synthesis.end(); // Intro.
+    expect(synthesis.current?.text).toBe('One two.');
+    synthesis.boundary(4, 3); // "two" in the collapsed chunk
+    synthesis.boundary(0, 8, 'sentence'); // sentence boundaries are not words
+    synthesis.end();
+    expect(synthesis.current?.text).toBe('Three');
+    synthesis.end();
+    synthesis.boundary(0, 4); // "four"
+    expect(words).toEqual(['1:two', '1:four']);
+  });
+
+  it('finds the word end when the browser reports no length', () => {
+    const words: Array<[number, number]> = [];
+    speak('Hello, wide world.', { ...env(), onWord: (w) => words.push([w.start, w.end]) });
+    synthesis.boundary(0);
+    synthesis.boundary(6); // the space before "wide"
+    synthesis.boundary(12, 0);
+    synthesis.boundary(99);
+    expect(words).toEqual([
+      [0, 5],
+      [7, 11],
+      [12, 17],
+    ]);
+  });
+
+  it('ignores words from an utterance that is no longer spoken', () => {
+    const words: number[] = [];
+    const s = speak('One. Two.', {
+      ...env(),
+      maxChunkChars: 4,
+      onWord: (w) => words.push(w.start),
+    });
+    const first = synthesis.current!;
+    s.stop();
+    first.onboundary?.({ name: 'word', charIndex: 0, charLength: 3 });
+    expect(words).toEqual([]);
+  });
+
+  it('listens for words only when asked', () => {
+    speak('One.', env());
+    expect(synthesis.current?.onboundary).toBeNull();
+  });
+
   it('splits long text into several utterances', async () => {
     const s = speak('One two. Three four. Five six seven.', { ...env(), maxChunkChars: 20 });
     synthesis.end();

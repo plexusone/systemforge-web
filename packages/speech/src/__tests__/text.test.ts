@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { splitText } from '../index';
+import { chunkText } from '../text';
 
 describe('splitText', () => {
   it('keeps short text whole and collapses whitespace', () => {
@@ -40,5 +41,19 @@ describe('splitText', () => {
   it('does not split when the limit is zero', () => {
     const long = 'word '.repeat(100).trim();
     expect(splitText(long, 0)).toEqual([long]);
+  });
+});
+
+describe('chunkText', () => {
+  it('maps every character of a chunk back to the original text', () => {
+    const text = '  One   two.\n\nThree four. ';
+    const chunks = chunkText(text, 10);
+    expect(chunks.map((c) => c.text)).toEqual(['One two.', 'Three', 'four.']);
+    for (const c of chunks) {
+      [...c.text].forEach((ch, i) => {
+        if (ch !== ' ') expect(text[c.source[i]]).toBe(ch);
+      });
+    }
+    expect(chunks[1].source[0]).toBe(text.indexOf('Three'));
   });
 });
