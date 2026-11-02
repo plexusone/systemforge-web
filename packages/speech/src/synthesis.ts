@@ -371,11 +371,14 @@ const WORD_END = /[\s.,;:!?…"')\]]/;
 // Punctuation trimmed from either end of a word, so every browser marks the
 // same span: Chrome includes it in the word's length, Safari gives no length.
 // An apostrophe is kept at the end, as in "users'".
-const LEADING = /[([{"'“‘¿¡]/;
-const TRAILING = /[.,;:!?…)\]}"”]/;
+const LEADING = /[([{"'“‘¿¡–—-]/;
+const TRAILING = /[.,;:!?…)\]}"”–—-]/;
+// A word has at least one letter or digit; anything else, such as a dash
+// or an ellipsis spoken as a pause, is not reported.
+const WORDLIKE = /[\p{L}\p{N}]/u;
 
 // Maps a word the browser reports in an utterance back to the segment's
-// text, without surrounding punctuation. A word that is only punctuation,
+// text, without surrounding punctuation. A piece with no letter or digit,
 // as some voices report, is no word.
 function locateWord(
   s: { text: string; source: number[]; segment: number },
@@ -393,7 +396,7 @@ function locateWord(
   }
   while (start < end && LEADING.test(text[start])) start++;
   while (end > start && TRAILING.test(text[end - 1])) end--;
-  if (start >= end) return undefined;
+  if (start >= end || !WORDLIKE.test(text.slice(start, end))) return undefined;
   return { segment: s.segment, start: s.source[start], end: s.source[end - 1] + 1 };
 }
 

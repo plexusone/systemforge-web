@@ -105,6 +105,16 @@ describe('speak', () => {
     expect(words).toEqual(['Promote', 'twice', '3.5%', "users'", 'guess']);
   });
 
+  it('does not report dashes, ellipses or symbols as words', () => {
+    const text = 'Plan: 3.5% — fine – well… & so-called';
+    const words: string[] = [];
+    speak(text, { ...env(), onWord: (w) => words.push(text.slice(w.start, w.end)) });
+    for (const w of ['3.5%', '—', 'fine', '–', 'well…', '&', 'so-called']) {
+      synthesis.boundary(text.indexOf(w), w.length);
+    }
+    expect(words).toEqual(['3.5%', 'fine', 'well', 'so-called']);
+  });
+
   it('ignores words from an utterance that is no longer spoken', () => {
     const words: number[] = [];
     const s = speak('One. Two.', {
