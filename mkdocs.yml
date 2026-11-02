@@ -63,6 +63,7 @@ nav:
       - '@plexusone/invites': packages/invites.md
       - '@plexusone/pages': packages/pages.md
       - '@plexusone/shell': packages/shell.md
+      - '@plexusone/speech': packages/speech.md
       - '@plexusone/telemetry': packages/telemetry.md
       - '@plexusone/tenant': packages/tenant.md
       - '@plexusone/ui': packages/ui.md
