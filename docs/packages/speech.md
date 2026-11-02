@@ -94,10 +94,16 @@ speak(text, {
 });
 ```
 
+A word is marked without the punctuation around it ("promote," marks
+"promote"); a piece that is only punctuation is not reported. Numbers and
+contractions such as "3.5%" and "didn't" are usually one word.
+
 Only some voices report words. Chrome's online voices often do not, so
 `onWord` may never be called; speech is the same either way. When the
 browser reports where a word starts but not its length, as Safari does,
-the word runs to the next space or punctuation.
+the word runs to the next space or punctuation. Voices differ in what they
+call a word: some report pieces of a word, join two short words, or skip a
+word they spell out, so the mark can lag for a word without drifting.
 
 ## Voices
 
