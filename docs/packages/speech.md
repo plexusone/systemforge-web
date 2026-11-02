@@ -38,6 +38,7 @@ await speech.done; // { status: 'ended' } or { status: 'stopped' }
 | `voice`                   | A voice, or a voice's `voiceURI` or `name`                        |
 | `rate`, `pitch`, `volume` | As on `SpeechSynthesisUtterance`                                  |
 | `onSegment`               | Called as each segment starts, including one that is only a pause |
+| `onWord`                  | Called as each word is spoken (see Highlighting words)            |
 | `signal`                  | An `AbortSignal` that stops the speech                            |
 | `maxChunkChars`           | Longest text per utterance (default 180)                          |
 | `startTimeoutMs`          | How long an utterance may take to start (default 3000; 0 is off)  |
@@ -78,6 +79,25 @@ progress. `stopSpeaking()` stops it from anywhere.
   (`pagehide`), so it can't stall the next page.
 - **User gestures.** Browsers may refuse speech that is not started from a
   click or key press; `done` then rejects with code `not-allowed`.
+
+### Highlighting words
+
+Pass `onWord` to hear about each word as it is spoken. `start` and `end`
+are offsets into the text of segment `segment`, exactly as passed to
+`speak`, even when the text was split into several utterances or had its
+whitespace collapsed:
+
+```ts
+const text = 'Welcome to the course.';
+speak(text, {
+  onWord: ({ start, end }) => mark(text.slice(start, end)),
+});
+```
+
+Only some voices report words. Chrome's online voices often do not, so
+`onWord` may never be called; speech is the same either way. When the
+browser reports where a word starts but not its length, as Safari does,
+the word runs to the next space or punctuation.
 
 ## Voices
 
@@ -137,9 +157,33 @@ function ReadAloud({ text }: { text: string }) {
 
 | Hook                 | Returns                                                                                 |
 | -------------------- | --------------------------------------------------------------------------------------- |
-| `useSpeech(options)` | `speak`, `stop`, `pause`, `resume`, `state`, `segment`, `error`, `supported`            |
+| `useSpeech(options)` | `speak`, `stop`, `pause`, `resume`, `state`, `segment`, `word`, `error`, `supported`    |
 | `useListen(options)` | `start`, `stop`, `abort`, `listening`, `text`, `final`, `interim`, `error`, `supported` |
 | `useVoices(lang)`    | The voices, empty until loaded                                                          |
+
+With `trackWords: true`, `useSpeech` keeps the word being spoken in
+`word` (`{ segment, start, end }`), for highlighting; it is undefined
+between segments and after speech. It is off by default because it
+re-renders the component on every word; `onWord` alone does not:
+
+```tsx
+function Highlighted({ text }: { text: string }) {
+  const { speak, word } = useSpeech({ trackWords: true });
+  return (
+    <p onClick={() => speak(text)}>
+      {word ? (
+        <>
+          {text.slice(0, word.start)}
+          <mark>{text.slice(word.start, word.end)}</mark>
+          {text.slice(word.end)}
+        </>
+      ) : (
+        text
+      )}
+    </p>
+  );
+}
+```
 
 Speech and listening stop when the component unmounts. The promises from
 `speak` and `start` reject on errors, which the hooks also report as
