@@ -54,6 +54,21 @@ describe('SessionClient', () => {
     expect(f.calls[0].init?.method).toBe('POST');
   });
 
+  it('asks for JSON and returns where to end the SystemAuth login session', async () => {
+    const signOut = {
+      url: 'https://auth.example.com/logout',
+      returnTo: 'https://app.example.com/',
+    };
+    const f = fakeFetch({ '/bff/auth/logout': () => json({ signOut }) });
+    await expect(new SessionClient({ fetch: f.fn }).signOut()).resolves.toEqual(signOut);
+    expect(new Headers(f.calls[0].init?.headers).get('Accept')).toBe('application/json');
+  });
+
+  it('returns nothing when the BFF names no sign-out page', async () => {
+    const f = fakeFetch({ '/bff/auth/logout': () => new Response(null, { status: 204 }) });
+    await expect(new SessionClient({ fetch: f.fn }).signOut()).resolves.toBeUndefined();
+  });
+
   it('reports a rejected sign-out', async () => {
     const f = fakeFetch({
       '/bff/auth/logout': () =>
