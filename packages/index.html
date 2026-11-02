@@ -522,6 +522,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../guides/read-aloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding Read-Aloud and Voice Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../guides/releasing/" class="md-nav__link">
         
   
@@ -951,6 +979,34 @@
     
   
     @plexusone/shell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="speech/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    @plexusone/speech
   
 
     
@@ -1835,6 +1891,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../releases/v0.6.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.6.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../releases/v0.5.1/" class="md-nav__link">
         
   
@@ -2208,10 +2292,12 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>@plexusone/pages ─────▶ @plexusone/auth
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Standalone: @plexusone/api-client, @plexusone/chat,
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>            @plexusone/design-tokens, @plexusone/telemetry
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>            @plexusone/design-tokens, @plexusone/speech,
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>            @plexusone/telemetry
 </code></pre></div>
 <p>An arrow is a peer dependency: the application installs both, and they
-share one copy. Every package also needs React 19.</p>
+share one copy. Every package also needs React 19, except
+<code>@plexusone/design-tokens</code> and the main entry point of <code>@plexusone/speech</code>.</p>
 <h2 id="package-summary">Package summary<a class="headerlink" href="#package-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2266,6 +2352,11 @@ share one copy. Every package also needs React 19.</p>
 <td><a href="shell/">@plexusone/shell</a></td>
 <td>Application chrome</td>
 <td><code>AppShell</code>, <code>ProductSwitcher</code>, <code>OrganizationSwitcher</code>, <code>ProfileMenu</code></td>
+</tr>
+<tr>
+<td><a href="speech/">@plexusone/speech</a></td>
+<td>Browser speech in and out</td>
+<td><code>speak</code>, <code>listen</code>, <code>getVoices</code>, <code>useSpeech</code>, <code>useListen</code></td>
 </tr>
 <tr>
 <td><a href="telemetry/">@plexusone/telemetry</a></td>

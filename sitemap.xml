@@ -29,6 +29,10 @@
          <lastmod>2026-11-02</lastmod>
     </url>
     <url>
+         <loc>https://plexusone.github.io/systemforge-web/guides/read-aloud/</loc>
+         <lastmod>2026-11-02</lastmod>
+    </url>
+    <url>
          <loc>https://plexusone.github.io/systemforge-web/guides/releasing/</loc>
          <lastmod>2026-11-02</lastmod>
     </url>
@@ -74,6 +78,10 @@
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/packages/shell/</loc>
+         <lastmod>2026-11-02</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/packages/speech/</loc>
          <lastmod>2026-11-02</lastmod>
     </url>
     <url>
@@ -126,6 +134,10 @@
     </url>
     <url>
          <loc>https://plexusone.github.io/systemforge-web/releases/v0.5.1/</loc>
+         <lastmod>2026-11-02</lastmod>
+    </url>
+    <url>
+         <loc>https://plexusone.github.io/systemforge-web/releases/v0.6.0/</loc>
          <lastmod>2026-11-02</lastmod>
     </url>
     <url>
