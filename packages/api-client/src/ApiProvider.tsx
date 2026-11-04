@@ -1,4 +1,13 @@
-import { createContext, useContext, useState, useCallback, useMemo, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ApiClient } from './client';
 import type { ApiClientConfig, ApiClientContextValue, ApiClientInterface } from './types';
@@ -21,7 +30,18 @@ export interface ApiProviderProps {
    * Optional existing QueryClient instance
    */
   queryClient?: QueryClient;
+  /**
+   * Follow the organization `@plexusone/tenant` selects, sending its ID as
+   * `X-Organization-ID`. Tenant only selects organizations the person is a
+   * member of. Default true.
+   */
+  followTenant?: boolean;
 }
+
+// Window events from @plexusone/auth and @plexusone/tenant. The names are
+// repeated here so this package needs neither.
+const PRINCIPAL_CHANGE_EVENT = 'systemforge:principal-change';
+const ORG_CHANGE_EVENT = 'systemforge:org-change';
 
 /**
  * Default query client with sensible defaults
@@ -75,6 +95,7 @@ export function ApiProvider({
   children,
   config,
   queryClient: providedQueryClient,
+  followTenant = true,
 }: ApiProviderProps) {
   const [currentOrgId, setCurrentOrgIdState] = useState<string | null>(config.currentOrgId || null);
 
@@ -93,16 +114,42 @@ export function ApiProvider({
     return apiClient;
   }, [config, currentOrgId]);
 
-  // Update org ID and invalidate queries
+  // Cached data belongs to one principal in one organization. Resetting
+  // cancels requests in flight, drops every query's data and refetches the
+  // ones on screen. Invalidating would keep the data, and an inactive query
+  // would show it when it next mounts.
+  const resetCache = useCallback(() => {
+    void queryClient.resetQueries();
+    queryClient.getMutationCache().clear();
+  }, [queryClient]);
+
+  const orgRef = useRef(currentOrgId);
   const setCurrentOrgId = useCallback(
     (orgId: string | null) => {
-      setCurrentOrgIdState(orgId);
       client.setOrgId(orgId);
-      // Invalidate all queries when org changes
-      queryClient.invalidateQueries();
+      if (orgRef.current === orgId) return;
+      orgRef.current = orgId;
+      setCurrentOrgIdState(orgId);
+      resetCache();
     },
-    [client, queryClient]
+    [client, resetCache]
   );
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    window.addEventListener(PRINCIPAL_CHANGE_EVENT, resetCache);
+    return () => window.removeEventListener(PRINCIPAL_CHANGE_EVENT, resetCache);
+  }, [resetCache]);
+
+  useEffect(() => {
+    if (!followTenant || typeof window === 'undefined') return undefined;
+    const onOrgChange = (e: Event) => {
+      const id = (e as CustomEvent<{ org?: { id?: unknown } }>).detail?.org?.id;
+      if (typeof id === 'string' && id !== '') setCurrentOrgId(id);
+    };
+    window.addEventListener(ORG_CHANGE_EVENT, onOrgChange);
+    return () => window.removeEventListener(ORG_CHANGE_EVENT, onOrgChange);
+  }, [followTenant, setCurrentOrgId]);
 
   const value = useMemo<ApiClientContextValue>(
     () => ({
