@@ -25,6 +25,18 @@ describe('toSession', () => {
     expect(s.apps[0]).not.toHaveProperty('order');
   });
 
+  it('drops catalog entries whose URL is not http(s) or relative', () => {
+    const s = toSession({
+      ...twoOrgs,
+      apps: [
+        ...(twoOrgs.apps ?? []),
+        { id: 'x', name: 'X', url: 'javascript:alert(1)//' },
+        { id: 'y', name: 'Y', url: 'data:text/html,hi' },
+      ],
+    });
+    expect(s.apps.map((a) => a.id)).toEqual(['build', 'agents', 'portfolio']);
+  });
+
   it('gives a membership without applications an empty map', () => {
     const s = toSession(noCatalog);
     expect(s.user?.memberships[0].applications).toEqual({});
