@@ -349,18 +349,19 @@ Organization management follows this permission model:
 | ------------------- | ----- | ----- | ------ |
 | View members        | Yes   | Yes   | Yes    |
 | Invite users        | Yes   | Yes   | No     |
+| Invite admins       | Yes   | No    | No     |
 | Edit member roles   | Yes   | Yes\* | No     |
 | Remove members      | Yes   | Yes\* | No     |
 | Update org settings | Yes   | Yes   | No     |
 | Transfer ownership  | Yes   | No    | No     |
 | Delete organization | Yes   | No    | No     |
 
-\*Only an owner can grant the owner role or change or remove an owner; admins can manage other admins
+\*Admins manage members only: granting `admin`, and changing or removing an owner or another admin, is an owner's. An admin may step down or leave
 
 `currentUserRole` decides only which controls the pages show. The server must
 enforce this table on every request: which roles may grant which roles,
-and that only an owner can grant `owner` or act on an owner. SystemForge's
-organization API does.
+and that only an owner can grant `owner` or `admin` or act on an owner or
+admin. SystemForge's organization API does.
 
 The pages encode `orgSlug` and member and invitation IDs in request paths,
 and load again, with fresh state, when `orgSlug` or `apiBaseUrl` changes.
