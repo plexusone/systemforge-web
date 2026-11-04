@@ -175,6 +175,26 @@ describe('devSession', () => {
   });
 });
 
+describe('devSession in a production build', () => {
+  it('is ignored, and the BFF session is used', async () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    // The BFF is unreachable here, so the host shows its session error.
+    const getSession = vi.fn(async () => {
+      throw new Error('no backend');
+    });
+    const sessionClient = { getSession } as unknown as SessionClient;
+    window.history.pushState({}, '', '/orgs/org-1');
+    render(createHost({ app: reportsApp, devSession: twoOrgs, sessionClient }));
+    await waitFor(() => expect(getSession).toHaveBeenCalled());
+    expect(screen.queryByRole('heading', { name: 'Reports home' })).toBeNull();
+    expect(error).toHaveBeenCalledWith('createHost: devSession is ignored in a production build');
+    vi.unstubAllEnvs();
+    error.mockRestore();
+    window.history.pushState({}, '', '/');
+  });
+});
+
 describe('serving under a path', () => {
   it('routes relative to the basename', async () => {
     window.history.pushState({}, '', '/console/orgs/org-1/reports/7');
