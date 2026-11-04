@@ -45,6 +45,9 @@ export default tseslint.config(
       '@eslint-react/no-use-context': 'off',
       '@eslint-react/naming-convention-ref-name': 'off',
       '@eslint-react/use-state': 'off',
+      // eslint-plugin-react-hooks checks hooks; don't report twice.
+      '@eslint-react/exhaustive-deps': 'off',
+      '@eslint-react/rules-of-hooks': 'off',
 
       // Hooks rules
       'react-hooks/rules-of-hooks': 'error',
