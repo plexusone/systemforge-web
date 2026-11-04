@@ -174,11 +174,11 @@ function ReadAloud({ text }: { text: string }) {
 }
 ```
 
-| Hook                 | Returns                                                                                 |
-| -------------------- | --------------------------------------------------------------------------------------- |
+| Hook                 | Returns                                                                                                     |
+| -------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `useSpeech(options)` | `speak`, `stop`, `pause`, `resume`, `setRate`, `setVoice`, `state`, `segment`, `word`, `error`, `supported` |
-| `useListen(options)` | `start`, `stop`, `abort`, `listening`, `text`, `final`, `interim`, `error`, `supported` |
-| `useVoices(lang)`    | The voices, empty until loaded                                                          |
+| `useListen(options)` | `start`, `stop`, `abort`, `listening`, `text`, `final`, `interim`, `error`, `supported`                     |
+| `useVoices(lang)`    | The voices, empty until loaded                                                                              |
 
 With `trackWords: true`, `useSpeech` keeps the word being spoken in
 `word` (`{ segment, start, end }`), for highlighting; it is undefined

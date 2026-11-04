@@ -4,10 +4,7 @@
   "repository": "https://github.com/plexusone/systemforge-web",
   "versioning": "semver",
   "commitConvention": "conventional",
-  "maintainers": [
-    "grokify",
-    "johncwang@gmail.com"
-  ],
+  "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
       "version": "v0.7.0",

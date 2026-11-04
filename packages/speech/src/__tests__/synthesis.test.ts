@@ -230,7 +230,11 @@ describe('speak', () => {
   it('carries on from the last word at a new speed', async () => {
     const words: string[] = [];
     const text = 'One two three.';
-    const s = speak(text, { ...env(), rate: 1, onWord: (w) => words.push(text.slice(w.start, w.end)) });
+    const s = speak(text, {
+      ...env(),
+      rate: 1,
+      onWord: (w) => words.push(text.slice(w.start, w.end)),
+    });
     synthesis.start();
     synthesis.boundary(4, 3); // "two"
     s.setRate(2);
