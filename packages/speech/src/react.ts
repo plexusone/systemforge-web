@@ -43,6 +43,10 @@ export interface UseSpeechResult {
   stop: () => void;
   pause: () => void;
   resume: () => void;
+  /** Changes the speed of the speech in progress; it carries on at the new speed. */
+  setRate: (rate: number) => void;
+  /** Changes the voice of the speech in progress. */
+  setVoice: (voice: SpeechSynthesisVoice | string) => void;
   /** `idle` before the first speech. */
   state: SpeechState | 'idle';
   /** The segment being spoken, or -1. */
@@ -127,12 +131,19 @@ export function useSpeech(defaults: UseSpeechOptions = {}): UseSpeechResult {
     handle.current?.resume();
     if (handle.current) setState(handle.current.state);
   }, []);
+  const setRate = useCallback((rate: number) => handle.current?.setRate(rate), []);
+  const setVoice = useCallback(
+    (voice: SpeechSynthesisVoice | string) => handle.current?.setVoice(voice),
+    []
+  );
 
   return {
     speak: run,
     stop,
     pause,
     resume,
+    setRate,
+    setVoice,
     state,
     segment,
     word,
