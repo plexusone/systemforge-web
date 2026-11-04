@@ -1,4 +1,5 @@
-import { useState, type ReactNode, type FormEvent } from 'react';
+import { useEffect, useState, type ReactNode, type FormEvent } from 'react';
+import { orgUrl } from './api';
 import type { OrganizationSettingsPageProps, OrgSettingsTab } from './types';
 
 /**
@@ -84,25 +85,30 @@ function GeneralTab({ orgSlug, apiBaseUrl }: { orgSlug: string; apiBaseUrl: stri
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch organization details on mount
-  useState(() => {
+  // Load when the page mounts. The page is keyed on apiBaseUrl and orgSlug,
+  // so another organization gets fresh state and a fresh load.
+  useEffect(() => {
+    let cancelled = false;
     const fetchOrg = async () => {
       try {
-        const response = await fetch(`${apiBaseUrl}/organizations/${orgSlug}`, {
+        const response = await fetch(orgUrl(apiBaseUrl, orgSlug), {
           credentials: 'include',
         });
         if (!response.ok) throw new Error('Failed to fetch organization');
         const org = await response.json();
-        setName(org.name || '');
-        setLogoUrl(org.logo_url || '');
+        if (!cancelled) setName(org.name || '');
+        if (!cancelled) setLogoUrl(org.logo_url || '');
       } catch {
-        setMessage({ type: 'error', text: 'Failed to load organization details' });
+        if (!cancelled) setMessage({ type: 'error', text: 'Failed to load organization details' });
       } finally {
-        setIsLoading(false);
+        if (!cancelled) setIsLoading(false);
       }
     };
-    fetchOrg();
-  });
+    void fetchOrg();
+    return () => {
+      cancelled = true;
+    };
+  }, [apiBaseUrl, orgSlug]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -110,7 +116,7 @@ function GeneralTab({ orgSlug, apiBaseUrl }: { orgSlug: string; apiBaseUrl: stri
     setMessage(null);
 
     try {
-      const response = await fetch(`${apiBaseUrl}/organizations/${orgSlug}`, {
+      const response = await fetch(orgUrl(apiBaseUrl, orgSlug), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -317,7 +323,7 @@ function DangerTab({
 
     setIsDeleting(true);
     try {
-      const response = await fetch(`${apiBaseUrl}/organizations/${orgSlug}`, {
+      const response = await fetch(orgUrl(apiBaseUrl, orgSlug), {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -595,7 +601,13 @@ export function OrganizationSettingsPage({
             padding: '24px',
           }}
         >
-          {currentTab === 'general' && <GeneralTab orgSlug={orgSlug} apiBaseUrl={apiBaseUrl} />}
+          {currentTab === 'general' && (
+            <GeneralTab
+              key={`${apiBaseUrl}\n${orgSlug}`}
+              orgSlug={orgSlug}
+              apiBaseUrl={apiBaseUrl}
+            />
+          )}
           {currentTab === 'members' && <MembersTabPlaceholder />}
           {currentTab === 'invitations' && <InvitationsTabPlaceholder />}
           {currentTab === 'danger' && (

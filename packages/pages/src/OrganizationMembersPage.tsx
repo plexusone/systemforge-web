@@ -1,4 +1,5 @@
-import { useState, type ReactNode, type FormEvent } from 'react';
+import { useEffect, useState, type ReactNode, type FormEvent } from 'react';
+import { orgUrl } from './api';
 import type { OrganizationMembersPageProps, OrgMember, MemberRole } from './types';
 
 /**
@@ -287,7 +288,15 @@ function TransferOwnershipModal({
  * />
  * ```
  */
-export function OrganizationMembersPage({
+export function OrganizationMembersPage(props: OrganizationMembersPageProps): ReactNode {
+  // A new organization mounts a new page, so no state from the previous
+  // one is shown or acted on.
+  return (
+    <OrganizationMembersPageBody key={`${props.apiBaseUrl ?? ''}\n${props.orgSlug}`} {...props} />
+  );
+}
+
+function OrganizationMembersPageBody({
   orgSlug,
   currentUserId,
   currentUserRole = 'member',
@@ -305,39 +314,41 @@ export function OrganizationMembersPage({
   const canManageMembers = currentUserRole === 'owner' || currentUserRole === 'admin';
   const isOwner = currentUserRole === 'owner';
 
-  // Fetch members on mount
-  useState(() => {
+  // Load when the page mounts. The page is keyed on apiBaseUrl and orgSlug,
+  // so another organization gets fresh state and a fresh load.
+  useEffect(() => {
+    let cancelled = false;
     const fetchMembers = async () => {
       try {
-        const response = await fetch(`${apiBaseUrl}/organizations/${orgSlug}/members`, {
+        const response = await fetch(orgUrl(apiBaseUrl, orgSlug, 'members'), {
           credentials: 'include',
         });
         if (!response.ok) throw new Error('Failed to fetch members');
         const data = await response.json();
-        setMembers(data.members || []);
+        if (!cancelled) setMembers(data.members || []);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load members');
+        if (!cancelled) setError(err instanceof Error ? err.message : 'Failed to load members');
       } finally {
-        setIsLoading(false);
+        if (!cancelled) setIsLoading(false);
       }
     };
-    fetchMembers();
-  });
+    void fetchMembers();
+    return () => {
+      cancelled = true;
+    };
+  }, [apiBaseUrl, orgSlug]);
 
   const handleUpdateRole = async (memberId: string, newRole: MemberRole) => {
     try {
       const member = members.find((m) => m.id === memberId);
       if (!member) return;
 
-      const response = await fetch(
-        `${apiBaseUrl}/organizations/${orgSlug}/members/${member.principal_id}`,
-        {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ role: newRole }),
-        }
-      );
+      const response = await fetch(orgUrl(apiBaseUrl, orgSlug, 'members', member.principal_id), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ role: newRole }),
+      });
 
       if (!response.ok) throw new Error('Failed to update member');
 
@@ -354,13 +365,10 @@ export function OrganizationMembersPage({
     if (!confirm('Are you sure you want to remove this member?')) return;
 
     try {
-      const response = await fetch(
-        `${apiBaseUrl}/organizations/${orgSlug}/members/${principalId}`,
-        {
-          method: 'DELETE',
-          credentials: 'include',
-        }
-      );
+      const response = await fetch(orgUrl(apiBaseUrl, orgSlug, 'members', principalId), {
+        method: 'DELETE',
+        credentials: 'include',
+      });
 
       if (!response.ok) throw new Error('Failed to remove member');
 
@@ -373,7 +381,7 @@ export function OrganizationMembersPage({
   };
 
   const handleTransferOwnership = async (newOwnerId: string) => {
-    const response = await fetch(`${apiBaseUrl}/organizations/${orgSlug}/transfer-ownership`, {
+    const response = await fetch(orgUrl(apiBaseUrl, orgSlug, 'transfer-ownership'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -388,7 +396,7 @@ export function OrganizationMembersPage({
     onOwnershipTransferred?.();
 
     // Refresh members list
-    const refreshResponse = await fetch(`${apiBaseUrl}/organizations/${orgSlug}/members`, {
+    const refreshResponse = await fetch(orgUrl(apiBaseUrl, orgSlug, 'members'), {
       credentials: 'include',
     });
     if (refreshResponse.ok) {
