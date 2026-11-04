@@ -42,4 +42,36 @@ describe('OrganizationMembersPage', () => {
       expect(fetch).toHaveBeenCalledWith('/api/organizations/org-b/members', expect.anything())
     );
   });
+
+  it('offers an admin no controls over another admin, and owners full control', async () => {
+    const people = [
+      { ...member('a2'), principal_id: 'p-a2', role: 'admin' },
+      { ...member('m1'), principal_id: 'p-m1', role: 'member' },
+    ];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response(JSON.stringify({ members: people }), { status: 200 }))
+    );
+    const { unmount } = render(
+      <OrganizationMembersPage
+        orgSlug="acme"
+        currentUserId="u"
+        currentUserRole="admin"
+        apiBaseUrl="/api"
+      />
+    );
+    await screen.findByText('Person in a2');
+    expect(screen.getAllByRole('button', { name: 'Remove' })).toHaveLength(1);
+    unmount();
+    render(
+      <OrganizationMembersPage
+        orgSlug="acme"
+        currentUserId="u"
+        currentUserRole="owner"
+        apiBaseUrl="/api"
+      />
+    );
+    await screen.findByText('Person in a2');
+    expect(screen.getAllByRole('button', { name: 'Remove' })).toHaveLength(2);
+  });
 });
