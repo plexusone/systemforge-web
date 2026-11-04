@@ -7,6 +7,197 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.8.0",
+      "date": "2026-11-04",
+      "highlights": [
+        {
+          "description": "A security release: navigation and redirects check their URLs, the API client keeps requests under `baseUrl` and drops cached data when the person or organization changes, and telemetry sends less personal data by default",
+          "commit": "3e135af"
+        },
+        {
+          "description": "Packages: `@plexusone/api-client`, `auth`, `chat`, `pages`, `shell`, `telemetry` and `tenant` 0.3.0, `console` 0.2.0, `host` 0.5.0, `invites` 0.1.1 and `speech` 0.2.1; `design-tokens` and `ui` are unchanged"
+        }
+      ],
+      "breaking": [
+        {
+          "description": "`ApiClient` appends a request path to `baseUrl` instead of resolving it, so `/users` under `https://app.example.com/api` is `.../api/users`; a path with a scheme, host, backslash, control character or dot segment throws `TypeError`, and a relative `baseUrl` such as `/api` now works",
+          "commit": "42e31d9"
+        },
+        {
+          "description": "`ProtectedRoute` roles and `usePermissions().hasRole` are checked in the organization `orgId` names, or the person's only membership; a person with several memberships and no `orgId` is refused",
+          "commit": "e4538e5"
+        },
+        {
+          "description": "`AuthProvider.logout` keeps the person signed in and sets `error` when the server does not end the session, instead of showing them signed out",
+          "commit": "f4d7b9e"
+        },
+        {
+          "description": "`LoginPage` follows `redirectUrl` only when it is on this site, and goes to `/` otherwise",
+          "commit": "a8ad27f"
+        },
+        {
+          "description": "`UserSettingsPage`'s profile tab is read-only unless `onSaveProfile` is given; Change avatar shows only with `onChangeAvatar`",
+          "commit": "e3490cb"
+        },
+        {
+          "description": "Telemetry page views no longer send `document.title` or the referrer unless `collectTitle` or `collectReferrer` is set, and never a query string; clicks are named by `data-track`, `aria-label` or `id`, not element text; requests use `credentials: 'same-origin'` unless `credentials` says otherwise; the ProductGraph anonymous ID is kept in memory unless `persistAnonymousId` is set",
+          "commit": "654c028"
+        },
+        {
+          "description": "`ChatComposer` focuses only with `autoFocus`; `ChatThread` takes `composer={false}` to leave out its own composer, which `ChatWidget` and `ChatEmbed` now do",
+          "commit": "2a22c1a"
+        },
+        {
+          "description": "`withConnection` returns `undefined` for a return address that is not http(s) or that would leave the site once rebuilt",
+          "commit": "7b81c1b"
+        },
+        {
+          "description": "`createHost` ignores `devSession` in a production build",
+          "commit": "743a24c"
+        },
+        {
+          "description": "`@plexusone/shell`, `tenant`, `pages`, `host` and `console` need `@plexusone/auth` 0.3.0",
+          "commit": "3e135af"
+        }
+      ],
+      "upgradeGuide": [
+        {
+          "description": "Install the new versions together: the packages that depend on `@plexusone/auth` need 0.3.0"
+        },
+        {
+          "description": "Remove any `baseUrl` prefix you repeated in request paths, such as `/api/users` under `baseUrl: '/api'`, and encode IDs in paths with `encodeURIComponent`"
+        },
+        {
+          "description": "Pass `orgId` to `ProtectedRoute` and `hasRole` for role checks, or use `RequireRole` from `@plexusone/tenant`"
+        },
+        {
+          "description": "Pass `onSaveProfile` to `UserSettingsPage` to keep the profile editable"
+        },
+        {
+          "description": "Set `collectTitle`, `collectReferrer`, `credentials: 'include'` or `persistAnonymousId` (with consent) only if you need them; send ProductGraph events through a same-origin route that adds the API key"
+        },
+        {
+          "description": "Gate `devSession` on `import.meta.env.DEV`"
+        },
+        {
+          "description": "Run SystemForge v0.31.0 or later on the server: the org pages show admin controls only to owners, as that release enforces"
+        }
+      ],
+      "added": [
+        {
+          "description": "`safeHref`, `sameOriginURL`, `returnPath`, `currentPath` and `navigateTo` in `@plexusone/auth`, for URLs that reach `window.location` or an `href` outside React",
+          "commit": "3e135af"
+        },
+        {
+          "description": "`PRINCIPAL_CHANGE_EVENT` and `usePrincipalChange` in `@plexusone/auth`: `AuthProvider` and `SessionProvider` announce sign-out, session end and account switches",
+          "commit": "d49c030"
+        },
+        {
+          "description": "`hasRoleIn` and the `orgId` prop of `ProtectedRoute` in `@plexusone/auth`",
+          "commit": "e4538e5"
+        },
+        {
+          "description": "`followTenant` on `ApiProvider`, default true: the client sends the organization `@plexusone/tenant` selects",
+          "commit": "5efb35f"
+        },
+        {
+          "description": "`scrubUrl`, `scrubText` and `scrubOrigin` in `@plexusone/telemetry`, and the `collectTitle`, `collectReferrer`, `collectStacks` and `credentials` options; `serialize` on `useStateTracker`; `persistAnonymousId` and `credentials` on `ProductGraphAdapter`",
+          "commit": "654c028"
+        },
+        {
+          "description": "`onSaveProfile` and `onChangeAvatar` on `UserSettingsPage`",
+          "commit": "e3490cb"
+        }
+      ],
+      "security": [
+        {
+          "description": "The console's return address could leave the site: `withConnection` rebuilt an allowed `/.//host/x` from its path as `//host/x`",
+          "commit": "7b81c1b"
+        },
+        {
+          "description": "The product switcher, sidebar, breadcrumbs, menus and error and login pages could follow a `javascript:` URL: assigning an anchor's `href` or calling `location.assign` bypasses React's check. App catalog entries that are not http(s) are dropped",
+          "commit": "4e336ae"
+        },
+        {
+          "description": "`ApiClient` sent a request, its headers and body to another origin when a path named one",
+          "commit": "42e31d9"
+        },
+        {
+          "description": "Cached API data outlived a sign-out, an account switch or an organization change, and could be shown to the next person or in the next organization",
+          "commit": "5efb35f"
+        },
+        {
+          "description": "A closed `ChatWidget` kept a focused composer mounted, so text typed elsewhere on the page could be sent as a chat message",
+          "commit": "2a22c1a"
+        },
+        {
+          "description": "Telemetry sent full referrers (which can carry invite or reset tokens), page titles, unscrubbed error messages and stacks and element text, sent cookies to its endpoint, and kept a device ID before consent; `sampleRate: 0` still sent every event",
+          "commit": "654c028"
+        },
+        {
+          "description": "Sign-in `return_to`, request paths built from IDs, and bodyless state-changing requests are hardened: return addresses must be a path on this site, IDs are encoded, and console, invites and sign-out requests carry `X-Requested-With` so they are preflighted cross-origin",
+          "commit": "a65ad84"
+        },
+        {
+          "description": "`ProtectedRoute` passed a role held in any organization; org pages acted on the previous organization after a switch; `logout` reported success when the server kept the session",
+          "commit": "e4538e5"
+        },
+        {
+          "description": "Published source maps no longer name the build machine's paths, and the build fails if `dist` does; the release workflow pins actions by commit, grants least privilege and publishes with provenance",
+          "commit": "e3fbb14"
+        }
+      ],
+      "fixed": [
+        {
+          "description": "The chat stream parser kept no buffer between reads, so text split across network chunks was lost; non-streamed replies are read, and `onMessageSent`, `onMessageReceived`, `onOpen` and `onClose` fire",
+          "commit": "6a8ec91"
+        },
+        {
+          "description": "`ErrorBoundary` reports through the enclosing `TelemetryProvider`, and `DefaultErrorFallback` shows the message only in development",
+          "commit": "471bbc7"
+        },
+        {
+          "description": "`TenantProvider` forgot the stored organization on every load and crashed when storage is blocked",
+          "commit": "e94431b"
+        },
+        {
+          "description": "The profile tab reported a save that never happened",
+          "commit": "e3490cb"
+        },
+        {
+          "description": "Console help links with a malformed URL no longer break the page",
+          "commit": "bc97fa4"
+        }
+      ],
+      "tests": [
+        {
+          "description": "URL checks, return addresses, catalog filtering, request paths, cache resets, chat focus and streaming, telemetry privacy, org-scoped roles, failed sign-out, org page reloads and role controls, tenant storage and the production dev-session guard",
+          "commit": "5c220b6"
+        }
+      ],
+      "dependencies": [
+        {
+          "description": "vitest 4.1 with vite 8, and dependencies refreshed within their ranges",
+          "commit": "2dd11cf"
+        }
+      ],
+      "infrastructure": [
+        {
+          "description": "`scripts/dist-paths.mjs` checks build output for local paths in `pnpm build` and every `prepublishOnly`; Dependabot updates actions and npm dependencies",
+          "commit": "e3fbb14"
+        }
+      ],
+      "documentation": [
+        {
+          "description": "api-client, auth, chat, pages and telemetry pages describe the new behavior and options; the releasing and application guides describe the path check and the development session",
+          "commit": "9e5d6f9"
+        },
+        {
+          "description": "v0.8.0 release notes"
+        }
+      ]
+    },
+    {
       "version": "v0.7.0",
       "date": "2026-11-03",
       "highlights": [

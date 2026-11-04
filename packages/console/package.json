@@ -1,6 +1,6 @@
 {
   "name": "@plexusone/console",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The SystemForge organization console: connect and manage an organization's services, guided step by step",
   "homepage": "https://plexusone.github.io/systemforge-web/packages/console/",
   "main": "./dist/index.js",

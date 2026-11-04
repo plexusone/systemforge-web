@@ -1,6 +1,6 @@
 {
   "name": "@plexusone/speech",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Browser text-to-speech and speech-to-text, with React hooks and a standalone build",
   "homepage": "https://plexusone.github.io/systemforge-web/packages/speech/",
   "main": "./dist/index.js",

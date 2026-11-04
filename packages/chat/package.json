@@ -1,6 +1,6 @@
 {
   "name": "@plexusone/chat",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Chat UI components for SystemForge applications",
   "homepage": "https://plexusone.github.io/systemforge-web/packages/chat/",
   "main": "./dist/index.js",
