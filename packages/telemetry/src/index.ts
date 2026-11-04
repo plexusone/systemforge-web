@@ -49,8 +49,8 @@
  *
  * const productGraph = new ProductGraphAdapter({
  *   projectId: 'my-project',
- *   endpoint: 'https://api.productgraph.io/v1/events',
- *   apiKey: process.env.PRODUCTGRAPH_API_KEY,
+ *   // A route on the app's own origin that adds the API key server-side.
+ *   endpoint: '/bff/telemetry/events',
  * });
  *
  * function App() {
@@ -74,6 +74,9 @@ export { ErrorBoundary, DefaultErrorFallback } from './ErrorBoundary';
 
 // Telemetry client
 export { TelemetryClient, createTelemetryClient, ConsoleAdapter, HttpAdapter } from './telemetry';
+
+// Redaction
+export { scrubOrigin, scrubText, scrubUrl } from './scrub';
 
 // Adapters
 export { ProductGraphAdapter, createProductGraphAdapter } from './adapters/productgraph';
