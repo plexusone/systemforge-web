@@ -33,9 +33,21 @@ export function useConversations(options: UseConversationsOptions = {}): UseConv
   const [conversations, setConversations] = React.useState<Conversation[]>(
     options.initialConversations ?? []
   );
-  // There is nothing to show until the first load, unless conversations were given.
-  const [isLoading, setIsLoading] = React.useState(!options.initialConversations?.length);
-  const [error, setError] = React.useState<Error | null>(null);
+  // The outcome of the latest load and the API base it was for. Until a load
+  // for the current base settles, the list is loading and shows no error.
+  const given = Boolean(options.initialConversations?.length);
+  const [outcome, setOutcome] = React.useState<{ base?: string; error: Error | null }>({
+    base: given ? config.apiBaseUrl : undefined,
+    error: null,
+  });
+  const [refreshing, setRefreshing] = React.useState(0);
+  const isCurrent = outcome.base === config.apiBaseUrl;
+  const isLoading = refreshing > 0 || !isCurrent;
+  const error = isCurrent ? outcome.error : null;
+
+  // Each load takes a number, and only the latest may write its result, so a
+  // slow load for an earlier base or an earlier refresh cannot overwrite it.
+  const latest = React.useRef(0);
 
   // Fetches the list; callers decide what to do with it.
   const fetchConversations = React.useCallback(async (): Promise<Conversation[]> => {
@@ -56,17 +68,33 @@ export function useConversations(options: UseConversationsOptions = {}): UseConv
     }));
   }, [config.apiBaseUrl, config.headers]);
 
+  const load = React.useCallback(
+    (base: string) => {
+      const id = ++latest.current;
+      return fetchConversations().then(
+        (list) => {
+          if (id !== latest.current) return;
+          setConversations(list);
+          setOutcome({ base, error: null });
+        },
+        (err: unknown) => {
+          if (id !== latest.current) return;
+          setOutcome({ base, error: err instanceof Error ? err : new Error('Unknown error') });
+        }
+      );
+    },
+    [fetchConversations]
+  );
+
   const refresh = React.useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
+    setRefreshing((n) => n + 1);
+    setOutcome((o) => ({ ...o, error: null }));
     try {
-      setConversations(await fetchConversations());
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('Unknown error'));
+      await load(config.apiBaseUrl);
     } finally {
-      setIsLoading(false);
+      setRefreshing((n) => n - 1);
     }
-  }, [fetchConversations]);
+  }, [load, config.apiBaseUrl]);
 
   const createConversation = React.useCallback(async (): Promise<Conversation> => {
     const response = await fetch(`${config.apiBaseUrl}/v1/conversations`, {
@@ -132,24 +160,19 @@ export function useConversations(options: UseConversationsOptions = {}): UseConv
     [config.apiBaseUrl, config.headers, currentConversation, setCurrentConversation]
   );
 
-  // Load conversations on mount, unless they were given.
+  // Load on mount, unless conversations were given, and again for each new
+  // API base.
+  const skipFirst = React.useRef(given);
   React.useEffect(() => {
-    if (options.initialConversations?.length) return undefined;
-    let live = true;
-    fetchConversations().then(
-      (list) => {
-        if (!live) return;
-        setConversations(list);
-        setIsLoading(false);
-      },
-      (err: unknown) => {
-        if (!live) return;
-        setError(err instanceof Error ? err : new Error('Unknown error'));
-        setIsLoading(false);
-      }
-    );
+    if (skipFirst.current) {
+      skipFirst.current = false;
+      return undefined;
+    }
+    void load(config.apiBaseUrl);
     return () => {
-      live = false;
+      // Results that arrive after the base changes or the list unmounts are
+      // not applied.
+      latest.current += 1;
     };
     // Load once per API base: headers may be a new object on every render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
