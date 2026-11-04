@@ -12,6 +12,7 @@
 import { useEffect, useRef, useCallback, createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
 import { useTelemetryOptional } from '../TelemetryProvider';
+import { scrubText, scrubUrl } from '../scrub';
 
 // =============================================================================
 // Component Path Context
@@ -143,6 +144,12 @@ export function useStateTracker<T>(
      * Comparison function to determine if state changed
      */
     isEqual?: (a: T, b: T) => boolean;
+    /**
+     * What to send for a value, such as a count or the fields that are safe
+     * to share. Default the value itself: do not track state that holds
+     * typed input, passwords or personal data without one.
+     */
+    serialize?: (value: T) => unknown;
   }
 ): void {
   const telemetry = useTelemetryOptional();
@@ -151,7 +158,11 @@ export function useStateTracker<T>(
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingChange = useRef<StateChange<T> | null>(null);
 
-  const { component, debounceMs = 0, isEqual = Object.is } = options || {};
+  const { component, debounceMs = 0, isEqual = Object.is, serialize } = options || {};
+  const serializeRef = useRef(serialize);
+  useEffect(() => {
+    serializeRef.current = serialize;
+  });
 
   useEffect(() => {
     if (isEqual(previousValue.current, value)) {
@@ -170,8 +181,8 @@ export function useStateTracker<T>(
     const emitChange = () => {
       telemetry?.trackEvent('state_change', {
         state_key: change.key,
-        state_before: change.before,
-        state_after: change.after,
+        state_before: serializeRef.current ? serializeRef.current(change.before) : change.before,
+        state_after: serializeRef.current ? serializeRef.current(change.after) : change.after,
         component: component || componentPath || undefined,
         component_path: componentPath || undefined,
       });
@@ -456,7 +467,8 @@ export function useScrollTracker(options?: ScrollTrackingOptions): void {
 // =============================================================================
 
 /**
- * Hook to create a click tracker with automatic context
+ * Hook to create a click tracker with automatic context. The element is
+ * named by its `data-track`, `aria-label` or `id`, never by its text.
  *
  * @example
  * ```tsx
@@ -480,8 +492,10 @@ export function useClickTracker() {
   return useCallback(
     (event: React.MouseEvent<HTMLElement>, properties?: Record<string, unknown>) => {
       const target = event.currentTarget;
+      // A label the page chose, never the element's text, which can show
+      // names, emails or other data on screen.
       const elementText =
-        target.textContent?.slice(0, 100) || target.getAttribute('aria-label') || undefined;
+        target.dataset.track || target.getAttribute('aria-label') || target.id || undefined;
       const elementType = target.tagName.toLowerCase();
 
       telemetry?.trackAction('ui', 'click', {
@@ -545,7 +559,7 @@ export function useAPITracker() {
 
       telemetry?.trackEvent('api_request', {
         method: options.method,
-        api_path: options.path,
+        api_path: scrubUrl(options.path),
       });
 
       return {
@@ -554,7 +568,7 @@ export function useAPITracker() {
 
           telemetry?.trackEvent('api_response', {
             method: options.method,
-            api_path: options.path,
+            api_path: scrubUrl(options.path),
             status_code: statusCode,
             api_duration: duration,
             ...properties,
@@ -565,11 +579,11 @@ export function useAPITracker() {
 
           telemetry?.trackEvent('api_response', {
             method: options.method,
-            api_path: options.path,
+            api_path: scrubUrl(options.path),
             status_code: statusCode || 0,
             api_duration: duration,
             error_type: error.name,
-            error_message: error.message,
+            error_message: scrubText(error.message ?? ''),
           });
         },
       };

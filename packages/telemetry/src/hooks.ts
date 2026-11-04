@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useTelemetryOptional } from './TelemetryProvider';
 import type { PerformanceTiming } from './types';
+import { scrubText } from './scrub';
 
 /**
  * Hook to track page views automatically
@@ -201,7 +202,7 @@ export function useFormTracker(formName: string) {
       telemetry?.trackAction('form', 'error', {
         form: formName,
         duration,
-        error: err.message,
+        error: scrubText(err.message ?? ''),
         ...properties,
       });
 

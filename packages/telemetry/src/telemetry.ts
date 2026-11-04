@@ -9,6 +9,7 @@ import type {
   PageViewEvent,
   PerformanceEvent,
 } from './types';
+import { scrubOrigin, scrubText, scrubUrl } from './scrub';
 
 /**
  * Console adapter - logs events to console (useful for development)
@@ -41,8 +42,18 @@ export class ConsoleAdapter implements TelemetryAdapter {
   }
 }
 
+/** The most events an adapter holds while its endpoint is unreachable. */
+export const MAX_QUEUED_EVENTS = 1000;
+
+/** Puts unsent events back at the front of the queue, keeping it bounded. */
+export function requeue<T>(queue: T[], events: T[]): void {
+  queue.unshift(...events);
+  if (queue.length > MAX_QUEUED_EVENTS) queue.length = MAX_QUEUED_EVENTS;
+}
+
 /**
- * HTTP adapter - sends events to a REST endpoint
+ * HTTP adapter - sends events to a REST endpoint. Requests carry cookies
+ * only to the page's own origin unless `credentials` says otherwise.
  */
 export class HttpAdapter implements TelemetryAdapter {
   name = 'http';
@@ -50,16 +61,27 @@ export class HttpAdapter implements TelemetryAdapter {
   private batch: TelemetryEvent[] = [];
   private batchSize: number;
   private batchInterval: number;
+  private credentials: RequestCredentials;
   private flushTimer: ReturnType<typeof setTimeout> | null = null;
 
-  constructor(endpoint: string, batchSize = 10, batchInterval = 5000) {
+  constructor(
+    endpoint: string,
+    batchSize = 10,
+    batchInterval = 5000,
+    credentials: RequestCredentials = 'same-origin'
+  ) {
     this.endpoint = endpoint;
     this.batchSize = batchSize;
     this.batchInterval = batchInterval;
+    this.credentials = credentials;
   }
 
   track(event: TelemetryEvent): void {
     this.batch.push(event);
+    // Events wait while the endpoint is unreachable; keep only the newest.
+    if (this.batch.length > MAX_QUEUED_EVENTS) {
+      this.batch.splice(0, this.batch.length - MAX_QUEUED_EVENTS);
+    }
 
     if (this.batch.length >= this.batchSize) {
       this.flush();
@@ -80,15 +102,17 @@ export class HttpAdapter implements TelemetryAdapter {
     this.batch = [];
 
     try {
-      await fetch(this.endpoint, {
+      const response = await fetch(this.endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ events }),
-        credentials: 'include',
+        credentials: this.credentials,
+        keepalive: true,
       });
+      // A rejected batch would be rejected again; only retry a server error.
+      if (response.status >= 500 || response.status === 429) requeue(this.batch, events);
     } catch (error) {
-      // Re-add events to batch on failure
-      this.batch.unshift(...events);
+      requeue(this.batch, events);
       console.error('[Telemetry] Failed to send events:', error);
     }
   }
@@ -120,7 +144,9 @@ export class TelemetryClient {
 
     // Add HTTP adapter if endpoint provided
     if (config.endpoint && !this.adapters.some((a) => a.name === 'http')) {
-      this.adapters.push(new HttpAdapter(config.endpoint, config.batchSize, config.batchInterval));
+      this.adapters.push(
+        new HttpAdapter(config.endpoint, config.batchSize, config.batchInterval, config.credentials)
+      );
     }
 
     // Set global properties
@@ -133,7 +159,7 @@ export class TelemetryClient {
    * Check if event should be sampled
    */
   private shouldSample(): boolean {
-    return Math.random() < (this.config.sampleRate || 1);
+    return Math.random() < (this.config.sampleRate ?? 1);
   }
 
   /**
@@ -191,9 +217,12 @@ export class TelemetryClient {
       name: 'page_view',
       timestamp: Date.now(),
       properties: {
-        path,
-        title: typeof document !== 'undefined' ? document.title : undefined,
-        referrer: typeof document !== 'undefined' ? document.referrer : undefined,
+        // Query strings and fragments often carry tokens, so they are dropped.
+        path: scrubUrl(path),
+        ...(this.config.collectTitle &&
+          typeof document !== 'undefined' && { title: document.title }),
+        ...(this.config.collectReferrer &&
+          typeof document !== 'undefined' && { referrer: scrubOrigin(document.referrer) }),
         ...properties,
       },
     };
@@ -229,8 +258,9 @@ export class TelemetryClient {
       timestamp: Date.now(),
       properties: {
         error_type: error.name,
-        message: error.message,
-        stack: error.stack,
+        message: scrubText(error.message ?? ''),
+        ...(this.config.collectStacks !== false &&
+          error.stack && { stack: scrubText(error.stack, 4000) }),
         context,
       },
     };
@@ -278,6 +308,7 @@ export class TelemetryClient {
    * Identify the current user
    */
   identify(user: TelemetryUser): void {
+    if (!this.config.enabled) return;
     this.user = user;
 
     for (const adapter of this.adapters) {
@@ -293,6 +324,7 @@ export class TelemetryClient {
    * Set organization context
    */
   setOrg(org: TelemetryOrg): void {
+    if (!this.config.enabled) return;
     this.org = org;
 
     for (const adapter of this.adapters) {

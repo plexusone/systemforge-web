@@ -184,9 +184,34 @@ export interface TelemetryConfig {
   batchInterval?: number;
 
   /**
-   * Sample rate for events (0-1, default: 1)
+   * Sample rate for events (0-1, default: 1). 0 sends nothing.
    */
   sampleRate?: number;
+
+  /**
+   * Send `document.title` with page views. Titles often name customers or
+   * documents. Default false.
+   */
+  collectTitle?: boolean;
+
+  /**
+   * Send the referrer's origin with page views. The full referrer can carry
+   * tokens from the URL the person arrived on, so only the origin is sent.
+   * Default false.
+   */
+  collectReferrer?: boolean;
+
+  /**
+   * Send error stacks, with URLs' query strings, emails and token-like
+   * strings redacted. Default true.
+   */
+  collectStacks?: boolean;
+
+  /**
+   * Cookie mode for the HTTP adapter's requests. Default `same-origin`:
+   * cookies go only to an endpoint on the page's own origin.
+   */
+  credentials?: RequestCredentials;
 
   /**
    * Filter function to exclude events
