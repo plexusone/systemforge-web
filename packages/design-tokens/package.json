@@ -29,8 +29,8 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "tsup": "^8.0.1",
-    "typescript": "^5.3.3"
+    "tsup": "^9.0.0",
+    "typescript": "^7.0.2"
   },
   "keywords": [
     "systemforge",
