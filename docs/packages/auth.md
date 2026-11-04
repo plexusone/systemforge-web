@@ -80,6 +80,23 @@ function AppRoutes() {
 }
 ```
 
+With `roles`, pass the organization the roles apply in:
+
+```tsx
+<ProtectedRoute roles={['admin', 'owner']} orgId={currentOrgId}>
+  <AdminPanel />
+</ProtectedRoute>
+```
+
+A role in one organization says nothing about another, so without `orgId`
+only a person with a single membership is checked, and a person with several
+is refused. `usePermissions().hasRole(roles, orgId)` works the same way.
+`RequireRole` from `@plexusone/tenant` checks the current organization for
+you.
+
+These gates decide only what the page shows. The server must authorize every
+request itself.
+
 ### Linked Accounts
 
 Manage OAuth provider connections:
@@ -194,14 +211,14 @@ the BFF uses its default landing page.
 
 ### useAuth Return Value
 
-| Property          | Type                  | Description                   |
-| ----------------- | --------------------- | ----------------------------- |
-| `user`            | `User \| null`        | Current user object           |
-| `isAuthenticated` | `boolean`             | Whether user is authenticated |
-| `isLoading`       | `boolean`             | Loading state                 |
-| `login`           | `() => void`          | Initiate login flow           |
-| `logout`          | `() => Promise<void>` | Logout user                   |
-| `refresh`         | `() => Promise<void>` | Refresh session               |
+| Property          | Type                  | Description                                                                                        |
+| ----------------- | --------------------- | -------------------------------------------------------------------------------------------------- |
+| `user`            | `User \| null`        | Current user object                                                                                |
+| `isAuthenticated` | `boolean`             | Whether user is authenticated                                                                      |
+| `isLoading`       | `boolean`             | Loading state                                                                                      |
+| `login`           | `() => void`          | Initiate login flow                                                                                |
+| `logout`          | `() => Promise<void>` | Logout user; if the server does not end the session, the user stays signed in and `error` says why |
+| `refresh`         | `() => Promise<void>` | Refresh session                                                                                    |
 
 ### User Type
 
