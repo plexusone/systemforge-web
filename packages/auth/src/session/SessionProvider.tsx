@@ -1,12 +1,13 @@
 import {
   createContext,
+  type ReactNode,
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
-  type ReactNode,
 } from 'react';
 import { endLoginSession, type SystemAuthSignOut } from '../signout';
 import { SessionClient, type SignInOptions } from './client';
@@ -75,7 +76,9 @@ export function SessionProvider({
   const [error, setError] = useState<Error | undefined>();
   const wasAuthenticated = useRef(false);
   const onUnauthorizedRef = useRef(onUnauthorized);
-  useEffect(() => {
+  // A layout effect, so a session read that settles right after a render
+  // calls the callback that render committed.
+  useLayoutEffect(() => {
     onUnauthorizedRef.current = onUnauthorized;
   });
 
