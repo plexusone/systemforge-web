@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { devSession } from '@plexusone/host';
 import { conformanceProblems, renderApp } from '@plexusone/host/testing';
 import { consoleApp, createConsoleApp } from '../app';
-import { withConnection } from '../pages/Connect';
+import { externalLink, withConnection } from '../pages/Connect';
 import { expiryText } from '../components/ui';
 import type { Connection, Manifest } from '../types';
 
@@ -343,6 +343,25 @@ describe('expiryText', () => {
       text: expect.stringMatching(/^Expired on/),
       soon: true,
     });
+  });
+});
+
+describe('externalLink', () => {
+  it('accepts only absolute https links', () => {
+    expect(externalLink('https://dash.example.com/tokens')).toEqual({
+      href: 'https://dash.example.com/tokens',
+      host: 'dash.example.com',
+    });
+    for (const url of [
+      undefined,
+      '',
+      '/relative',
+      'http://x.example',
+      'javascript:alert(1)',
+      '::',
+    ]) {
+      expect(externalLink(url)).toBeUndefined();
+    }
   });
 });
 

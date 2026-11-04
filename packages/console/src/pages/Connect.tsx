@@ -104,14 +104,16 @@ function Wizard({ manifest, method }: { manifest: Manifest; method: AuthMethod }
               {(method.helpUrl || manifest.helpUrl) && (
                 <>
                   {' '}
-                  <a
-                    className="underline"
-                    href={method.helpUrl || manifest.helpUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    How to create it
-                  </a>
+                  {externalLink(method.helpUrl || manifest.helpUrl) && (
+                    <a
+                      className="underline"
+                      href={externalLink(method.helpUrl || manifest.helpUrl)?.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      How to create it
+                    </a>
+                  )}
                 </>
               )}
             </p>
@@ -223,6 +225,21 @@ function RotationChoice({
   );
 }
 
+/**
+ * externalLink parses a link from a service manifest, and returns it only
+ * when it is an absolute https URL. A malformed URL would otherwise throw
+ * while the page renders.
+ */
+export function externalLink(url: string | undefined): { href: string; host: string } | undefined {
+  if (!url) return undefined;
+  try {
+    const u = new URL(url);
+    return u.protocol === 'https:' ? { href: u.href, host: u.host } : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function SetupSteps({ steps }: { steps: NonNullable<AuthMethod['setup']> }): ReactNode {
   return (
     <ol className="list-decimal space-y-3 pl-5 text-sm">
@@ -230,14 +247,14 @@ function SetupSteps({ steps }: { steps: NonNullable<AuthMethod['setup']> }): Rea
         <li key={s.title}>
           <span className="font-medium">{s.title}</span>
           {s.detail && <p className="mt-1 text-muted-foreground">{s.detail}</p>}
-          {s.url && (
+          {externalLink(s.url) && (
             <a
               className="mt-2 inline-flex items-center rounded-md border border-border px-3 py-1.5 text-sm font-medium hover:bg-accent"
-              href={s.url}
+              href={externalLink(s.url)?.href}
               target="_blank"
               rel="noopener noreferrer"
             >
-              Open {new URL(s.url).host} ↗
+              Open {externalLink(s.url)?.host} ↗
             </a>
           )}
         </li>
