@@ -45,8 +45,9 @@ await speech.done; // { status: 'ended' } or { status: 'stopped' }
 | `maxChunkChars`           | Longest text per utterance (default 180)                          |
 | `startTimeoutMs`          | How long an utterance may take to start (default 3000; 0 is off)  |
 
-The returned object has `stop()`, `pause()`, `resume()` and `state`
-(`speaking`, `paused`, `ended`, `stopped` or `error`). `done` rejects with a
+The returned object has `stop()`, `pause()`, `resume()`, `setRate(rate)`,
+`setVoice(voice)` and `state` (`speaking`, `paused`, `ended`, `stopped` or
+`error`). `done` rejects with a
 `SpeechError` whose `code` is the browser's error, `unsupported`, or
 `start-timeout` when the browser never started the speech. On
 `start-timeout`, offer another way to hear the text, such as a recording, or
@@ -74,6 +75,12 @@ progress. `stopSpeaking()` stops it from anywhere.
   `resume()` speaks it again from its start: at most one sentence, or
   `maxChunkChars`, is repeated. A segment's `pauseMs` is a timer, which
   `pause()` and `resume()` stop and continue.
+- **Changing speed or voice while speaking.** A browser can't change an
+  utterance once it has started. `setRate()` and `setVoice()` cancel it and
+  speak the rest from the last word reported to `onWord`, or the whole
+  utterance again without `onWord`, so speech carries on with the new
+  setting, as a video player's speed menu does. Between utterances and while
+  paused, the next utterance uses it.
 - **Cancelled from elsewhere.** Another script or library calling
   `speechSynthesis.cancel()` ends this speech too; `done` then resolves
   with `stopped` rather than waiting for an end that never comes.
@@ -169,7 +176,7 @@ function ReadAloud({ text }: { text: string }) {
 
 | Hook                 | Returns                                                                                 |
 | -------------------- | --------------------------------------------------------------------------------------- |
-| `useSpeech(options)` | `speak`, `stop`, `pause`, `resume`, `state`, `segment`, `word`, `error`, `supported`    |
+| `useSpeech(options)` | `speak`, `stop`, `pause`, `resume`, `setRate`, `setVoice`, `state`, `segment`, `word`, `error`, `supported` |
 | `useListen(options)` | `start`, `stop`, `abort`, `listening`, `text`, `final`, `interim`, `error`, `supported` |
 | `useVoices(lang)`    | The voices, empty until loaded                                                          |
 

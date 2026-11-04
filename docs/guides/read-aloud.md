@@ -162,6 +162,19 @@ Voices differ by browser and device, so a saved voice may be missing on
 another computer. Without it, `speak` picks a voice for `lang`: the
 browser's default for that language, then a voice on the device.
 
+To change the voice or speed while speech is playing, call `setVoice` or
+`setRate` from `useSpeech` rather than speaking again. Speech carries on
+with the new setting from the word it reached (with `trackWords`), like a
+video player's speed menu:
+
+```tsx
+const { setRate } = useSpeech({ lang: 'en-US', trackWords: true });
+// <select onChange={(e) => setRate(Number(e.target.value))}> 0.75× … 2× </select>
+```
+
+Keep the chosen speed for the next `speak` too, by passing it in the
+hook's options.
+
 ## 6. Add voice input to a text field
 
 `useListen` reports text as it is recognized, final and interim together:
