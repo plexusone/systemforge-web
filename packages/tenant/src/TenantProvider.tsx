@@ -5,6 +5,7 @@ import {
   useEffect,
   useCallback,
   useMemo,
+  useRef,
   type ReactNode,
 } from 'react';
 import { useAuth, type Membership, type Role } from '@plexusone/auth';
@@ -80,13 +81,10 @@ export function TenantProvider({
   onOrgChange,
 }: TenantProviderProps) {
   const { user, isLoading: authLoading } = useAuth();
-  const [currentOrgId, setCurrentOrgId] = useState<string | null>(() => {
-    // Try to restore from localStorage
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem(storageKey) || defaultOrgId || null;
-    }
-    return defaultOrgId || null;
-  });
+  const [currentOrgId, setCurrentOrgId] = useState<string | null>(
+    // Restore the last selection; it is used only if it is still a membership.
+    () => readStored(storageKey) || defaultOrgId || null
+  );
 
   /**
    * Build organizations list from user memberships
@@ -164,13 +162,7 @@ export function TenantProvider({
 
       setCurrentOrgId(orgId);
 
-      // Persist to localStorage
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(storageKey, orgId);
-      }
-
-      // Emit event
-      window.dispatchEvent(new CustomEvent(ORG_CHANGE_EVENT, { detail: { org } }));
+      writeStored(storageKey, orgId);
 
       // Callback
       onOrgChange?.(org);
@@ -179,13 +171,28 @@ export function TenantProvider({
   );
 
   /**
-   * Clear localStorage when user logs out (side effect for external system)
+   * Forget the stored organization when the signed-in person signs out or
+   * changes. Not while auth is loading: there is no user yet, and clearing
+   * then would forget the selection on every page load.
+   */
+  const signedInAs = useRef<string | undefined>(undefined);
+  useEffect(() => {
+    if (authLoading) return;
+    const id = user?.id;
+    if (signedInAs.current !== undefined && signedInAs.current !== id) {
+      removeStored(storageKey);
+    }
+    signedInAs.current = id;
+  }, [authLoading, user, storageKey]);
+
+  /**
+   * Announce the organization in use whenever it changes, including the one
+   * restored or chosen first, so @plexusone/api-client sends it.
    */
   useEffect(() => {
-    if (!user && typeof window !== 'undefined') {
-      localStorage.removeItem(storageKey);
-    }
-  }, [user, storageKey]);
+    if (!currentOrg || typeof window === 'undefined') return;
+    window.dispatchEvent(new CustomEvent(ORG_CHANGE_EVENT, { detail: { org: currentOrg } }));
+  }, [currentOrg]);
 
   const isLoading = authLoading;
 
@@ -230,4 +237,30 @@ export function useTenant(): TenantContextValue {
  */
 export function useTenantOptional(): TenantContextValue | null {
   return useContext(TenantContext);
+}
+
+// localStorage throws in some privacy modes and sandboxed frames; the
+// selection is then not remembered, and nothing else changes.
+function readStored(key: string): string | null {
+  try {
+    return typeof localStorage === 'undefined' ? null : localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeStored(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Not remembered.
+  }
+}
+
+function removeStored(key: string): void {
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    // Nothing to remove.
+  }
 }
