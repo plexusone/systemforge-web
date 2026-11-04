@@ -36,7 +36,7 @@ export type { PrincipalChangeDetail } from './principal';
 export type { AuthProviderProps } from './AuthProvider';
 
 // Route protection
-export { ProtectedRoute, usePermissions } from './ProtectedRoute';
+export { ProtectedRoute, hasRoleIn, usePermissions } from './ProtectedRoute';
 
 // Linked accounts
 export { useLinkedAccounts } from './useLinkedAccounts';
