@@ -33,39 +33,40 @@ export function useConversations(options: UseConversationsOptions = {}): UseConv
   const [conversations, setConversations] = React.useState<Conversation[]>(
     options.initialConversations ?? []
   );
-  const [isLoading, setIsLoading] = React.useState(false);
+  // There is nothing to show until the first load, unless conversations were given.
+  const [isLoading, setIsLoading] = React.useState(!options.initialConversations?.length);
   const [error, setError] = React.useState<Error | null>(null);
+
+  // Fetches the list; callers decide what to do with it.
+  const fetchConversations = React.useCallback(async (): Promise<Conversation[]> => {
+    const response = await fetch(`${config.apiBaseUrl}/v1/conversations`, {
+      headers: config.headers,
+      credentials: 'include',
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch conversations');
+    }
+    const data = await response.json();
+    return data.conversations.map((c: any) => ({
+      id: c.id,
+      title: c.title,
+      messages: c.messages ?? [],
+      createdAt: new Date(c.created_at),
+      updatedAt: new Date(c.updated_at),
+    }));
+  }, [config.apiBaseUrl, config.headers]);
 
   const refresh = React.useCallback(async () => {
     setIsLoading(true);
     setError(null);
-
     try {
-      const response = await fetch(`${config.apiBaseUrl}/v1/conversations`, {
-        headers: config.headers,
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch conversations');
-      }
-
-      const data = await response.json();
-      setConversations(
-        data.conversations.map((c: any) => ({
-          id: c.id,
-          title: c.title,
-          messages: c.messages ?? [],
-          createdAt: new Date(c.created_at),
-          updatedAt: new Date(c.updated_at),
-        }))
-      );
+      setConversations(await fetchConversations());
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Unknown error'));
     } finally {
       setIsLoading(false);
     }
-  }, [config.apiBaseUrl, config.headers]);
+  }, [fetchConversations]);
 
   const createConversation = React.useCallback(async (): Promise<Conversation> => {
     const response = await fetch(`${config.apiBaseUrl}/v1/conversations`, {
@@ -131,12 +132,28 @@ export function useConversations(options: UseConversationsOptions = {}): UseConv
     [config.apiBaseUrl, config.headers, currentConversation, setCurrentConversation]
   );
 
-  // Load conversations on mount
+  // Load conversations on mount, unless they were given.
   React.useEffect(() => {
-    if (conversations.length === 0) {
-      refresh();
-    }
-  }, []);
+    if (options.initialConversations?.length) return undefined;
+    let live = true;
+    fetchConversations().then(
+      (list) => {
+        if (!live) return;
+        setConversations(list);
+        setIsLoading(false);
+      },
+      (err: unknown) => {
+        if (!live) return;
+        setError(err instanceof Error ? err : new Error('Unknown error'));
+        setIsLoading(false);
+      }
+    );
+    return () => {
+      live = false;
+    };
+    // Load once per API base: headers may be a new object on every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config.apiBaseUrl]);
 
   return {
     conversations,

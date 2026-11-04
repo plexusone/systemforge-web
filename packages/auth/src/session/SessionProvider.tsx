@@ -75,27 +75,43 @@ export function SessionProvider({
   const [error, setError] = useState<Error | undefined>();
   const wasAuthenticated = useRef(false);
   const onUnauthorizedRef = useRef(onUnauthorized);
-  onUnauthorizedRef.current = onUnauthorized;
+  useEffect(() => {
+    onUnauthorizedRef.current = onUnauthorized;
+  });
+
+  const apply = useCallback((s: Session) => {
+    setSession(s);
+    setError(undefined);
+    setStatus(s.authenticated ? 'authenticated' : 'unauthenticated');
+    if (wasAuthenticated.current && !s.authenticated) {
+      onUnauthorizedRef.current?.();
+    }
+    wasAuthenticated.current = s.authenticated;
+  }, []);
+
+  const fail = useCallback((err: unknown) => {
+    setError(err instanceof Error ? err : new Error(String(err)));
+    setStatus('error');
+  }, []);
 
   const refresh = useCallback(async () => {
     try {
-      const s = await bff.getSession();
-      setSession(s);
-      setError(undefined);
-      setStatus(s.authenticated ? 'authenticated' : 'unauthenticated');
-      if (wasAuthenticated.current && !s.authenticated) {
-        onUnauthorizedRef.current?.();
-      }
-      wasAuthenticated.current = s.authenticated;
+      apply(await bff.getSession());
     } catch (err) {
-      setError(err instanceof Error ? err : new Error(String(err)));
-      setStatus('error');
+      fail(err);
     }
-  }, [bff]);
+  }, [bff, apply, fail]);
 
   useEffect(() => {
-    void refresh();
-  }, [refresh]);
+    let live = true;
+    bff.getSession().then(
+      (s) => live && apply(s),
+      (err: unknown) => live && fail(err)
+    );
+    return () => {
+      live = false;
+    };
+  }, [bff, apply, fail]);
 
   useEffect(() => {
     if (!refreshOnFocus || typeof window === 'undefined') return undefined;
