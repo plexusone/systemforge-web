@@ -43,7 +43,9 @@ Actions does not publish; it runs only when started by hand.
    `pnpm build` runs `scripts/check-exports.mjs`, which imports and requires
    every entry point each package exports. It fails when an export names a
    file the build does not write, which once shipped a `@plexusone/ui` that
-   could not load.
+   could not load. It then runs `scripts/dist-paths.mjs check`, which fails
+   when any `dist/` file names a local filesystem path, such as a home
+   directory in a source map.
 
 ## 2. Push, then tag
 
@@ -69,9 +71,10 @@ pnpm build
 ```
 
 Each package's `prepublishOnly` script builds it again as it is published,
-so `pnpm publish` never uploads a `dist/` left from an earlier commit. A
-build from before a `git pull` once shipped `@plexusone/speech` 0.1.0
-without its release's fixes. Run the full `pnpm build` first all the same:
+so `pnpm publish` never uploads a `dist/` left from an earlier commit, and
+then checks that `dist/` names no local path. A build from before a
+`git pull` once shipped `@plexusone/speech` 0.1.0 without its release's
+fixes. Run the full `pnpm build` first all the same:
 a package's type declarations are built against the other packages'
 `dist/`.
 
