@@ -508,8 +508,10 @@ function OrganizationMembersPageBody({
       >
         {members.map((member, index) => {
           const isCurrentUser = member.principal_id === currentUserId;
-          const canEdit = canManageMembers && !isCurrentUser && member.role !== 'owner';
-          const canRemove = canManageMembers && !isCurrentUser && member.role !== 'owner';
+          // Owners manage admins; admins manage members. The server enforces it.
+          const managesRole = member.role !== 'owner' && (member.role !== 'admin' || isOwner);
+          const canEdit = canManageMembers && !isCurrentUser && managesRole;
+          const canRemove = canManageMembers && !isCurrentUser && managesRole;
 
           return (
             <div
@@ -564,7 +566,7 @@ function OrganizationMembersPageBody({
                           fontSize: '14px',
                         }}
                       >
-                        <option value="admin">Admin</option>
+                        {isOwner && <option value="admin">Admin</option>}
                         <option value="member">Member</option>
                       </select>
                       <button

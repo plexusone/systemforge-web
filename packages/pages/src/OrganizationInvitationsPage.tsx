@@ -53,9 +53,11 @@ function StatusBadge({ status }: { status: string }): ReactNode {
 function CreateInvitationModal({
   onSubmit,
   onClose,
+  canInviteAdmins,
 }: {
   onSubmit: (email: string, role: MemberRole) => Promise<void>;
   onClose: () => void;
+  canInviteAdmins: boolean;
 }): ReactNode {
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<MemberRole>('member');
@@ -192,7 +194,7 @@ function CreateInvitationModal({
                 fontSize: '14px',
               }}
             >
-              <option value="admin">Admin</option>
+              {canInviteAdmins && <option value="admin">Admin</option>}
               <option value="member">Member</option>
             </select>
             <p
@@ -532,23 +534,25 @@ function OrganizationInvitationsPageBody({
                   </div>
                 </div>
 
-                {canManageInvitations && (
-                  <button
-                    type="button"
-                    onClick={() => handleRevokeInvitation(invitation.id)}
-                    style={{
-                      padding: '6px 12px',
-                      backgroundColor: 'transparent',
-                      border: '1px solid var(--cf-color-status-error, #dc2626)',
-                      borderRadius: '6px',
-                      fontSize: '14px',
-                      cursor: 'pointer',
-                      color: 'var(--cf-color-status-error, #dc2626)',
-                    }}
-                  >
-                    Revoke
-                  </button>
-                )}
+                {/* Owners manage admin invitations; the server enforces it. */}
+                {canManageInvitations &&
+                  (currentUserRole === 'owner' || invitation.role === 'member') && (
+                    <button
+                      type="button"
+                      onClick={() => handleRevokeInvitation(invitation.id)}
+                      style={{
+                        padding: '6px 12px',
+                        backgroundColor: 'transparent',
+                        border: '1px solid var(--cf-color-status-error, #dc2626)',
+                        borderRadius: '6px',
+                        fontSize: '14px',
+                        cursor: 'pointer',
+                        color: 'var(--cf-color-status-error, #dc2626)',
+                      }}
+                    >
+                      Revoke
+                    </button>
+                  )}
               </div>
             ))}
           </div>
@@ -660,6 +664,7 @@ function OrganizationInvitationsPageBody({
         <CreateInvitationModal
           onSubmit={handleCreateInvitation}
           onClose={() => setShowCreateModal(false)}
+          canInviteAdmins={currentUserRole === 'owner'}
         />
       )}
     </div>
