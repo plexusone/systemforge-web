@@ -90,6 +90,15 @@ export interface Speaking {
   /** Pauses. Resuming repeats the utterance that was interrupted, at most one sentence. */
   pause(): void;
   resume(): void;
+  /**
+   * Changes the speed, and speech carries on at the new speed. A browser
+   * can't change an utterance that has started, so the one being spoken
+   * starts again from the last word reported to `onWord`, or from its
+   * beginning when no `onWord` was given.
+   */
+  setRate(rate: number): void;
+  /** Changes the voice, as `setRate` changes the speed. */
+  setVoice(voice: SpeechSynthesisVoice | string): void;
 }
 
 /** How long an utterance may take to start. See SpeakOptions.startTimeoutMs. */
@@ -175,6 +184,8 @@ export function speak(input: SpeakInput, options: SpeakOptions = {}): Speaking {
     stop,
     pause,
     resume,
+    setRate,
+    setVoice,
   };
 
   if (!synth || !Utterance) {
@@ -185,7 +196,8 @@ export function speak(input: SpeakInput, options: SpeakOptions = {}): Speaking {
 
   const segments = toSegments(input);
   const steps = plan(segments, options.maxChunkChars ?? DEFAULT_MAX_CHUNK_CHARS);
-  const voice = resolveVoice(synth, options);
+  let voice = resolveVoice(synth, options);
+  let rate = options.rate;
   let next = 0;
   // The utterance being spoken. Holding it also keeps it from being
   // garbage-collected before its end event, which loses the event in Chrome.
@@ -197,6 +209,10 @@ export function speak(input: SpeakInput, options: SpeakOptions = {}): Speaking {
   let startTimer: ReturnType<typeof setTimeout> | undefined;
   // Set while paused mid-utterance: resuming repeats that utterance.
   let repeat = false;
+  // The step being spoken, and where in its text the last word started, so
+  // a change of speed or voice can carry on from there.
+  let saying: Extract<Step, { kind: 'say' }> | undefined;
+  let spokenAt = 0;
   const startTimeoutMs = options.startTimeoutMs ?? DEFAULT_START_TIMEOUT_MS;
 
   current?.stop();
@@ -263,7 +279,7 @@ export function speak(input: SpeakInput, options: SpeakOptions = {}): Speaking {
     if (voice) u.voice = voice;
     const lang = options.lang ?? voice?.lang;
     if (lang) u.lang = lang;
-    if (options.rate !== undefined) u.rate = options.rate;
+    if (rate !== undefined) u.rate = rate;
     if (options.pitch !== undefined) u.pitch = options.pitch;
     if (options.volume !== undefined) u.volume = options.volume;
     u.onstart = () => {
@@ -274,7 +290,9 @@ export function speak(input: SpeakInput, options: SpeakOptions = {}): Speaking {
       u.onboundary = (e: SpeechSynthesisEvent) => {
         if (utterance !== u || e.name === 'sentence') return;
         const word = locateWord(s, e.charIndex, e.charLength);
-        if (word) onWord(word);
+        if (!word) return;
+        spokenAt = e.charIndex;
+        onWord(word);
       };
     }
     u.onend = () => {
@@ -295,6 +313,8 @@ export function speak(input: SpeakInput, options: SpeakOptions = {}): Speaking {
       finish(new SpeechError(e.error ?? 'synthesis-failed'));
     };
     utterance = u;
+    saying = s;
+    spokenAt = 0;
     synth!.speak(u);
     if (startTimeoutMs > 0 && utterance === u) {
       clearStartTimer();
@@ -349,6 +369,29 @@ export function speak(input: SpeakInput, options: SpeakOptions = {}): Speaking {
       repeat = true;
       synth!.cancel();
     }
+  }
+
+  function setRate(value: number) {
+    rate = value;
+    restart();
+  }
+
+  function setVoice(value: SpeechSynthesisVoice | string) {
+    if (!synth) return;
+    voice = resolveVoice(synth, { ...options, voice: value });
+    restart();
+  }
+
+  // Speaks the rest of the current utterance again with the new settings.
+  // Between utterances, or while paused, the next one picks them up.
+  function restart() {
+    if (state !== 'speaking' || !utterance || !saying) return;
+    const s = saying;
+    const at = spokenAt;
+    clearStartTimer();
+    utterance = undefined; // let go first, so its cancel isn't taken as a stop
+    synth!.cancel();
+    say(at > 0 ? { ...s, text: s.text.slice(at), source: s.source.slice(at) } : s, false);
   }
 
   function resume() {

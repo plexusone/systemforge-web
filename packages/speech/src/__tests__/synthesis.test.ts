@@ -227,6 +227,59 @@ describe('speak', () => {
     expect(started).toEqual([0]);
   });
 
+  it('carries on from the last word at a new speed', async () => {
+    const words: string[] = [];
+    const text = 'One two three.';
+    const s = speak(text, { ...env(), rate: 1, onWord: (w) => words.push(text.slice(w.start, w.end)) });
+    synthesis.start();
+    synthesis.boundary(4, 3); // "two"
+    s.setRate(2);
+    expect(s.state).toBe('speaking');
+    expect(synthesis.texts()).toEqual(['One two three.', 'two three.']);
+    expect(synthesis.spoken[1].rate).toBe(2);
+    synthesis.start();
+    synthesis.boundary(4, 5); // "three" in the shorter utterance
+    synthesis.end();
+    await expect(s.done).resolves.toEqual({ status: 'ended' });
+    expect(words).toEqual(['two', 'three']);
+  });
+
+  it('starts the utterance again when no words are tracked', () => {
+    const s = speak('One two three.', env());
+    synthesis.start();
+    s.setRate(1.5);
+    expect(synthesis.texts()).toEqual(['One two three.', 'One two three.']);
+    expect(synthesis.spoken[1].rate).toBe(1.5);
+    expect(s.state).toBe('speaking');
+  });
+
+  it('changes the voice and carries on', () => {
+    const en = voice('Samantha', 'en-US');
+    const other = voice('Daniel', 'en-GB');
+    synthesis.voices = [en, other];
+    const s = speak('Hello there.', { ...env(), voice: en, onWord: () => {} });
+    synthesis.start();
+    synthesis.boundary(6, 5); // "there"
+    s.setVoice('Daniel');
+    expect(synthesis.texts()).toEqual(['Hello there.', 'there.']);
+    expect(synthesis.spoken[1].voice).toBe(other);
+  });
+
+  it('applies a new speed to the next utterance during a pause', () => {
+    const s = speak([{ text: 'A.', pauseMs: 1000 }, { text: 'B.' }], env());
+    synthesis.end();
+    s.setRate(1.25);
+    expect(synthesis.texts()).toEqual(['A.']);
+    vi.advanceTimersByTime(1000);
+    expect(synthesis.texts()).toEqual(['A.', 'B.']);
+    expect(synthesis.spoken[1].rate).toBe(1.25);
+
+    s.pause();
+    s.setRate(0.75);
+    s.resume();
+    expect(synthesis.spoken[2].rate).toBe(0.75);
+  });
+
   it('clears the queue before speaking, even when the browser reports it idle', () => {
     synthesis.paused = true;
     speak('Hello.', env());
