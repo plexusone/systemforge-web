@@ -1,7 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { TelemetryProvider } from '../TelemetryProvider';
+import { DefaultErrorFallback, ErrorBoundary } from '../ErrorBoundary';
 import { useClickTracker, useStateTracker } from '../hooks/productgraph';
 import type { TelemetryAdapter, TelemetryEvent } from '../types';
 
@@ -61,5 +62,32 @@ describe('useStateTracker', () => {
       state_after: { filled: true },
     });
     expect(JSON.stringify(events)).not.toContain('hunter2');
+  });
+});
+
+function Boom(): never {
+  throw new Error('failed for ada@example.com');
+}
+
+describe('ErrorBoundary', () => {
+  it('reports to the enclosing TelemetryProvider without a telemetry prop', () => {
+    const { events, config } = setup();
+    const quiet = vi.spyOn(console, 'error').mockImplementation(() => {});
+    render(
+      <TelemetryProvider config={config}>
+        <ErrorBoundary>
+          <Boom />
+        </ErrorBoundary>
+      </TelemetryProvider>
+    );
+    quiet.mockRestore();
+    const error = events.find((e) => e.type === 'error');
+    expect(error?.properties?.message).toBe('failed for [redacted]');
+  });
+
+  it('shows no error message outside a development build', () => {
+    render(<DefaultErrorFallback error={new Error('db password wrong')} reset={() => {}} />);
+    expect(screen.queryByText(/db password/)).toBeNull();
+    expect(screen.getByText('An unexpected error occurred.')).toBeTruthy();
   });
 });
