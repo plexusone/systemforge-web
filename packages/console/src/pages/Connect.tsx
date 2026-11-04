@@ -1,6 +1,7 @@
 import { useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { NextStepLinks } from '../components/NextSteps';
 import { Link, useParams, useSearchParams } from 'react-router';
+import { safeHref } from '@plexusone/auth';
 import { useAppContext } from '@plexusone/host';
 import { Button, Input, Label } from '@plexusone/ui';
 import { ApiError, api } from '../api';
@@ -368,7 +369,12 @@ function Connected({
       setError('That return address is not allowed.');
       return;
     }
-    window.location.assign(withConnection(allowed, connection.id));
+    const target = withConnection(allowed, connection.id);
+    if (target === undefined) {
+      setError('That return address is not allowed.');
+      return;
+    }
+    window.location.assign(target);
   }
 
   return (
@@ -403,11 +409,22 @@ function Connected({
 
 /**
  * withConnection adds the new connection's ID to an allowed return address,
- * as `connection_id`, so the application that linked here can select it.
+ * as `connection_id`, so the application that linked here can select it. It
+ * returns undefined for an address that is not http(s), or a path that would
+ * leave this host once rebuilt.
  */
-export function withConnection(url: string, connectionId: string): string {
-  const u = new URL(url, window.location.origin);
+export function withConnection(url: string, connectionId: string): string | undefined {
+  if (safeHref(url) === undefined) return undefined;
+  let u: URL;
+  try {
+    u = new URL(url, window.location.origin);
+  } catch {
+    return undefined;
+  }
   u.searchParams.set('connection_id', connectionId);
-  // A path on this host stays a path; an absolute URL stays absolute.
-  return url.startsWith('/') ? `${u.pathname}${u.search}${u.hash}` : u.toString();
+  if (!url.startsWith('/')) return u.toString();
+  // A path on this host stays a path. Resolving "/.//evil.example" removes
+  // the dot segment, and the rebuilt "//evil.example" is another host.
+  if (u.origin !== window.location.origin || u.pathname.startsWith('//')) return undefined;
+  return `${u.pathname}${u.search}${u.hash}`;
 }
