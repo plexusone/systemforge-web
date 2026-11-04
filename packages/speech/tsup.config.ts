@@ -1,4 +1,6 @@
 import { defineConfig } from 'tsup';
+// @ts-expect-error: a plain JavaScript build script, without types
+import { relativizeSourceMaps } from '../../scripts/dist-paths.mjs';
 
 export default defineConfig([
   {
@@ -9,6 +11,8 @@ export default defineConfig([
     // stopSpeaking() and new speech see speech started through the hooks.
     splitting: true,
     sourcemap: true,
+    // Splitting with CJS output writes absolute paths into the source maps.
+    onSuccess: async () => relativizeSourceMaps('dist'),
     // Only this build's files: the two builds run at once, and cleaning
     // everything could delete the standalone build.
     clean: ['**/*', '!speech.global.js'],

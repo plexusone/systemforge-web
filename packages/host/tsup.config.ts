@@ -1,4 +1,6 @@
 import { defineConfig } from 'tsup';
+// @ts-expect-error: a plain JavaScript build script, without types
+import { relativizeSourceMaps } from '../../scripts/dist-paths.mjs';
 
 export default defineConfig({
   entry: ['src/index.ts', 'src/testing.tsx'],
@@ -8,6 +10,8 @@ export default defineConfig({
   // context testing.renderApp provides is the one useAppContext reads.
   splitting: true,
   sourcemap: true,
+  // Splitting with CJS output writes absolute paths into the source maps.
+  onSuccess: async () => relativizeSourceMaps('dist'),
   clean: true,
   external: [
     'react',
