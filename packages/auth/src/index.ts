@@ -31,6 +31,8 @@
 
 // Provider and main hook
 export { AuthProvider, useAuth, useAuthOptional, SESSION_EXPIRED_EVENT } from './AuthProvider';
+export { PRINCIPAL_CHANGE_EVENT, usePrincipalChange } from './principal';
+export type { PrincipalChangeDetail } from './principal';
 export type { AuthProviderProps } from './AuthProvider';
 
 // Route protection

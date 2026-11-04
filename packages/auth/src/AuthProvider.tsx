@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { BFFClient } from './bff-client';
 import { currentPath, returnPath } from './url';
+import { usePrincipalChange } from './principal';
 import type {
   User,
   AuthConfig,
@@ -299,6 +300,8 @@ export function AuthProvider({
       clearInterval(interval);
     };
   }, [user, checkSession, checkInterval]);
+
+  usePrincipalChange(user?.id);
 
   /**
    * Listen for session expired events from other parts of the app
