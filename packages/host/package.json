@@ -55,7 +55,7 @@
     "react-dom": "^19.0.0",
     "react-router": "^8.4.0",
     "tsup": "^9.0.0",
-    "typescript": "^7.0.2"
+    "typescript": "^6.0.3"
   },
   "keywords": [
     "systemforge",
