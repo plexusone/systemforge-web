@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { ChatThread } from './ChatThread';
 import { ChatComposer } from './ChatComposer';
+import { useChatContextOptional } from './ChatProvider';
 import { cn } from '../utils';
 
 export type WidgetPosition = 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
@@ -75,15 +76,20 @@ export function ChatWidget({
   // Support both controlled and uncontrolled modes
   const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen;
 
+  const events = useChatContextOptional()?.events;
+
   const handleToggle = () => {
     const newOpen = !isOpen;
     setInternalOpen(newOpen);
     onOpenChange?.(newOpen);
+    if (newOpen) events?.onOpen?.();
+    else events?.onClose?.();
   };
 
   const handleClose = () => {
     setInternalOpen(false);
     onOpenChange?.(false);
+    events?.onClose?.();
   };
 
   return (

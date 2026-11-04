@@ -14,6 +14,7 @@ import type {
   Message,
   ChatEventCallbacks,
 } from '../types';
+import { readSSEData } from '../sse';
 
 interface ChatContextValue {
   config: ChatConfig;
@@ -45,17 +46,49 @@ export function useChatContextOptional() {
   return React.useContext(ChatContext);
 }
 
-function createChatAdapter(
+// IDs for the messages passed to onMessageSent and onMessageReceived.
+let lastMessageId = 0;
+
+interface AdapterCallbacks {
+  onStreamStart?: () => void;
+  onStreamEnd?: () => void;
+  onError?: (error: Error) => void;
+  onMessageSent?: (content: string) => void;
+  onMessageReceived?: (content: string) => void;
+}
+
+type WireMessage = { role: string; content: string };
+
+function textOf(m: { content?: readonly { type: string; text?: string }[] }): string {
+  return (
+    m.content
+      ?.filter((c) => c.type === 'text')
+      .map((c) => c.text ?? '')
+      .join('') ?? ''
+  );
+}
+
+function errorFrom(parsed: unknown): Error | undefined {
+  const err = (parsed as { error?: unknown } | null)?.error;
+  if (err === undefined || err === null) return undefined;
+  const message = typeof err === 'string' ? err : (err as { message?: unknown }).message;
+  return new Error(typeof message === 'string' ? message : 'The chat service returned an error');
+}
+
+export function createChatAdapter(
   config: ChatConfig,
-  callbacks: {
-    onStreamStart?: () => void;
-    onStreamEnd?: () => void;
-    onError?: (error: Error) => void;
-  }
+  callbacks: AdapterCallbacks
 ): ChatModelAdapter {
   return {
     async *run({ messages, abortSignal }) {
-      callbacks.onStreamStart?.();
+      const cb = () => callbacks;
+      const wire: WireMessage[] = messages.map((m) => ({ role: m.role, content: textOf(m) }));
+      const streaming = config.streaming !== false;
+      let content = '';
+
+      cb().onStreamStart?.();
+      const sent = [...wire].reverse().find((m) => m.role === 'user');
+      if (sent) cb().onMessageSent?.(sent.content);
 
       try {
         const response = await fetch(`${config.apiBaseUrl}/v1/chat/completions`, {
@@ -67,77 +100,59 @@ function createChatAdapter(
           credentials: 'include',
           body: JSON.stringify({
             model: config.modelId ?? 'default',
-            messages: messages.map((m) => ({
-              role: m.role,
-              content:
-                m.content
-                  ?.filter((c) => c.type === 'text')
-                  .map((c) => c.text)
-                  .join('') ?? '',
-            })),
-            stream: config.streaming !== false,
+            messages: wire,
+            stream: streaming,
           }),
           signal: abortSignal,
         });
 
         if (!response.ok) {
-          const error = new Error(`API error: ${response.status}`);
-          callbacks.onError?.(error);
-          throw error;
+          throw new Error(`API error: ${response.status}`);
         }
 
-        const reader = response.body?.getReader();
-        if (!reader) {
-          const error = new Error('No response body');
-          callbacks.onError?.(error);
-          throw error;
-        }
-
-        const decoder = new TextDecoder();
-        let content = '';
-
-        try {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            const chunk = decoder.decode(value, { stream: true });
-            const lines = chunk.split('\n');
-
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                const data = line.slice(6);
-                if (data === '[DONE]') {
-                  callbacks.onStreamEnd?.();
-                  return;
-                }
-
-                try {
-                  const parsed = JSON.parse(data);
-                  const delta = parsed.choices?.[0]?.delta?.content;
-                  if (delta) {
-                    content += delta;
-                    yield {
-                      content: [{ type: 'text' as const, text: content }],
-                    } satisfies ChatModelRunResult;
-                  }
-                } catch {
-                  // Ignore parse errors for incomplete chunks
-                }
-              }
+        if (!streaming) {
+          const parsed = (await response.json()) as {
+            choices?: { message?: { content?: string } }[];
+          };
+          const err = errorFrom(parsed);
+          if (err) throw err;
+          content = parsed.choices?.[0]?.message?.content ?? '';
+          yield {
+            content: [{ type: 'text' as const, text: content }],
+          } satisfies ChatModelRunResult;
+        } else {
+          if (!response.body) {
+            throw new Error('No response body');
+          }
+          for await (const data of readSSEData(response.body)) {
+            if (data === '[DONE]') break;
+            let parsed: unknown;
+            try {
+              parsed = JSON.parse(data);
+            } catch {
+              throw new Error('The chat service sent a malformed event');
+            }
+            const err = errorFrom(parsed);
+            if (err) throw err;
+            const delta = (parsed as { choices?: { delta?: { content?: string } }[] }).choices?.[0]
+              ?.delta?.content;
+            if (delta) {
+              content += delta;
+              yield {
+                content: [{ type: 'text' as const, text: content }],
+              } satisfies ChatModelRunResult;
             }
           }
-        } finally {
-          reader.releaseLock();
         }
 
-        callbacks.onStreamEnd?.();
+        cb().onMessageReceived?.(content);
       } catch (error) {
-        callbacks.onStreamEnd?.();
-        if (error instanceof Error) {
-          callbacks.onError?.(error);
+        if (error instanceof Error && error.name !== 'AbortError') {
+          cb().onError?.(error);
         }
         throw error;
+      } finally {
+        cb().onStreamEnd?.();
       }
     },
   };
@@ -181,13 +196,10 @@ export function ChatProvider({
     [events]
   );
 
-  // Create message ID counter
-  const messageIdRef = React.useRef(0);
-
   const notifyMessageSent = React.useCallback(
     (content: string) => {
       const message: Message = {
-        id: `user-${++messageIdRef.current}`,
+        id: `user-${++lastMessageId}`,
         role: 'user',
         content,
         createdAt: new Date(),
@@ -200,7 +212,7 @@ export function ChatProvider({
   const notifyMessageReceived = React.useCallback(
     (content: string) => {
       const message: Message = {
-        id: `assistant-${++messageIdRef.current}`,
+        id: `assistant-${++lastMessageId}`,
         role: 'assistant',
         content,
         createdAt: new Date(),
@@ -217,14 +229,17 @@ export function ChatProvider({
     [events]
   );
 
+  const { onStreamStart, onStreamEnd } = events;
   const adapter = React.useMemo(
     () =>
       createChatAdapter(config, {
-        onStreamStart: events.onStreamStart,
-        onStreamEnd: events.onStreamEnd,
-        onError: events.onError,
+        onStreamStart,
+        onStreamEnd,
+        onError: notifyError,
+        onMessageSent: notifyMessageSent,
+        onMessageReceived: notifyMessageReceived,
       }),
-    [config, events.onStreamStart, events.onStreamEnd, events.onError]
+    [config, onStreamStart, onStreamEnd, notifyError, notifyMessageSent, notifyMessageReceived]
   );
 
   const runtime = useLocalRuntime(adapter);
