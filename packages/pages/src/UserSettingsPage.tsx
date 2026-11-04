@@ -98,7 +98,10 @@ const providerIcons: Record<OAuthProvider, ReactNode> = {
 /**
  * Profile Tab Content
  */
-function ProfileTab(): ReactNode {
+function ProfileTab({
+  onSaveProfile,
+  onChangeAvatar,
+}: Pick<UserSettingsPageProps, 'onSaveProfile' | 'onChangeAvatar'>): ReactNode {
   const { user } = useAuth();
   const [name, setName] = useState(user?.name || '');
   const [isSaving, setIsSaving] = useState(false);
@@ -110,8 +113,8 @@ function ProfileTab(): ReactNode {
     setMessage(null);
 
     try {
-      // TODO: Implement profile update API call
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      if (!onSaveProfile) return;
+      await onSaveProfile({ name });
       setMessage({ type: 'success', text: 'Profile updated successfully' });
     } catch {
       setMessage({ type: 'error', text: 'Failed to update profile' });
@@ -197,20 +200,23 @@ function ProfileTab(): ReactNode {
                 {user?.name?.charAt(0).toUpperCase() || '?'}
               </div>
             )}
-            <button
-              type="button"
-              style={{
-                padding: '8px 16px',
-                backgroundColor: 'transparent',
-                border: '1px solid var(--cf-color-border-default, #e4e4e7)',
-                borderRadius: '6px',
-                fontSize: '14px',
-                cursor: 'pointer',
-                color: 'var(--cf-color-fg-primary, #18181b)',
-              }}
-            >
-              Change avatar
-            </button>
+            {onChangeAvatar && (
+              <button
+                type="button"
+                onClick={onChangeAvatar}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: 'transparent',
+                  border: '1px solid var(--cf-color-border-default, #e4e4e7)',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  cursor: 'pointer',
+                  color: 'var(--cf-color-fg-primary, #18181b)',
+                }}
+              >
+                Change avatar
+              </button>
+            )}
           </div>
         </div>
 
@@ -233,6 +239,7 @@ function ProfileTab(): ReactNode {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            readOnly={!onSaveProfile}
             style={{
               width: '100%',
               maxWidth: '400px',
@@ -287,23 +294,25 @@ function ProfileTab(): ReactNode {
           </p>
         </div>
 
-        <button
-          type="submit"
-          disabled={isSaving}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: 'var(--cf-color-brand-primary, #2563eb)',
-            color: '#ffffff',
-            border: 'none',
-            borderRadius: '8px',
-            fontSize: '14px',
-            fontWeight: 500,
-            cursor: isSaving ? 'not-allowed' : 'pointer',
-            opacity: isSaving ? 0.6 : 1,
-          }}
-        >
-          {isSaving ? 'Saving...' : 'Save changes'}
-        </button>
+        {onSaveProfile && (
+          <button
+            type="submit"
+            disabled={isSaving}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: 'var(--cf-color-brand-primary, #2563eb)',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontWeight: 500,
+              cursor: isSaving ? 'not-allowed' : 'pointer',
+              opacity: isSaving ? 0.6 : 1,
+            }}
+          >
+            {isSaving ? 'Saving...' : 'Save changes'}
+          </button>
+        )}
       </form>
     </div>
   );
@@ -681,6 +690,8 @@ export function UserSettingsPage({
   onTabChange,
   bffBaseUrl,
   oauthProviders,
+  onSaveProfile,
+  onChangeAvatar,
 }: UserSettingsPageProps): ReactNode {
   const [currentTab, setCurrentTab] = useState<SettingsTab>(activeTab);
 
@@ -772,7 +783,9 @@ export function UserSettingsPage({
             padding: '24px',
           }}
         >
-          {currentTab === 'profile' && <ProfileTab />}
+          {currentTab === 'profile' && (
+            <ProfileTab onSaveProfile={onSaveProfile} onChangeAvatar={onChangeAvatar} />
+          )}
           {currentTab === 'security' && <SecurityTab />}
           {currentTab === 'accounts' && (
             <AccountsTab bffBaseUrl={bffBaseUrl} oauthProviders={oauthProviders} />

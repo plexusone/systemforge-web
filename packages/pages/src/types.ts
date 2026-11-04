@@ -281,6 +281,16 @@ export interface UserSettingsPageProps {
    * Available OAuth providers for linking
    */
   oauthProviders?: OAuthProvider[];
+
+  /**
+   * Saves the profile. Without it, the profile tab is read-only.
+   */
+  onSaveProfile?: (profile: { name: string }) => Promise<void>;
+
+  /**
+   * Starts an avatar change. Without it, no Change avatar button is shown.
+   */
+  onChangeAvatar?: () => void;
 }
 
 /**
