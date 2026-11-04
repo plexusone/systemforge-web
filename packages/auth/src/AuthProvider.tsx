@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from 'react';
 import { BFFClient } from './bff-client';
+import { currentPath, returnPath } from './url';
 import type {
   User,
   AuthConfig,
@@ -151,7 +152,7 @@ export function AuthProvider({
    */
   const loginWithOAuth = useCallback(
     (provider: OAuthProvider) => {
-      const returnTo = window.location.pathname;
+      const returnTo = returnPath(currentPath());
       client.loginWithOAuth(provider, returnTo);
     },
     [client]

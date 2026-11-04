@@ -1,4 +1,5 @@
 import { readSignOut, type SystemAuthSignOut } from './signout';
+import { returnPath } from './url';
 import type {
   User,
   SessionStatus,
@@ -102,8 +103,9 @@ export class BFFClient {
    */
   getOAuthUrl(provider: OAuthProvider, returnTo?: string): string {
     const params = new URLSearchParams();
-    if (returnTo) {
-      params.set('return_to', returnTo);
+    const path = returnPath(returnTo);
+    if (path) {
+      params.set('return_to', path);
     }
     const query = params.toString();
     return `${this.baseUrl}/bff/auth/${provider}${query ? `?${query}` : ''}`;

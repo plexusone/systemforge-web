@@ -1,4 +1,5 @@
 import { readSignOut, type SystemAuthSignOut } from '../signout';
+import { currentPath, returnPath } from '../url';
 import { toSession } from './adapter';
 import type { Session, WireSession } from './types';
 
@@ -25,7 +26,10 @@ export interface SessionClientOptions {
 
 /** Sign-in options. */
 export interface SignInOptions {
-  /** Where to land after sign-in: a path on this origin. Default the current location. */
+  /**
+   * Where to land after sign-in: a path on this origin. Default the current
+   * location. Any other value is dropped.
+   */
   returnTo?: string;
   /** Sign in with this identity provider directly (for example `github`). */
   provider?: string;
@@ -61,7 +65,9 @@ export class SessionClient {
     const path = opts.provider
       ? `${this.base}/auth/${encodeURIComponent(opts.provider)}`
       : `${this.base}/auth/login`;
-    const returnTo = opts.returnTo ?? currentLocation();
+    // A value that is not a path on this site is dropped, and the BFF uses
+    // its default landing page.
+    const returnTo = returnPath(opts.returnTo ?? currentPath());
     return returnTo ? `${path}?return_to=${encodeURIComponent(returnTo)}` : path;
   }
 
@@ -82,12 +88,6 @@ export class SessionClient {
     if (res.status === 204) return undefined;
     return readSignOut(await res.json().catch(() => undefined));
   }
-}
-
-function currentLocation(): string | undefined {
-  if (typeof window === 'undefined') return undefined;
-  const { pathname, search, hash } = window.location;
-  return `${pathname}${search}${hash}`;
 }
 
 async function errorFrom(res: Response): Promise<SessionError> {
