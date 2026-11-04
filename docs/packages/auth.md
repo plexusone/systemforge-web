@@ -155,6 +155,32 @@ stays as before.
 `social_login.allowed_redirect_origins`, and the app and SystemAuth must
 share a site, such as `app.example.com` and `auth.example.com`.
 
+### When the signed-in person changes
+
+`AuthProvider` and `SessionProvider` dispatch `PRINCIPAL_CHANGE_EVENT`
+(`systemforge:principal-change`) on `window` when the signed-in person signs
+out, the session ends, or another account takes its place. Data cached for
+the previous person must not be shown to the next one: `@plexusone/api-client`
+clears its query cache on this event, and an application with its own caches
+should do the same.
+
+### Navigation URLs
+
+A URL that came from props, the server or the address bar must be checked
+before the browser goes there: `window.location.assign('javascript:…')` runs
+script, and React's guard on `href` does not cover it.
+
+| Function             | Accepts                                                        |
+| -------------------- | -------------------------------------------------------------- |
+| `safeHref(url)`      | Relative URLs and absolute `http(s)` URLs                      |
+| `sameOriginURL(url)` | The above, on this page's origin only                          |
+| `returnPath(url)`    | A path on this site, such as `/orgs/a?tab=2`                   |
+| `navigateTo(url)`    | Goes to `url` if `safeHref` accepts it; returns whether it did |
+
+Each returns the URL unchanged, or `undefined` when it is refused. The sign-in
+`return_to` value is checked with `returnPath`; any other value is dropped and
+the BFF uses its default landing page.
+
 ## API Reference
 
 ### AuthProvider Props
