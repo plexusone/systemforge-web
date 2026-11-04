@@ -78,11 +78,7 @@ export interface Health {
 
 /** A connection's lifecycle state. */
 export type ConnectionState =
-  | 'pending'
-  | 'connected'
-  | 'needs_attention'
-  | 'disconnected'
-  | 'revoked';
+  'pending' | 'connected' | 'needs_attention' | 'disconnected' | 'revoked';
 
 /** An organization's connection to an account at a service. */
 export interface Connection {

@@ -379,8 +379,7 @@ export function useWebVitals(): void {
     const fidObserver = new PerformanceObserver((list) => {
       const entries = list.getEntries();
       const firstEntry = entries[0] as unknown as
-        | { processingStart: number; startTime: number }
-        | undefined;
+        { processingStart: number; startTime: number } | undefined;
       if (firstEntry) {
         mark('fid', firstEntry.processingStart - firstEntry.startTime, 'ms');
       }
