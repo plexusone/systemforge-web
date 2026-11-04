@@ -31,7 +31,8 @@ export interface LoginPageProps {
   showRegisterLink?: boolean;
 
   /**
-   * URL to redirect after login
+   * URL to go to after login. Only a URL on this site is followed; any other
+   * value, such as an absolute URL to another host, goes to "/" instead.
    */
   redirectUrl?: string;
 
