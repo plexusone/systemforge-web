@@ -1963,6 +1963,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../releases/v0.7.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.7.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../releases/v0.6.1/" class="md-nav__link">
         
   
@@ -2517,8 +2545,9 @@ speech in progress:</p>
 </tr>
 </tbody>
 </table>
-<p>The returned object has <code>stop()</code>, <code>pause()</code>, <code>resume()</code> and <code>state</code>
-(<code>speaking</code>, <code>paused</code>, <code>ended</code>, <code>stopped</code> or <code>error</code>). <code>done</code> rejects with a
+<p>The returned object has <code>stop()</code>, <code>pause()</code>, <code>resume()</code>, <code>setRate(rate)</code>,
+<code>setVoice(voice)</code> and <code>state</code> (<code>speaking</code>, <code>paused</code>, <code>ended</code>, <code>stopped</code> or
+<code>error</code>). <code>done</code> rejects with a
 <code>SpeechError</code> whose <code>code</code> is the browser's error, <code>unsupported</code>, or
 <code>start-timeout</code> when the browser never started the speech. On
 <code>start-timeout</code>, offer another way to hear the text, such as a recording, or
@@ -2544,6 +2573,12 @@ progress. <code>stopSpeaking()</code> stops it from anywhere.</p>
   <code>resume()</code> speaks it again from its start: at most one sentence, or
   <code>maxChunkChars</code>, is repeated. A segment's <code>pauseMs</code> is a timer, which
   <code>pause()</code> and <code>resume()</code> stop and continue.</li>
+<li><strong>Changing speed or voice while speaking.</strong> A browser can't change an
+  utterance once it has started. <code>setRate()</code> and <code>setVoice()</code> cancel it and
+  speak the rest from the last word reported to <code>onWord</code>, or the whole
+  utterance again without <code>onWord</code>, so speech carries on with the new
+  setting, as a video player's speed menu does. Between utterances and while
+  paused, the next utterance uses it.</li>
 <li><strong>Cancelled from elsewhere.</strong> Another script or library calling
   <code>speechSynthesis.cancel()</code> ends this speech too; <code>done</code> then resolves
   with <code>stopped</code> rather than waiting for an end that never comes.</li>
@@ -2628,7 +2663,7 @@ the device.</p>
 <tbody>
 <tr>
 <td><code>useSpeech(options)</code></td>
-<td><code>speak</code>, <code>stop</code>, <code>pause</code>, <code>resume</code>, <code>state</code>, <code>segment</code>, <code>word</code>, <code>error</code>, <code>supported</code></td>
+<td><code>speak</code>, <code>stop</code>, <code>pause</code>, <code>resume</code>, <code>setRate</code>, <code>setVoice</code>, <code>state</code>, <code>segment</code>, <code>word</code>, <code>error</code>, <code>supported</code></td>
 </tr>
 <tr>
 <td><code>useListen(options)</code></td>
@@ -2670,7 +2705,7 @@ re-renders the component on every word; <code>onWord</code> alone does not:</p>
 <h2 id="pages-without-a-build-step">Pages without a build step<a class="headerlink" href="#pages-without-a-build-step" title="Permanent link">&para;</a></h2>
 <p><code>dist/speech.global.js</code> (the <code>@plexusone/speech/browser</code> export) defines
 <code>window.PlexusSpeech</code> with the same functions as the main entry point:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://cdn.jsdelivr.net/npm/@plexusone/speech@0.1.1/dist/speech.global.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://cdn.jsdelivr.net/npm/@plexusone/speech@0.2.0/dist/speech.global.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nx">PlexusSpeech</span><span class="p">.</span><span class="nx">speak</span><span class="p">(</span><span class="s1">&#39;Hello.&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">lang</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;en-US&#39;</span><span class="w"> </span><span class="p">});</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
