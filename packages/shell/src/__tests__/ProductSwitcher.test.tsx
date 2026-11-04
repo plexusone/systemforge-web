@@ -41,6 +41,20 @@ describe('ProductSwitcher', () => {
     await waitFor(() => expect(screen.queryByRole('link', { name: 'Agents' })).toBeNull());
   });
 
+  it('leaves out an entry whose URL is not http(s), even from the apps prop', async () => {
+    render(
+      <WithSession>
+        <ProductSwitcher
+          self={self}
+          organizationId="org-1"
+          apps={[self, { id: 'agents', name: 'Agents', url: 'javascript:alert(1)//' }]}
+        />
+      </WithSession>
+    );
+    await screen.findByText('Build');
+    expect(screen.queryByRole('link', { name: 'Agents' })).toBeNull();
+  });
+
   it('renders the current application alone outside a session', () => {
     render(<ProductSwitcher self={self} />);
     expect(screen.getByRole('navigation', { name: 'Products' }).textContent).toBe('Build');

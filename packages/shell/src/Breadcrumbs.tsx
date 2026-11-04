@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react';
 import { ChevronRightIcon, HomeIcon, cn } from '@plexusone/ui';
 import type { BreadcrumbsProps } from './types';
+import { navigateTo, safeHref } from '@plexusone/auth';
 
 /**
  * Breadcrumbs - Navigation breadcrumb trail
@@ -33,7 +34,7 @@ export function Breadcrumbs({
     if (onNavigate) {
       onNavigate(href);
     } else {
-      window.location.assign(href);
+      navigateTo(href);
     }
   };
 
@@ -68,7 +69,7 @@ export function Breadcrumbs({
                 <span className="text-muted-foreground px-1 py-0.5">{item.label}</span>
               ) : item.href && !isLast ? (
                 <a
-                  href={item.href}
+                  href={safeHref(item.href)}
                   onClick={(e) => handleClick(item.href, e)}
                   className="flex items-center gap-1 text-muted-foreground no-underline px-1 py-0.5 rounded hover:text-foreground hover:bg-accent"
                 >

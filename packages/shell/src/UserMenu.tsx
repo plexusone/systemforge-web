@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { useAuthOptional } from '@plexusone/auth';
+import { navigateTo, useAuthOptional } from '@plexusone/auth';
 import {
   Avatar,
   AvatarImage,
@@ -51,7 +51,7 @@ export function UserMenu({ actions = defaultActions, onNavigate }: UserMenuProps
       if (onNavigate) {
         onNavigate(action.href);
       } else {
-        window.location.assign(action.href);
+        navigateTo(action.href);
       }
     }
   };

@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { ShellContextValue, AppShellConfig } from './types';
+import { navigateTo } from '@plexusone/auth';
 
 /**
  * Shell context
@@ -93,7 +94,7 @@ export function ShellProvider({
       if (onNavigate) {
         onNavigate(href);
       } else {
-        window.location.assign(href);
+        navigateTo(href);
       }
       setCurrentPath(href);
       // Close mobile sidebar on navigation
