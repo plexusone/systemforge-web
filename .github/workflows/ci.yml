@@ -15,7 +15,7 @@ jobs:
     name: Lint
     uses: grokify/.github/.github/workflows/ts-lint-pnpm.yaml@v0.4.0
     with:
-      node-version: '20.x'
+      node-version: '26.x'
       pnpm-version: '9'
       lint-script: 'lint'
       format-check-script: 'format:check'
@@ -24,7 +24,7 @@ jobs:
     name: CI
     uses: grokify/.github/.github/workflows/ts-ci-pnpm.yaml@v0.4.0
     with:
-      node-versions: '["20.x"]'
+      node-versions: '["24.x", "26.x"]'
       pnpm-version: '9'
       test-script: 'test'
       build-script: 'build'

@@ -104,6 +104,9 @@ function CheckoutPage() {
 
 ## Development
 
+Building this repository needs Node.js 24.15 or later (CI runs 24 and 26) and
+pnpm 9.
+
 ```bash
 # Install dependencies
 pnpm install
