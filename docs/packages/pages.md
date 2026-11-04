@@ -355,12 +355,12 @@ Organization management follows this permission model:
 | Transfer ownership  | Yes   | No    | No     |
 | Delete organization | Yes   | No    | No     |
 
-\*Admin cannot modify other admins or the owner
+\*Only an owner can grant the owner role or change or remove an owner; admins can manage other admins
 
 `currentUserRole` decides only which controls the pages show. The server must
 enforce this table on every request: which roles may grant which roles,
-whether admins may act on other admins, and that no request can grant
-`owner` except a transfer by the owner.
+and that only an owner can grant `owner` or act on an owner. SystemForge's
+organization API does.
 
 The pages encode `orgSlug` and member and invitation IDs in request paths,
 and load again, with fresh state, when `orgSlug` or `apiBaseUrl` changes.
