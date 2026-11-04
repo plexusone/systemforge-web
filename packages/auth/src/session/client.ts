@@ -80,7 +80,8 @@ export class SessionClient {
     const res = await this.doFetch(`${this.base}/auth/logout`, {
       method: 'POST',
       credentials: 'include',
-      headers: { Accept: 'application/json' },
+      // The custom header makes this a preflighted request cross-origin.
+      headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
     });
     if (!res.ok) {
       throw await errorFrom(res);
