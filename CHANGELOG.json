@@ -4,8 +4,36 @@
   "repository": "https://github.com/plexusone/systemforge-web",
   "versioning": "semver",
   "commitConvention": "conventional",
-  "maintainers": ["grokify", "johncwang@gmail.com"],
+  "maintainers": [
+    "grokify",
+    "johncwang@gmail.com"
+  ],
   "releases": [
+    {
+      "version": "v0.7.0",
+      "date": "2026-11-03",
+      "highlights": [
+        {
+          "description": "`@plexusone/speech` 0.2.0: change the speed or voice of speech while it plays, and it carries on from the word it reached",
+          "commit": "cac4c53"
+        }
+      ],
+      "added": [
+        {
+          "description": "`setRate` and `setVoice` on the object `speak` returns and on `useSpeech`: the utterance being spoken is cancelled and the rest is spoken with the new setting, from the last word reported to `onWord`, or again from its start without it; the cancel is not reported as a stop",
+          "commit": "cac4c53"
+        }
+      ],
+      "documentation": [
+        {
+          "description": "The speech package page and the read-aloud guide describe changing speed and voice while speaking",
+          "commit": "bae562b"
+        },
+        {
+          "description": "v0.7.0 release notes"
+        }
+      ]
+    },
     {
       "version": "v0.6.1",
       "date": "2026-11-02",
