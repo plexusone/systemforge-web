@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { membershipFor, organizationLabel, useSessionOptional } from '@plexusone/auth';
+import { membershipFor, navigateTo, organizationLabel, useSessionOptional } from '@plexusone/auth';
 import {
   Avatar,
   AvatarFallback,
@@ -73,7 +73,7 @@ export function ProfileMenu({
       item.onClick();
     } else if (item.href) {
       if (onNavigate) onNavigate(item.href);
-      else window.location.assign(item.href);
+      else navigateTo(item.href);
     }
   };
 

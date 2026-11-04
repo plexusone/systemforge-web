@@ -1,6 +1,6 @@
 {
   "name": "@plexusone/invites",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pages for SystemForge invite-gated sign-up: an operator page for invite codes, email invites, the waitlist and member allowances, and a member page to invite people",
   "homepage": "https://plexusone.github.io/systemforge-web/packages/invites/",
   "main": "./dist/index.js",
@@ -22,7 +22,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "prepublishOnly": "pnpm run build",
+    "prepublishOnly": "pnpm run build && node ../../scripts/dist-paths.mjs check .",
     "dev": "tsup --watch",
     "lint": "eslint src/",
     "typecheck": "tsc --noEmit"

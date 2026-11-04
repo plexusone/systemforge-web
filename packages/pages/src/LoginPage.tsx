@@ -1,5 +1,5 @@
 import { useState, type ReactNode, type FormEvent } from 'react';
-import { useAuth, type OAuthProvider } from '@plexusone/auth';
+import { navigateTo, sameOriginURL, useAuth, type OAuthProvider } from '@plexusone/auth';
 import type { LoginPageProps } from './types';
 
 /**
@@ -81,10 +81,13 @@ export function LoginPage({
     event.preventDefault();
     try {
       await login({ email, password });
+      // redirectUrl often comes from the address bar (?next=…), so only a
+      // URL on this site is followed.
+      const target = sameOriginURL(redirectUrl) ?? '/';
       if (onNavigate) {
-        onNavigate(redirectUrl);
+        onNavigate(target);
       } else {
-        window.location.assign(redirectUrl);
+        navigateTo(target);
       }
     } catch {
       // Error is handled by useAuth
@@ -99,7 +102,7 @@ export function LoginPage({
     if (onNavigate) {
       onNavigate(href);
     } else {
-      window.location.assign(href);
+      navigateTo(href);
     }
   };
 

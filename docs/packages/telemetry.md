@@ -137,6 +137,26 @@ interface TelemetrySink {
 }
 ```
 
+## Privacy defaults
+
+Telemetry often leaves the app's control, so the defaults send as little as
+they can:
+
+- **Page views** send the path without its query string or fragment, which
+  often carry invite or reset tokens. `collectTitle` adds `document.title`;
+  `collectReferrer` adds the referrer's origin, never its full URL.
+- **Errors** send the message and stack with URLs' query strings, emails and
+  token-like strings redacted. `collectStacks: false` leaves stacks out.
+- **Clicks** name the element by its `data-track`, `aria-label` or `id`,
+  never by its text.
+- **Requests** to the endpoint carry cookies only when it is on the page's
+  own origin (`credentials: 'same-origin'`).
+- **`sampleRate: 0`** sends nothing, and a disabled client passes no identity
+  to its adapters.
+
+`scrubUrl` and `scrubText` are exported for your own events, and
+`eventTransform` can redact anything else before an event is sent.
+
 ## ProductGraph Integration
 
 ProductGraph provides advanced telemetry with session management, journey tracking, and OTel semantic conventions.
@@ -148,8 +168,8 @@ import { TelemetryProvider, ProductGraphAdapter } from '@plexusone/telemetry';
 
 const adapter = new ProductGraphAdapter({
   projectId: 'my-project',
-  endpoint: 'https://api.productgraph.io/v1/events',
-  apiKey: process.env.NEXT_PUBLIC_PRODUCTGRAPH_API_KEY,
+  // A route on the app's own origin that adds the API key server-side.
+  endpoint: '/bff/telemetry/events',
   batchSize: 20, // Events per batch (default: 20)
   batchInterval: 5000, // Flush interval in ms (default: 5000)
   sessionTimeout: 30 * 60 * 1000, // Session timeout (default: 30 min)
@@ -164,17 +184,28 @@ function App() {
 }
 ```
 
+Anything in the browser bundle is public, including an `apiKey`. Send events
+through a route on the app's own origin, such as the BFF, that adds the key on
+the server. If a key must ship to the browser, it must be one that can only
+ingest events into this project.
+
 ### Configuration Options
 
-| Option           | Type    | Default  | Description                     |
-| ---------------- | ------- | -------- | ------------------------------- |
-| `projectId`      | string  | required | ProductGraph project ID         |
-| `endpoint`       | string  | required | ProductGraph API endpoint       |
-| `apiKey`         | string  | -        | API key for X-PG-API-Key header |
-| `batchSize`      | number  | 20       | Events per batch                |
-| `batchInterval`  | number  | 5000     | Flush interval (ms)             |
-| `sessionTimeout` | number  | 1800000  | Session timeout (ms)            |
-| `debug`          | boolean | false    | Enable console logging          |
+| Option               | Type    | Default       | Description                                           |
+| -------------------- | ------- | ------------- | ----------------------------------------------------- |
+| `projectId`          | string  | required      | ProductGraph project ID                               |
+| `endpoint`           | string  | required      | ProductGraph API endpoint                             |
+| `apiKey`             | string  | -             | API key for X-PG-API-Key header (public, see above)   |
+| `batchSize`          | number  | 20            | Events per batch                                      |
+| `batchInterval`      | number  | 5000          | Flush interval (ms)                                   |
+| `sessionTimeout`     | number  | 1800000       | Session timeout (ms)                                  |
+| `persistAnonymousId` | boolean | false         | Keep the anonymous ID in localStorage (needs consent) |
+| `credentials`        | string  | `same-origin` | Cookie mode for requests to `endpoint`                |
+| `debug`              | boolean | false         | Enable console logging                                |
+
+The anonymous ID is created with the first event and, unless
+`persistAnonymousId` is set, lasts only for the page load. `reset()`, called
+on sign-out, gives the next person new anonymous and session IDs.
 
 ### Journey Tracking
 
@@ -216,14 +247,18 @@ import { useStateTracker } from '@plexusone/telemetry';
 function CartPage() {
   const [items, setItems] = useState([]);
 
-  // Tracks changes to cart.items with before/after values
+  // Tracks changes to cart.items, sending only the count
   useStateTracker('cart.items', items, {
-    debounce: 500, // Debounce rapid changes
+    debounceMs: 500, // Debounce rapid changes
+    serialize: (items) => ({ count: items.length }),
   });
 
   return <CartList items={items} />;
 }
 ```
+
+Without `serialize`, the whole value is sent. Do not track state that holds
+typed input, passwords or personal data without one.
 
 ### Component Path Tracking
 

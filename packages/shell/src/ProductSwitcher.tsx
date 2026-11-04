@@ -1,5 +1,5 @@
 import { type MouseEvent, type ReactNode } from 'react';
-import { membershipFor, useSessionOptional, type CatalogApp } from '@plexusone/auth';
+import { membershipFor, safeHref, useSessionOptional, type CatalogApp } from '@plexusone/auth';
 import { cn } from '@plexusone/ui';
 import { carryPreferences } from './preferences';
 import { switcherApps } from './switcher';
@@ -41,12 +41,24 @@ export function ProductSwitcher({
   const session = ctx?.session;
   const catalog = apps ?? session?.apps ?? [];
   const membership = session ? membershipFor(session, organizationId) : undefined;
-  const entries = switcherApps(catalog, self, membership);
+  // Entries link to their URLs, so one that is not http(s) or relative is
+  // left out, whether it came from the session or the apps prop.
+  const entries = switcherApps(catalog, self, membership).filter(
+    (app) => app.id === self.id || safeHref(app.url) !== undefined
+  );
 
   const follow = (url: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     // Read the preferences when the link is followed, not when it rendered:
     // the sidebar may have been toggled since.
-    if (!onNavigate) e.currentTarget.href = carryPreferences(url);
+    if (!onNavigate) {
+      // Setting href on the element bypasses React's URL check, so check here.
+      const href = safeHref(carryPreferences(url));
+      if (href === undefined) {
+        e.preventDefault();
+        return;
+      }
+      e.currentTarget.href = href;
+    }
     if (
       !onNavigate ||
       e.defaultPrevented ||

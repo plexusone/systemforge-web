@@ -109,11 +109,14 @@ export function useConversations(options: UseConversationsOptions = {}): UseConv
 
   const deleteConversation = React.useCallback(
     async (id: string) => {
-      const response = await fetch(`${config.apiBaseUrl}/v1/conversations/${id}`, {
-        method: 'DELETE',
-        headers: config.headers,
-        credentials: 'include',
-      });
+      const response = await fetch(
+        `${config.apiBaseUrl}/v1/conversations/${encodeURIComponent(id)}`,
+        {
+          method: 'DELETE',
+          headers: config.headers,
+          credentials: 'include',
+        }
+      );
 
       if (!response.ok) {
         throw new Error('Failed to delete conversation');

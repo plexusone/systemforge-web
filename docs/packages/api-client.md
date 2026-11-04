@@ -1,6 +1,7 @@
 # @plexusone/api-client
 
-HTTP client with authentication and tenant context integration.
+HTTP client for the application's API, with the current organization sent on
+every request and TanStack Query hooks on top.
 
 ## Installation
 
@@ -8,124 +9,121 @@ HTTP client with authentication and tenant context integration.
 pnpm add @plexusone/api-client @tanstack/react-query
 ```
 
-## Features
-
-- Automatic authentication headers
-- Tenant context injection
-- TanStack Query integration
-- Request/response interceptors
-- TypeScript-first API
-
 ## Usage
 
 ### ApiProvider
 
-Wrap your application with `ApiProvider`:
+Wrap the application with `ApiProvider`. It creates the client and a
+`QueryClient`, or uses the one you pass.
 
 ```tsx
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ApiProvider } from '@plexusone/api-client';
-
-const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ApiProvider baseUrl="/api">
+    <AuthProvider>
+      <TenantProvider>
+        <ApiProvider config={{ baseUrl: '/api', onUnauthorized: () => navigate('/login') }}>
           <YourApp />
         </ApiProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+      </TenantProvider>
+    </AuthProvider>
   );
 }
 ```
 
-### useApi Hook
-
-Make API calls with automatic auth:
+### Queries
 
 ```tsx
-import { useApi } from '@plexusone/api-client';
+import { useApiQuery } from '@plexusone/api-client';
 
-function UserList() {
-  const api = useApi();
-
-  const { data, isLoading } = api.useQuery(['users'], '/users');
-
-  if (isLoading) return <div>Loading...</div>;
-
-  return (
-    <ul>
-      {data.map((user) => (
-        <li key={user.id}>{user.name}</li>
-      ))}
-    </ul>
+function UserProfile({ userId }: { userId: string }) {
+  const { data, isLoading } = useApiQuery<User>(
+    ['users', userId],
+    `/users/${encodeURIComponent(userId)}`
   );
+  if (isLoading) return <Spinner />;
+  return <div>{data?.name}</div>;
 }
 ```
+
+`usePaginatedQuery` and `useInfiniteApiQuery` work the same way for paginated
+lists.
 
 ### Mutations
 
 ```tsx
-import { useApi } from '@plexusone/api-client';
+import { useApiMutation } from '@plexusone/api-client';
 
 function CreateUser() {
-  const api = useApi();
-
-  const mutation = api.useMutation('/users', {
-    method: 'POST',
-    onSuccess: () => {
-      // Handle success
-    },
+  const { mutate, isPending } = useApiMutation<User, CreateUserInput>('/users', {
+    invalidateQueries: [['users']],
   });
-
-  const handleSubmit = (data: CreateUserData) => {
-    mutation.mutate(data);
-  };
-
-  return <UserForm onSubmit={handleSubmit} isLoading={mutation.isPending} />;
+  return <UserForm onSubmit={(data) => mutate(data)} isLoading={isPending} />;
 }
 ```
 
-### Direct Client Access
+`useApiDelete` sends a DELETE; `useInvalidateQueries` and `usePrefetch` give
+direct cache control.
+
+### Direct client access
 
 ```tsx
 import { useApiClient } from '@plexusone/api-client';
 
-function DownloadReport() {
-  const client = useApiClient();
-
-  const download = async () => {
-    const response = await client.get('/reports/download', {
-      responseType: 'blob',
-    });
-    // Handle blob response
-  };
-
-  return <button onClick={download}>Download</button>;
+function Export() {
+  const { client } = useApiClient();
+  return <button onClick={() => client.post('/exports', { kind: 'csv' })}>Export</button>;
 }
 ```
 
+## Request paths
+
+A path is appended to `baseUrl`, never resolved against it: `/users` under
+`https://app.example.com/api` is `https://app.example.com/api/users`. A
+relative `baseUrl` such as `/api` is on the page's origin.
+
+A path that names a scheme or host (`https://…`, `//host`), contains a
+backslash or control character, or has `.` or `..` segments is refused with a
+`TypeError` before any request is sent, so a request can never leave the base
+with your headers. Encode IDs and other values you put in a path with
+`encodeURIComponent`.
+
+## Organizations and the cache
+
+The client sends the current organization as `X-Organization-ID`. With
+`@plexusone/tenant` in the tree, `ApiProvider` follows the organization tenant
+selects, which is always one the person is a member of. Pass
+`followTenant={false}` to set it yourself with `setCurrentOrgId`. The server
+must still check that the person belongs to the organization in the header.
+
+Cached data belongs to one person in one organization. When the organization
+changes, or `@plexusone/auth` reports that the signed-in person changed (sign
+out, session expiry or an account switch), `ApiProvider` cancels requests in
+flight, drops all cached data and refetches what is on screen.
+
 ## API Reference
 
-### ApiProvider Props
+### ApiProvider props
 
-| Prop      | Type                        | Description               |
-| --------- | --------------------------- | ------------------------- |
-| `baseUrl` | `string`                    | Base URL for API requests |
-| `headers` | `Record<string, string>`    | Additional headers        |
-| `onError` | `(error: ApiError) => void` | Global error handler      |
+| Prop           | Type              | Description                                  |
+| -------------- | ----------------- | -------------------------------------------- |
+| `config`       | `ApiClientConfig` | Client configuration (below)                 |
+| `queryClient`  | `QueryClient`     | Use this QueryClient instead of creating one |
+| `followTenant` | `boolean`         | Follow tenant's organization. Default `true` |
 
-### useApi Return Value
+### ApiClientConfig
 
-| Method                                  | Description              |
-| --------------------------------------- | ------------------------ |
-| `useQuery(key, path, options?)`         | GET request with caching |
-| `useMutation(path, options?)`           | POST/PUT/DELETE request  |
-| `useInfiniteQuery(key, path, options?)` | Paginated queries        |
+| Field            | Type                        | Description                          |
+| ---------------- | --------------------------- | ------------------------------------ |
+| `baseUrl`        | `string`                    | Base URL for API requests            |
+| `defaultHeaders` | `Record<string, string>`    | Headers sent with every request      |
+| `timeout`        | `number`                    | Request timeout in ms. Default 30000 |
+| `currentOrgId`   | `string`                    | Initial organization ID              |
+| `onUnauthorized` | `() => void`                | Called on a 401 response             |
+| `onError`        | `(error: ApiError) => void` | Called on any error                  |
 
-### Client Methods
+### Client methods
 
 | Method                         | Description    |
 | ------------------------------ | -------------- |

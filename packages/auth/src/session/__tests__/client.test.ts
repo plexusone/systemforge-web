@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { SessionClient, SessionError } from '../client';
 import { fakeFetch, json, twoOrgs } from './fixtures';
 
@@ -46,6 +46,33 @@ describe('SessionClient', () => {
     expect(new SessionClient().signInUrl()).toBe(
       '/bff/auth/login?return_to=%2Forgs%2Forg-2%2Fsites%3Fx%3D1'
     );
+  });
+
+  it('drops a return value that is not a path on this site', () => {
+    const c = new SessionClient();
+    for (const returnTo of [
+      'https://evil.example/',
+      '//evil.example/x',
+      '/\\evil.example',
+      '/.//evil.example',
+      'javascript:alert(1)',
+    ]) {
+      expect(c.signInUrl({ returnTo })).toBe('/bff/auth/login');
+    }
+  });
+
+  it('collapses leading slashes in the current location', () => {
+    window.history.pushState({}, '', '/orgs/org-3');
+    // pushState cannot set a path starting with "//", so check the helper
+    // through a path the browser reports as such.
+    vi.spyOn(window, 'location', 'get').mockReturnValue({
+      ...window.location,
+      pathname: '//evil.example/x',
+      search: '',
+      hash: '',
+    } as Location);
+    expect(new SessionClient().signInUrl()).toBe('/bff/auth/login?return_to=%2Fevil.example%2Fx');
+    vi.restoreAllMocks();
   });
 
   it('signs out with a POST', async () => {

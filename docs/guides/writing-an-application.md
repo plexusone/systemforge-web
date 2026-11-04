@@ -44,12 +44,15 @@ The application's own front end, for development, uses `DevShell`:
 ```tsx
 // main.tsx in the application's repository
 createRoot(document.getElementById('root')!).render(
-  createHost({ app: reportsApp, devSession: import.meta.env.VITE_DEV_SESSION === '1' })
+  createHost({ app: reportsApp, devSession: import.meta.env.DEV })
 );
 ```
 
-With `devSession` it needs no backend. Without it, point the dev server's
-`/bff` and `/api` proxy at the application's server, and you sign in for real.
+With `devSession` it needs no backend: it signs in a canned owner, so gate it
+on a development build (`import.meta.env.DEV`), never on a variable a
+production build can set. `createHost` ignores it in a production build.
+Without it, point the dev server's `/bff` and `/api` proxy at the
+application's server, and you sign in for real.
 
 ## 3. Test it
 

@@ -1,4 +1,5 @@
 import { readSignOut, type SystemAuthSignOut } from './signout';
+import { returnPath } from './url';
 import type {
   User,
   SessionStatus,
@@ -35,11 +36,7 @@ export class BFFClient {
     });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({
-        code: 'UNKNOWN_ERROR',
-        message: response.statusText,
-      }));
-      throw error as AuthError;
+      throw await authErrorFrom(response);
     }
 
     // Handle 204 No Content
@@ -102,11 +99,12 @@ export class BFFClient {
    */
   getOAuthUrl(provider: OAuthProvider, returnTo?: string): string {
     const params = new URLSearchParams();
-    if (returnTo) {
-      params.set('return_to', returnTo);
+    const path = returnPath(returnTo);
+    if (path) {
+      params.set('return_to', path);
     }
     const query = params.toString();
-    return `${this.baseUrl}/bff/auth/${provider}${query ? `?${query}` : ''}`;
+    return `${this.baseUrl}/bff/auth/${encodeURIComponent(provider)}${query ? `?${query}` : ''}`;
   }
 
   /**
@@ -163,14 +161,14 @@ export class BFFClient {
    * Initiate account linking (redirects browser)
    */
   linkAccount(provider: OAuthProvider): void {
-    window.location.assign(`${this.baseUrl}/bff/auth/link/${provider}`);
+    window.location.assign(`${this.baseUrl}/bff/auth/link/${encodeURIComponent(provider)}`);
   }
 
   /**
    * Unlink an OAuth account
    */
   async unlinkAccount(accountId: string): Promise<void> {
-    await this.request<void>(`/bff/auth/accounts/${accountId}`, {
+    await this.request<void>(`/bff/auth/accounts/${encodeURIComponent(accountId)}`, {
       method: 'DELETE',
     });
   }
@@ -191,3 +189,35 @@ export class BFFClient {
  * Default BFF client instance
  */
 export const defaultBFFClient = new BFFClient();
+
+/**
+ * authErrorFrom reads an error response into an AuthError, whatever its body:
+ * JSON with code and message, other JSON, or none at all.
+ */
+async function authErrorFrom(response: Response): Promise<AuthError> {
+  let body: unknown;
+  try {
+    body = await response.json();
+  } catch {
+    body = undefined;
+  }
+  const b = typeof body === 'object' && body !== null ? (body as Record<string, unknown>) : {};
+  return {
+    code: typeof b.code === 'string' ? b.code : 'UNKNOWN_ERROR',
+    message:
+      typeof b.message === 'string'
+        ? b.message
+        : response.statusText || `request failed with status ${response.status}`,
+    ...(typeof b.details === 'object' && b.details !== null
+      ? { details: b.details as Record<string, unknown> }
+      : {}),
+    status: response.status,
+  };
+}
+
+/** isUnauthorized reports whether an error means the session is gone. */
+export function isUnauthorized(err: unknown): boolean {
+  if (typeof err !== 'object' || err === null) return false;
+  const e = err as Partial<AuthError>;
+  return e.status === 401 || e.code === 'UNAUTHORIZED';
+}

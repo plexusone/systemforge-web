@@ -217,7 +217,7 @@ Speech and listening stop when the component unmounts. The promises from
 `window.PlexusSpeech` with the same functions as the main entry point:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@plexusone/speech@0.2.0/dist/speech.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@plexusone/speech@0.2.1/dist/speech.global.js"></script>
 <script>
   PlexusSpeech.speak('Hello.', { lang: 'en-US' });
 </script>

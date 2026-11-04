@@ -31,10 +31,12 @@
 
 // Provider and main hook
 export { AuthProvider, useAuth, useAuthOptional, SESSION_EXPIRED_EVENT } from './AuthProvider';
+export { PRINCIPAL_CHANGE_EVENT, usePrincipalChange } from './principal';
+export type { PrincipalChangeDetail } from './principal';
 export type { AuthProviderProps } from './AuthProvider';
 
 // Route protection
-export { ProtectedRoute, usePermissions } from './ProtectedRoute';
+export { ProtectedRoute, hasRoleIn, usePermissions } from './ProtectedRoute';
 
 // Linked accounts
 export { useLinkedAccounts } from './useLinkedAccounts';
@@ -46,6 +48,9 @@ export * from './session';
 // BFF client (for advanced use cases)
 export { BFFClient, defaultBFFClient } from './bff-client';
 export { endLoginSession, readSignOut } from './signout';
+
+// Navigation URL checks
+export { currentPath, navigateTo, returnPath, safeHref, sameOriginURL } from './url';
 export type { SystemAuthSignOut } from './signout';
 
 // Types

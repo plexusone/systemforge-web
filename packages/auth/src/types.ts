@@ -92,6 +92,8 @@ export interface AuthError {
   code: string;
   message: string;
   details?: Record<string, unknown>;
+  /** The HTTP status, when the error came from a response. */
+  status?: number;
 }
 
 /**
@@ -173,7 +175,15 @@ export interface LinkedAccountsContextValue {
  */
 export interface ProtectedRouteProps {
   children: React.ReactNode;
+  /**
+   * Roles that may see the children, checked in the organization `orgId`
+   * names. Without `orgId`, the person's only membership is checked; a person
+   * with several memberships is refused. Use RequireRole from
+   * `@plexusone/tenant` to check the current organization.
+   */
   roles?: Role[];
+  /** The organization the roles apply in. */
+  orgId?: string;
   fallback?: React.ReactNode;
   loadingComponent?: React.ReactNode;
 }

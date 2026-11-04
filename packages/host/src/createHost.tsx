@@ -31,7 +31,8 @@ export interface HostOptions {
   sessionClient?: SessionClient;
   /**
    * Run without a backend: true for a default development session (see
-   * devSession), or the session to use.
+   * devSession), or the session to use. The development session signs in
+   * an owner with no backend, so it is ignored in a production build.
    */
   devSession?: boolean | WireSession;
   /**
@@ -63,6 +64,19 @@ export function createHost(options: HostOptions): ReactNode {
   );
 }
 
+/**
+ * isProductionBuild reports whether the bundler built for production.
+ * Bundlers replace `process.env.NODE_ENV` with a string literal; without one
+ * there is no `process`, and this is not a production build.
+ */
+function isProductionBuild(): boolean {
+  try {
+    return process.env.NODE_ENV === 'production';
+  } catch {
+    return false;
+  }
+}
+
 /** The session createHost provides: the BFF's, or a development session. */
 export function HostSession({
   options,
@@ -73,7 +87,12 @@ export function HostSession({
 }): ReactNode {
   const { app, sessionClient, devSession: dev } = options;
   const client = useMemo(() => {
-    if (dev) return devSessionClient(dev === true ? devSession(app) : dev);
+    if (dev && isProductionBuild()) {
+      console.error('createHost: devSession is ignored in a production build');
+    } else if (dev) {
+      console.warn('createHost: using a development session with no backend');
+      return devSessionClient(dev === true ? devSession(app) : dev);
+    }
     return sessionClient;
   }, [app, sessionClient, dev]);
   return <SessionProvider client={client}>{children}</SessionProvider>;

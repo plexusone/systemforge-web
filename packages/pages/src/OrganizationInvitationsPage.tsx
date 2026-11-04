@@ -1,4 +1,5 @@
-import { useState, type ReactNode, type FormEvent } from 'react';
+import { useEffect, useState, type ReactNode, type FormEvent } from 'react';
+import { orgUrl } from './api';
 import type { OrganizationInvitationsPageProps, OrgInvitation, MemberRole } from './types';
 
 /**
@@ -52,9 +53,11 @@ function StatusBadge({ status }: { status: string }): ReactNode {
 function CreateInvitationModal({
   onSubmit,
   onClose,
+  canInviteAdmins,
 }: {
   onSubmit: (email: string, role: MemberRole) => Promise<void>;
   onClose: () => void;
+  canInviteAdmins: boolean;
 }): ReactNode {
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<MemberRole>('member');
@@ -191,7 +194,7 @@ function CreateInvitationModal({
                 fontSize: '14px',
               }}
             >
-              <option value="admin">Admin</option>
+              {canInviteAdmins && <option value="admin">Admin</option>}
               <option value="member">Member</option>
             </select>
             <p
@@ -272,7 +275,18 @@ function formatRelativeTime(dateString: string): string {
  * />
  * ```
  */
-export function OrganizationInvitationsPage({
+export function OrganizationInvitationsPage(props: OrganizationInvitationsPageProps): ReactNode {
+  // A new organization mounts a new page, so no state from the previous
+  // one is shown or acted on.
+  return (
+    <OrganizationInvitationsPageBody
+      key={`${props.apiBaseUrl ?? ''}\n${props.orgSlug}`}
+      {...props}
+    />
+  );
+}
+
+function OrganizationInvitationsPageBody({
   orgSlug,
   currentUserRole = 'member',
   apiBaseUrl = '/api',
@@ -287,27 +301,32 @@ export function OrganizationInvitationsPage({
 
   const canManageInvitations = currentUserRole === 'owner' || currentUserRole === 'admin';
 
-  // Fetch invitations on mount
-  useState(() => {
+  // Load when the page mounts. The page is keyed on apiBaseUrl and orgSlug,
+  // so another organization gets fresh state and a fresh load.
+  useEffect(() => {
+    let cancelled = false;
     const fetchInvitations = async () => {
       try {
-        const response = await fetch(`${apiBaseUrl}/organizations/${orgSlug}/invitations`, {
+        const response = await fetch(orgUrl(apiBaseUrl, orgSlug, 'invitations'), {
           credentials: 'include',
         });
         if (!response.ok) throw new Error('Failed to fetch invitations');
         const data = await response.json();
-        setInvitations(data.invitations || []);
+        if (!cancelled) setInvitations(data.invitations || []);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load invitations');
+        if (!cancelled) setError(err instanceof Error ? err.message : 'Failed to load invitations');
       } finally {
-        setIsLoading(false);
+        if (!cancelled) setIsLoading(false);
       }
     };
-    fetchInvitations();
-  });
+    void fetchInvitations();
+    return () => {
+      cancelled = true;
+    };
+  }, [apiBaseUrl, orgSlug]);
 
   const handleCreateInvitation = async (email: string, role: MemberRole) => {
-    const response = await fetch(`${apiBaseUrl}/organizations/${orgSlug}/invitations`, {
+    const response = await fetch(orgUrl(apiBaseUrl, orgSlug, 'invitations'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -329,13 +348,10 @@ export function OrganizationInvitationsPage({
     if (!confirm('Are you sure you want to revoke this invitation?')) return;
 
     try {
-      const response = await fetch(
-        `${apiBaseUrl}/organizations/${orgSlug}/invitations/${invitationId}`,
-        {
-          method: 'DELETE',
-          credentials: 'include',
-        }
-      );
+      const response = await fetch(orgUrl(apiBaseUrl, orgSlug, 'invitations', invitationId), {
+        method: 'DELETE',
+        credentials: 'include',
+      });
 
       if (!response.ok) throw new Error('Failed to revoke invitation');
 
@@ -518,23 +534,25 @@ export function OrganizationInvitationsPage({
                   </div>
                 </div>
 
-                {canManageInvitations && (
-                  <button
-                    type="button"
-                    onClick={() => handleRevokeInvitation(invitation.id)}
-                    style={{
-                      padding: '6px 12px',
-                      backgroundColor: 'transparent',
-                      border: '1px solid var(--cf-color-status-error, #dc2626)',
-                      borderRadius: '6px',
-                      fontSize: '14px',
-                      cursor: 'pointer',
-                      color: 'var(--cf-color-status-error, #dc2626)',
-                    }}
-                  >
-                    Revoke
-                  </button>
-                )}
+                {/* Owners manage admin invitations; the server enforces it. */}
+                {canManageInvitations &&
+                  (currentUserRole === 'owner' || invitation.role === 'member') && (
+                    <button
+                      type="button"
+                      onClick={() => handleRevokeInvitation(invitation.id)}
+                      style={{
+                        padding: '6px 12px',
+                        backgroundColor: 'transparent',
+                        border: '1px solid var(--cf-color-status-error, #dc2626)',
+                        borderRadius: '6px',
+                        fontSize: '14px',
+                        cursor: 'pointer',
+                        color: 'var(--cf-color-status-error, #dc2626)',
+                      }}
+                    >
+                      Revoke
+                    </button>
+                  )}
               </div>
             ))}
           </div>
@@ -646,6 +664,7 @@ export function OrganizationInvitationsPage({
         <CreateInvitationModal
           onSubmit={handleCreateInvitation}
           onClose={() => setShowCreateModal(false)}
+          canInviteAdmins={currentUserRole === 'owner'}
         />
       )}
     </div>

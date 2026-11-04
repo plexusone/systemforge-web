@@ -5,7 +5,7 @@ import type { TelemetryConfig, TelemetryContextValue, TelemetryUser, TelemetryOr
 /**
  * Telemetry context
  */
-const TelemetryContext = createContext<TelemetryContextValue | null>(null);
+export const TelemetryContext = createContext<TelemetryContextValue | null>(null);
 
 /**
  * Props for TelemetryProvider

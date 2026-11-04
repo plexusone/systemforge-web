@@ -1,3 +1,4 @@
+import { safeHref } from '../url';
 import type { Session, WireSession } from './types';
 
 /** Converts the BFF's `GET /bff/session` response into a {@link Session}. */
@@ -24,12 +25,16 @@ export function toSession(wire: WireSession): Session {
         applications: m.applications ?? {},
       })),
     },
-    apps: (wire.apps ?? []).map((a) => ({
-      id: a.id,
-      name: a.name,
-      url: a.url,
-      ...(a.icon ? { icon: a.icon } : {}),
-    })),
+    // An entry whose URL is not http(s) or a relative path is dropped: the
+    // switcher links to these URLs.
+    apps: (wire.apps ?? [])
+      .filter((a) => safeHref(a.url) !== undefined)
+      .map((a) => ({
+        id: a.id,
+        name: a.name,
+        url: a.url,
+        ...(a.icon ? { icon: a.icon } : {}),
+      })),
   };
 }
 

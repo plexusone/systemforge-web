@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { devSession } from '@plexusone/host';
 import { conformanceProblems, renderApp } from '@plexusone/host/testing';
 import { consoleApp, createConsoleApp } from '../app';
-import { withConnection } from '../pages/Connect';
+import { externalLink, withConnection } from '../pages/Connect';
 import { expiryText } from '../components/ui';
 import type { Connection, Manifest } from '../types';
 
@@ -292,6 +292,27 @@ describe('Connect', () => {
     );
   });
 
+  it('stays on the page when an allowed path would leave the site once rebuilt', async () => {
+    const assign = vi.fn();
+    vi.stubGlobal('location', { ...window.location, assign });
+    respond = (c) => {
+      if (c.method === 'POST') return json(201, connection());
+      if (c.url.includes('/v1/return-to')) return json(200, { url: '/.//evil.example/x' });
+      return undefined;
+    };
+    renderApp(consoleApp, {
+      session: session('admin'),
+      path: '/orgs/org-1/connections/new/github?return_to=%2F.%2F%2Fevil.example%2Fx',
+    });
+    fireEvent.change(await screen.findByLabelText('Token'), { target: { value: 'gh-token' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Connect GitHub' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Continue' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'That return address is not allowed.'
+    );
+    expect(assign).not.toHaveBeenCalled();
+  });
+
   it('names a service the deployment does not offer', async () => {
     renderApp(consoleApp, { session: session('admin'), path: '/orgs/org-1/connections/new/nope' });
     expect(await screen.findByRole('alert')).toHaveTextContent(
@@ -325,12 +346,43 @@ describe('expiryText', () => {
   });
 });
 
+describe('externalLink', () => {
+  it('accepts only absolute https links', () => {
+    expect(externalLink('https://dash.example.com/tokens')).toEqual({
+      href: 'https://dash.example.com/tokens',
+      host: 'dash.example.com',
+    });
+    for (const url of [
+      undefined,
+      '',
+      '/relative',
+      'http://x.example',
+      'javascript:alert(1)',
+      '::',
+    ]) {
+      expect(externalLink(url)).toBeUndefined();
+    }
+  });
+});
+
 describe('withConnection', () => {
   it('adds the connection to an absolute or relative return address', () => {
     expect(withConnection('https://app.example.com/sites/new?tab=cf#top', 'c 1')).toBe(
       'https://app.example.com/sites/new?tab=cf&connection_id=c+1#top'
     );
     expect(withConnection('/console/orgs/x', 'c1')).toBe('/console/orgs/x?connection_id=c1');
+  });
+
+  it('refuses an address that would leave the site once rebuilt', () => {
+    for (const url of [
+      '/.//evil.example/x',
+      '/a/..//evil.example',
+      '/%2e//evil.example',
+      '//evil.example',
+      'javascript:alert(1)',
+    ]) {
+      expect(withConnection(url, 'c1')).toBeUndefined();
+    }
   });
 });
 

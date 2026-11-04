@@ -102,21 +102,34 @@ function Maintenance() {
 
 ### LoginPage Props
 
-| Prop             | Type                         | Description              |
-| ---------------- | ---------------------------- | ------------------------ |
-| `brandName`      | `string`                     | Application name         |
-| `brandLogo`      | `string`                     | Logo URL                 |
-| `providers`      | `string[]`                   | OAuth providers          |
-| `onLogin`        | `(provider: string) => void` | Login callback           |
-| `showEmailLogin` | `boolean`                    | Show email/password form |
+| Prop                | Type                     | Description                                                                               |
+| ------------------- | ------------------------ | ----------------------------------------------------------------------------------------- |
+| `appName`           | `string`                 | Application name                                                                          |
+| `logo`              | `ReactNode`              | Logo                                                                                      |
+| `oauthProviders`    | `OAuthProvider[]`        | OAuth providers to offer                                                                  |
+| `showEmailForm`     | `boolean`                | Show the email and password form                                                          |
+| `showRegisterLink`  | `boolean`                | Show the link to registration                                                             |
+| `redirectUrl`       | `string`                 | Where to go after sign-in; only a URL on this site is followed, anything else goes to `/` |
+| `onNavigate`        | `(href: string) => void` | Client-side navigation                                                                    |
+| `registerUrl`       | `string`                 | Registration page                                                                         |
+| `forgotPasswordUrl` | `string`                 | Password reset page                                                                       |
+
+`redirectUrl` often comes from the address bar (`?next=…`), which is why it
+must be on this site. URLs that reach `window.location` (`registerUrl`,
+`forgotPasswordUrl`, `homeUrl` on ErrorPage) are followed only when they are
+relative or `http(s)`.
 
 ### UserSettingsPage Props
 
-| Prop       | Type                                | Description               |
-| ---------- | ----------------------------------- | ------------------------- |
-| `sections` | `string[]`                          | Settings sections to show |
-| `onSave`   | `(data: UserData) => Promise<void>` | Save callback             |
-| `onCancel` | `() => void`                        | Cancel callback           |
+| Prop             | Type                                           | Description                                            |
+| ---------------- | ---------------------------------------------- | ------------------------------------------------------ |
+| `activeTab`      | `SettingsTab`                                  | Tab to open                                            |
+| `tabs`           | `SettingsTab[]`                                | Tabs to show                                           |
+| `onTabChange`    | `(tab: SettingsTab) => void`                   | Called when the tab changes                            |
+| `bffBaseUrl`     | `string`                                       | BFF base URL for linked accounts                       |
+| `oauthProviders` | `OAuthProvider[]`                              | Providers offered for linking                          |
+| `onSaveProfile`  | `(profile: { name: string }) => Promise<void>` | Saves the profile; without it the profile is read-only |
+| `onChangeAvatar` | `() => void`                                   | Starts an avatar change; without it no button shows    |
 
 ### ErrorPage Props
 
@@ -336,10 +349,19 @@ Organization management follows this permission model:
 | ------------------- | ----- | ----- | ------ |
 | View members        | Yes   | Yes   | Yes    |
 | Invite users        | Yes   | Yes   | No     |
+| Invite admins       | Yes   | No    | No     |
 | Edit member roles   | Yes   | Yes\* | No     |
 | Remove members      | Yes   | Yes\* | No     |
 | Update org settings | Yes   | Yes   | No     |
 | Transfer ownership  | Yes   | No    | No     |
 | Delete organization | Yes   | No    | No     |
 
-\*Admin cannot modify other admins or the owner
+\*Admins manage members only: granting `admin`, and changing or removing an owner or another admin, is an owner's. An admin may step down or leave
+
+`currentUserRole` decides only which controls the pages show. The server must
+enforce this table on every request: which roles may grant which roles,
+and that only an owner can grant `owner` or `admin` or act on an owner or
+admin. SystemForge's organization API does.
+
+The pages encode `orgSlug` and member and invitation IDs in request paths,
+and load again, with fresh state, when `orgSlug` or `apiBaseUrl` changes.

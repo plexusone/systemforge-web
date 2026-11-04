@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { ROLE_LEVELS, type Role } from '@plexusone/auth';
+import { navigateTo, ROLE_LEVELS, safeHref, type Role } from '@plexusone/auth';
 import { useTenantOptional, type TenantContextValue } from '@plexusone/tenant';
 import {
   Badge,
@@ -54,13 +54,13 @@ function NavItemComponent({
     if (onNavigate) {
       onNavigate(item.href);
     } else {
-      window.location.assign(item.href);
+      navigateTo(item.href);
     }
   };
 
   return (
     <a
-      href={item.href}
+      href={safeHref(item.href)}
       onClick={handleClick}
       target={item.external ? '_blank' : undefined}
       rel={item.external ? 'noopener noreferrer' : undefined}

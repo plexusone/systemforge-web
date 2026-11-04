@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react';
 import { useAuth } from './AuthProvider';
-import type { Role, ProtectedRouteProps } from './types';
+import type { Membership, Role, ProtectedRouteProps } from './types';
 import { ROLE_LEVELS } from './types';
 
 /**
@@ -43,24 +43,27 @@ function DefaultUnauthorized() {
 }
 
 /**
- * Check if user has required role in any of their memberships
+ * hasRoleIn reports whether the person holds one of `requiredRoles`, or a
+ * higher one, in the organization `orgId`. Without `orgId` it checks the
+ * person's only membership, and refuses a person with several: a role in
+ * one organization says nothing about another. Platform admins pass.
  */
-function hasRequiredRole(userRoles: Array<{ role: Role }>, requiredRoles: Role[]): boolean {
-  // Get the minimum required level
+export function hasRoleIn(
+  memberships: Membership[],
+  requiredRoles: Role[],
+  orgId?: string
+): boolean {
+  if (memberships.some((m) => m.role === 'platform_admin')) return true;
+  if (requiredRoles.length === 0) return false;
+  const membership =
+    orgId !== undefined
+      ? memberships.find((m) => m.organization_id === orgId)
+      : memberships.length === 1
+        ? memberships[0]
+        : undefined;
+  if (!membership) return false;
   const minRequiredLevel = Math.min(...requiredRoles.map((r) => ROLE_LEVELS[r]));
-
-  // Check if user has any role >= required level
-  return userRoles.some((membership) => {
-    const userLevel = ROLE_LEVELS[membership.role];
-    return userLevel >= minRequiredLevel;
-  });
-}
-
-/**
- * Check if user is platform admin
- */
-function isPlatformAdmin(userRoles: Array<{ role: Role }>): boolean {
-  return userRoles.some((m) => m.role === 'platform_admin');
+  return ROLE_LEVELS[membership.role] >= minRequiredLevel;
 }
 
 /**
@@ -73,12 +76,15 @@ function isPlatformAdmin(userRoles: Array<{ role: Role }>): boolean {
  * </ProtectedRoute>
  * ```
  *
- * @example With role requirement
+ * @example With role requirement in an organization
  * ```tsx
- * <ProtectedRoute roles={['admin', 'owner']}>
+ * <ProtectedRoute roles={['admin', 'owner']} orgId={currentOrgId}>
  *   <AdminPanel />
  * </ProtectedRoute>
  * ```
+ *
+ * This gate decides only what the page shows. The server must authorize
+ * every request itself.
  *
  * @example With custom fallback
  * ```tsx
@@ -93,6 +99,7 @@ function isPlatformAdmin(userRoles: Array<{ role: Role }>): boolean {
 export function ProtectedRoute({
   children,
   roles,
+  orgId,
   fallback,
   loadingComponent,
 }: ProtectedRouteProps): ReactNode {
@@ -113,16 +120,7 @@ export function ProtectedRoute({
     return <>{children}</>;
   }
 
-  // Check role requirement
-  const userMemberships = user.memberships.map((m) => ({ role: m.role }));
-
-  // Platform admins bypass role checks
-  if (isPlatformAdmin(userMemberships)) {
-    return <>{children}</>;
-  }
-
-  // Check if user has required role
-  if (hasRequiredRole(userMemberships, roles)) {
+  if (hasRoleIn(user.memberships, roles, orgId)) {
     return <>{children}</>;
   }
 
@@ -138,7 +136,7 @@ export function ProtectedRoute({
  * function EditButton() {
  *   const { hasRole } = usePermissions();
  *
- *   if (!hasRole(['admin', 'owner'])) {
+ *   if (!hasRole(['admin', 'owner'], currentOrgId)) {
  *     return null;
  *   }
  *
@@ -150,21 +148,14 @@ export function usePermissions() {
   const { user, isAuthenticated } = useAuth();
 
   /**
-   * Check if user has any of the specified roles
+   * Check if user has any of the specified roles in the organization
+   * `orgId`, or in their only membership when no organization is given
    */
-  const hasRole = (requiredRoles: Role[]): boolean => {
+  const hasRole = (requiredRoles: Role[], orgId?: string): boolean => {
     if (!isAuthenticated || !user) {
       return false;
     }
-
-    const userMemberships = user.memberships.map((m) => ({ role: m.role }));
-
-    // Platform admins have all roles
-    if (isPlatformAdmin(userMemberships)) {
-      return true;
-    }
-
-    return hasRequiredRole(userMemberships, requiredRoles);
+    return hasRoleIn(user.memberships, requiredRoles, orgId);
   };
 
   /**
@@ -175,18 +166,7 @@ export function usePermissions() {
       return false;
     }
 
-    const membership = user.memberships.find((m) => m.organization_id === orgId);
-    if (!membership) {
-      return false;
-    }
-
-    // Platform admins have all roles
-    if (membership.role === 'platform_admin') {
-      return true;
-    }
-
-    const minRequiredLevel = Math.min(...requiredRoles.map((r) => ROLE_LEVELS[r]));
-    return ROLE_LEVELS[membership.role] >= minRequiredLevel;
+    return hasRoleIn(user.memberships, requiredRoles, orgId);
   };
 
   /**

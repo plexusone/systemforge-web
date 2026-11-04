@@ -8,7 +8,9 @@ import {
   useMemo,
   type ReactNode,
 } from 'react';
-import { BFFClient } from './bff-client';
+import { BFFClient, isUnauthorized } from './bff-client';
+import { currentPath, returnPath } from './url';
+import { usePrincipalChange } from './principal';
 import type {
   User,
   AuthConfig,
@@ -99,11 +101,10 @@ export function AuthProvider({
       setError(null);
       return userData;
     } catch (err) {
-      const authError = err as AuthError;
-      if (authError.code === 'UNAUTHORIZED') {
+      if (isUnauthorized(err)) {
         setUser(null);
       } else {
-        handleError(authError);
+        handleError(err as AuthError);
       }
       return null;
     }
@@ -151,7 +152,7 @@ export function AuthProvider({
    */
   const loginWithOAuth = useCallback(
     (provider: OAuthProvider) => {
-      const returnTo = window.location.pathname;
+      const returnTo = returnPath(currentPath());
       client.loginWithOAuth(provider, returnTo);
     },
     [client]
@@ -191,9 +192,14 @@ export function AuthProvider({
         endSession(next);
       }
     } catch (err) {
-      // Even if logout fails on server, clear local state
-      setUser(null);
-      handleError(err as AuthError);
+      if (isUnauthorized(err)) {
+        // The session had already ended.
+        setUser(null);
+      } else {
+        // The server did not end the session, so the person is still signed
+        // in. Say so rather than showing them signed out.
+        handleError(err as AuthError);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -298,6 +304,8 @@ export function AuthProvider({
       clearInterval(interval);
     };
   }, [user, checkSession, checkInterval]);
+
+  usePrincipalChange(user?.id);
 
   /**
    * Listen for session expired events from other parts of the app

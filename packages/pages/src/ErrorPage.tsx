@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react';
+import { navigateTo } from '@plexusone/auth';
 import type { ErrorPageProps, NotFoundPageProps, ServerErrorPageProps } from './types';
 
 /**
@@ -27,7 +28,7 @@ export function ErrorPage({
     if (onNavigate) {
       onNavigate(href);
     } else {
-      window.location.assign(href);
+      navigateTo(href);
     }
   };
 

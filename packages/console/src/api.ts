@@ -21,6 +21,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     headers: {
       Accept: 'application/json',
       ...(init?.body ? { 'Content-Type': 'application/json' } : {}),
+      // A custom header makes every change a preflighted request, so another
+      // site cannot send one with this person's cookies.
+      ...(isUnsafe(init?.method) ? { 'X-Requested-With': 'XMLHttpRequest' } : {}),
     },
   });
   if (!res.ok) {
@@ -69,3 +72,8 @@ export const api = {
   returnTo: (url: string) =>
     request<{ url: string }>(`/v1/return-to?url=${encodeURIComponent(url)}`).then((r) => r.url),
 };
+
+function isUnsafe(method: string | undefined): boolean {
+  const m = (method ?? 'GET').toUpperCase();
+  return m !== 'GET' && m !== 'HEAD';
+}

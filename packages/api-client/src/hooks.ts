@@ -17,7 +17,7 @@ import type { ApiError, PaginatedResponse, PaginationParams, RequestOptions } fr
  * function UserProfile({ userId }: { userId: string }) {
  *   const { data, isLoading } = useApiQuery<User>(
  *     ['users', userId],
- *     `/users/${userId}`
+ *     `/users/${encodeURIComponent(userId)}`
  *   );
  *
  *   if (isLoading) return <Spinner />;
@@ -224,7 +224,7 @@ export function useApiMutation<TData, TVariables = unknown>(
  * ```tsx
  * function DeleteUserButton({ userId }: { userId: string }) {
  *   const { mutate, isPending } = useApiDelete<void>(
- *     `/users/${userId}`,
+ *     `/users/${encodeURIComponent(userId)}`,
  *     {
  *       invalidateQueries: [['users']],
  *       onSuccess: () => {
@@ -303,8 +303,8 @@ export function useInvalidateQueries() {
  *
  *   return (
  *     <Link
- *       to={`/users/${userId}`}
- *       onMouseEnter={() => prefetch(['users', userId], `/users/${userId}`)}
+ *       to={`/users/${encodeURIComponent(userId)}`}
+ *       onMouseEnter={() => prefetch(['users', userId], `/users/${encodeURIComponent(userId)}`)}
  *     >
  *       View User
  *     </Link>

@@ -1,3 +1,5 @@
+import { safeHref } from './url';
+
 /**
  * SystemAuth's sign-out, which the BFF names when it ends the app's session:
  * the browser posts a form to `url` with a `return_to` field of `returnTo`,
@@ -27,12 +29,8 @@ export function readSignOut(body: unknown): SystemAuthSignOut | undefined {
 }
 
 function isHTTPURL(s: string): boolean {
-  try {
-    const u = new URL(s);
-    return u.protocol === 'https:' || u.protocol === 'http:';
-  } catch {
-    return false;
-  }
+  // Absolute only: a relative value is not a sign-out target.
+  return /^https?:\/\//i.test(s) && safeHref(s) !== undefined;
 }
 
 /**

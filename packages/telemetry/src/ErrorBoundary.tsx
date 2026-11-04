@@ -1,5 +1,18 @@
-import { Component, type ReactNode, type ErrorInfo } from 'react';
+import { Component, type ContextType, type ReactNode, type ErrorInfo } from 'react';
+import { TelemetryContext } from './TelemetryProvider';
 import type { ErrorBoundaryProps, TelemetryContextValue } from './types';
+
+/**
+ * isDevelopmentBuild reports whether the bundler built for development.
+ * Bundlers replace `process.env.NODE_ENV` with a string literal.
+ */
+function isDevelopmentBuild(): boolean {
+  try {
+    return process.env.NODE_ENV === 'development';
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Internal context for passing telemetry to error boundary
@@ -13,7 +26,8 @@ interface ErrorBoundaryState {
  * Error boundary with telemetry integration
  *
  * Catches JavaScript errors in child components and reports them
- * to the telemetry system.
+ * to the telemetry system: the `telemetry` prop, or else the enclosing
+ * TelemetryProvider's.
  *
  * @example Basic usage
  * ```tsx
@@ -28,7 +42,6 @@ interface ErrorBoundaryState {
  *   fallback={(error, reset) => (
  *     <div>
  *       <h1>Something went wrong</h1>
- *       <p>{error.message}</p>
  *       <button onClick={reset}>Try again</button>
  *     </div>
  *   )}
@@ -41,6 +54,9 @@ export class ErrorBoundary extends Component<
   ErrorBoundaryProps & { telemetry?: TelemetryContextValue },
   ErrorBoundaryState
 > {
+  static contextType = TelemetryContext;
+  declare context: ContextType<typeof TelemetryContext>;
+
   constructor(props: ErrorBoundaryProps & { telemetry?: TelemetryContextValue }) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -52,7 +68,7 @@ export class ErrorBoundary extends Component<
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     // Track error in telemetry
-    this.props.telemetry?.trackError(error, {
+    (this.props.telemetry ?? this.context)?.trackError(error, {
       component: errorInfo.componentStack,
       boundary: true,
     });
@@ -115,7 +131,9 @@ export class ErrorBoundary extends Component<
 }
 
 /**
- * Default error fallback component
+ * Default error fallback component. It shows the error's message only in a
+ * development build: messages can carry server responses or internal
+ * details.
  */
 export function DefaultErrorFallback({
   error,
@@ -145,7 +163,7 @@ export function DefaultErrorFallback({
           fontSize: '12px',
         }}
       >
-        {error.message}
+        {isDevelopmentBuild() ? error.message : 'An unexpected error occurred.'}
       </pre>
       <button
         onClick={reset}

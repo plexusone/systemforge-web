@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { endLoginSession, type SystemAuthSignOut } from '../signout';
 import { SessionClient, type SignInOptions } from './client';
+import { usePrincipalChange } from '../principal';
 import type { Session } from './types';
 
 /** Where the session is in its lifecycle. */
@@ -129,6 +130,8 @@ export function SessionProvider({
     }
     await refresh();
   }, [bff, refresh, endSession]);
+
+  usePrincipalChange(session.user?.id);
 
   const value = useMemo<SessionContextValue>(
     () => ({ status, session, error, refresh, signIn, signOut }),

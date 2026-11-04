@@ -26,6 +26,8 @@
  */
 
 import type { TelemetryAdapter, TelemetryEvent, TelemetryUser, TelemetryOrg } from '../types';
+import { scrubOrigin, scrubText, scrubUrl } from '../scrub';
+import { MAX_QUEUED_EVENTS, requeue } from '../telemetry';
 
 // =============================================================================
 // ProductGraph Event Types (OTel-compatible)
@@ -192,6 +194,36 @@ export interface ProductGraphConfig {
    * Custom headers for API requests
    */
   headers?: Record<string, string>;
+
+  /**
+   * Keep the anonymous ID in localStorage, so a browser keeps one ID across
+   * visits. That is a persistent identifier: enable it only with the
+   * person's consent. Default false: a new ID for each page load.
+   */
+  persistAnonymousId?: boolean;
+
+  /**
+   * Cookie mode for requests to `endpoint`. Default `same-origin`: cookies
+   * go only to an endpoint on the page's own origin, such as a BFF proxy.
+   */
+  credentials?: RequestCredentials;
+}
+
+const ANONYMOUS_ID_KEY = 'pg_anonymous_id';
+
+function newId(prefix: string): string {
+  return typeof crypto !== 'undefined' && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+// localStorage throws in some privacy modes and sandboxed frames.
+function storage(): Storage | undefined {
+  try {
+    return typeof localStorage === 'undefined' ? undefined : localStorage;
+  } catch {
+    return undefined;
+  }
 }
 
 // =============================================================================
@@ -243,7 +275,8 @@ class SessionManager {
     }
   }
 
-  private startNewSession(): void {
+  /** Starts a new session, as after a timeout. */
+  startNewSession(): void {
     this.sessionId = this.generateSessionId();
     this.startedAt = Date.now();
     this.lastActivityAt = Date.now();
@@ -300,7 +333,7 @@ export class ProductGraphAdapter implements TelemetryAdapter {
   private org: TelemetryOrg | null = null;
   private batch: ProductGraphEvent[] = [];
   private flushTimer: ReturnType<typeof setTimeout> | null = null;
-  private anonymousId: string;
+  private anonymousId: string | undefined;
 
   constructor(config: ProductGraphConfig) {
     this.config = {
@@ -312,7 +345,6 @@ export class ProductGraphAdapter implements TelemetryAdapter {
     };
 
     this.sessionManager = new SessionManager(this.config.sessionTimeout);
-    this.anonymousId = this.getOrCreateAnonymousId();
 
     // Flush on page unload
     if (typeof window !== 'undefined') {
@@ -321,26 +353,31 @@ export class ProductGraphAdapter implements TelemetryAdapter {
     }
   }
 
-  private getOrCreateAnonymousId(): string {
-    const key = 'pg_anonymous_id';
-    if (typeof localStorage !== 'undefined') {
-      let id = localStorage.getItem(key);
-      if (!id) {
-        id =
-          typeof crypto !== 'undefined' && crypto.randomUUID
-            ? crypto.randomUUID()
-            : `anon-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-        localStorage.setItem(key, id);
-      }
-      return id;
+  // Created on the first event, not at construction, so nothing is stored
+  // before an event is actually tracked.
+  private getAnonymousId(): string {
+    if (this.anonymousId) return this.anonymousId;
+    const store = this.config.persistAnonymousId ? storage() : undefined;
+    let id: string | null | undefined;
+    try {
+      id = store?.getItem(ANONYMOUS_ID_KEY);
+    } catch {
+      id = undefined;
     }
-    return `anon-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    if (!id) {
+      id = newId('anon');
+      try {
+        store?.setItem(ANONYMOUS_ID_KEY, id);
+      } catch {
+        // Not persisted: the ID lasts for this page load.
+      }
+    }
+    this.anonymousId = id;
+    return id;
   }
 
   private generateEventId(): string {
-    return typeof crypto !== 'undefined' && crypto.randomUUID
-      ? crypto.randomUUID()
-      : `evt-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    return newId('evt');
   }
 
   private mapEventType(type: string): ProductGraphEventType {
@@ -409,7 +446,7 @@ export class ProductGraphAdapter implements TelemetryAdapter {
     if (this.user) {
       pgEvent['user.id'] = this.user.id;
     } else {
-      pgEvent['user.anonymous_id'] = this.anonymousId;
+      pgEvent['user.anonymous_id'] = this.getAnonymousId();
     }
 
     // Add org context
@@ -423,10 +460,11 @@ export class ProductGraphAdapter implements TelemetryAdapter {
       const props = event.properties;
 
       // Page properties
-      if (props.path) pgEvent['page.path'] = props.path as string;
+      if (props.path) pgEvent['page.path'] = scrubUrl(String(props.path));
       if (props.title) pgEvent['page.title'] = props.title as string;
-      if (props.referrer) pgEvent['page.referrer'] = props.referrer as string;
-      if (props.url) pgEvent['page.url'] = props.url as string;
+      const referrer = scrubOrigin(props.referrer as string | undefined);
+      if (referrer) pgEvent['page.referrer'] = referrer;
+      if (props.url) pgEvent['page.url'] = scrubUrl(String(props.url));
 
       // UI properties
       if (props.component) pgEvent['ui.component.name'] = props.component as string;
@@ -457,8 +495,8 @@ export class ProductGraphAdapter implements TelemetryAdapter {
 
       // Error properties
       if (props.error_type) pgEvent['error.type'] = props.error_type as string;
-      if (props.message) pgEvent['error.message'] = props.message as string;
-      if (props.stack) pgEvent['error.stack'] = props.stack as string;
+      if (props.message) pgEvent['error.message'] = scrubText(String(props.message));
+      if (props.stack) pgEvent['error.stack'] = scrubText(String(props.stack), 4000);
 
       // Performance properties
       if (props.metric === 'lcp') pgEvent['performance.lcp_ms'] = props.value as number;
@@ -515,8 +553,12 @@ export class ProductGraphAdapter implements TelemetryAdapter {
       }
     }
 
-    // Add to batch
+    // Add to batch, keeping only the newest events while the endpoint is
+    // unreachable.
     this.batch.push(pgEvent);
+    if (this.batch.length > MAX_QUEUED_EVENTS) {
+      this.batch.splice(0, this.batch.length - MAX_QUEUED_EVENTS);
+    }
 
     if (this.config.debug) {
       console.log('[ProductGraph] Event:', pgEvent);
@@ -558,6 +600,15 @@ export class ProductGraphAdapter implements TelemetryAdapter {
   reset(): void {
     this.user = null;
     this.org = null;
+    // The next person on this browser gets new IDs, so their events cannot
+    // be linked to the previous person's.
+    this.anonymousId = undefined;
+    try {
+      storage()?.removeItem(ANONYMOUS_ID_KEY);
+    } catch {
+      // Nothing stored, or storage unavailable.
+    }
+    this.sessionManager.startNewSession();
 
     if (this.config.debug) {
       console.log('[ProductGraph] Reset');
@@ -592,10 +643,18 @@ export class ProductGraphAdapter implements TelemetryAdapter {
         method: 'POST',
         headers,
         body: JSON.stringify({ events }),
-        credentials: 'include',
+        credentials: this.config.credentials ?? 'same-origin',
+        keepalive: true,
       });
 
       if (!response.ok) {
+        // A rejected batch would be rejected again; only retry server errors.
+        if (response.status < 500 && response.status !== 429) {
+          if (this.config.debug) {
+            console.error(`[ProductGraph] Dropped ${events.length} events: ${response.status}`);
+          }
+          return;
+        }
         throw new Error(`ProductGraph API error: ${response.status}`);
       }
 
@@ -604,7 +663,7 @@ export class ProductGraphAdapter implements TelemetryAdapter {
       }
     } catch (error) {
       // Re-add events to batch on failure
-      this.batch.unshift(...events);
+      requeue(this.batch, events);
 
       if (this.config.debug) {
         console.error('[ProductGraph] Failed to send events:', error);

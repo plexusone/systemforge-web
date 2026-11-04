@@ -10,14 +10,33 @@ import {
 } from './types';
 
 /**
- * Build URL with query parameters
+ * buildUrl joins `path` to `baseUrl` and adds query parameters. The path is
+ * appended to the base, not resolved against it: "/users" under
+ * "https://app.example.com/api" is ".../api/users". A path that names a
+ * scheme or host, or has "." or ".." segments, would leave the base, so it
+ * is refused. A relative base, such as "/api", is on this page's origin.
  */
-function buildUrl(
+export function buildUrl(
   baseUrl: string,
   path: string,
   params?: Record<string, string | number | boolean | undefined>
 ): string {
-  const url = new URL(path, baseUrl);
+  const origin = typeof window === 'undefined' ? undefined : window.location.origin;
+  const base = new URL(baseUrl, origin);
+  const basePath = base.pathname.replace(/\/+$/, '');
+
+  if (/^[a-z][a-z\d+.-]*:/i.test(path) || path.startsWith('//') || hasUnsafeChar(path)) {
+    throw new TypeError(`api-client: path must be relative to baseUrl: ${path}`);
+  }
+  const pathOnly = path.split(/[?#]/, 1)[0];
+  if (pathOnly.split('/').some(isDotSegment)) {
+    throw new TypeError(`api-client: path must not contain "." or ".." segments: ${path}`);
+  }
+
+  const url = new URL(`${base.origin}${basePath}/${path.replace(/^\/+/, '')}`);
+  if (url.origin !== base.origin || !`${url.pathname}/`.startsWith(`${basePath}/`)) {
+    throw new TypeError(`api-client: path leaves baseUrl: ${path}`);
+  }
 
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -28,6 +47,25 @@ function buildUrl(
   }
 
   return url.toString();
+}
+
+// Browsers drop tabs and newlines from URLs and read a backslash as a slash.
+function hasUnsafeChar(s: string): boolean {
+  for (let i = 0; i < s.length; i++) {
+    const c = s.charCodeAt(i);
+    if (c < 0x20 || c === 0x7f || c === 0x5c) return true;
+  }
+  return false;
+}
+
+function isDotSegment(segment: string): boolean {
+  let s = segment;
+  try {
+    s = decodeURIComponent(segment);
+  } catch {
+    // Not valid percent-encoding: compare it as written.
+  }
+  return s === '.' || s === '..';
 }
 
 /**
