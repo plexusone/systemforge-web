@@ -99,31 +99,38 @@ export function ChatWidget({
             ? 'opacity-100 scale-100 pointer-events-auto'
             : 'opacity-0 scale-95 pointer-events-none'
         )}
+        aria-hidden={!isOpen}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-          <div>
-            <h3 className="font-semibold text-lg">{title}</h3>
-            {subtitle && <p className="text-sm text-blue-100">{subtitle}</p>}
-          </div>
-          <button
-            onClick={handleClose}
-            className="p-1.5 rounded-full hover:bg-white/20 transition-colors"
-            aria-label="Close chat"
-          >
-            <XIcon className="w-5 h-5" />
-          </button>
-        </div>
+        {/* A closed panel mounts nothing that can take focus, so text typed
+            elsewhere on the page cannot land in its composer. */}
+        {isOpen && (
+          <>
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+              <div>
+                <h3 className="font-semibold text-lg">{title}</h3>
+                {subtitle && <p className="text-sm text-blue-100">{subtitle}</p>}
+              </div>
+              <button
+                onClick={handleClose}
+                className="p-1.5 rounded-full hover:bg-white/20 transition-colors"
+                aria-label="Close chat"
+              >
+                <XIcon className="w-5 h-5" />
+              </button>
+            </div>
 
-        {/* Chat Content */}
-        <div className="flex-1 overflow-hidden">
-          <ChatThread className="h-full" welcomeMessage={welcomeMessage} />
-        </div>
+            {/* Chat Content */}
+            <div className="flex-1 overflow-hidden">
+              <ChatThread className="h-full" welcomeMessage={welcomeMessage} composer={false} />
+            </div>
 
-        {/* Composer */}
-        <div className="border-t border-gray-200">
-          <ChatComposer />
-        </div>
+            {/* Composer: focused when the person opens the panel */}
+            <div className="border-t border-gray-200">
+              <ChatComposer autoFocus />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Toggle Button */}

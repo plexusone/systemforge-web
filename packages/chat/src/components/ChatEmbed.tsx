@@ -95,7 +95,7 @@ export function ChatEmbed({
 
       {/* Chat Thread */}
       <div className="flex-1 overflow-hidden min-h-0">
-        <ChatThread className="h-full" welcomeMessage={welcomeMessage} />
+        <ChatThread className="h-full" welcomeMessage={welcomeMessage} composer={false} />
       </div>
 
       {/* Composer */}

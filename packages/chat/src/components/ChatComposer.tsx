@@ -10,12 +10,15 @@ export interface ChatComposerProps {
   placeholder?: string;
   /** Whether the composer is disabled */
   disabled?: boolean;
+  /** Focus the input when the composer mounts. Default false. */
+  autoFocus?: boolean;
 }
 
 export function ChatComposer({
   className,
   placeholder = 'Type a message...',
   disabled = false,
+  autoFocus = false,
 }: ChatComposerProps) {
   return (
     <Composer.Root
@@ -29,7 +32,7 @@ export function ChatComposer({
         placeholder={placeholder}
         className="flex-1 resize-none rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         rows={1}
-        autoFocus
+        autoFocus={autoFocus}
       />
       <Composer.Send className="rounded-full bg-blue-600 p-3 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         <SendIcon className="w-5 h-5" />
