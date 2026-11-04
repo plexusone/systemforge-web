@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- A supported Node.js LTS release (24 or later) for your build tools; the
+- A supported Node.js LTS release (24.15 or later) for your build tools; the
   packages themselves run in the browser
 - pnpm 9+ (recommended) or npm
 
