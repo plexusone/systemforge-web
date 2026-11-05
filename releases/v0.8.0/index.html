@@ -1882,6 +1882,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#also-in-this-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Also in this release
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2321,6 +2332,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#also-in-this-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Also in this release
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2444,6 +2466,19 @@ personal data by default.</p>
   loses text split across network chunks.</li>
 <li><strong>Release hygiene.</strong> Published source maps no longer name the build
   machine's paths, and the build fails if they would.</li>
+</ul>
+<h2 id="also-in-this-release">Also in this release<a class="headerlink" href="#also-in-this-release" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Conversation list.</strong> <code>useConversations</code> applies only its latest load.
+  A refresh still running when the API base changes no longer replaces the
+  new base's conversations, and a new base shows loading, not the earlier
+  error, until its own load settles.</li>
+<li><strong>Session provider.</strong> <code>SessionProvider</code> sets state only when a session
+  read settles, and calls the <code>onUnauthorized</code> the latest render passed.</li>
+<li><strong>Toolchain.</strong> Building this repository needs Node.js 24.15 or later;
+  CI tests on Node 24 and 26. The build moved to TypeScript 6.0, ESLint 10
+  with a flat configuration, vitest 5 and tsup 9. Nothing changes for
+  applications that install the packages.</li>
 </ul>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pnpm<span class="w"> </span>add<span class="w"> </span>@plexusone/auth@^0.3.0<span class="w"> </span>@plexusone/api-client@^0.3.0
