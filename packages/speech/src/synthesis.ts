@@ -153,7 +153,6 @@ function plan(segments: readonly SpeakSegment[], maxChars: number): Step[] {
     const ms = Math.max(0, seg.pauseMs ?? 0);
     if (ms > 0) {
       steps.push({ kind: 'wait', ms, segment, first });
-      first = false;
     }
   });
   return steps;

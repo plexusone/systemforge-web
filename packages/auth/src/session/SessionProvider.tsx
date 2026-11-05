@@ -1,12 +1,13 @@
 import {
   createContext,
+  type ReactNode,
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
-  type ReactNode,
 } from 'react';
 import { endLoginSession, type SystemAuthSignOut } from '../signout';
 import { SessionClient, type SignInOptions } from './client';
@@ -75,27 +76,45 @@ export function SessionProvider({
   const [error, setError] = useState<Error | undefined>();
   const wasAuthenticated = useRef(false);
   const onUnauthorizedRef = useRef(onUnauthorized);
-  onUnauthorizedRef.current = onUnauthorized;
+  // A layout effect, so a session read that settles right after a render
+  // calls the callback that render committed.
+  useLayoutEffect(() => {
+    onUnauthorizedRef.current = onUnauthorized;
+  });
+
+  const apply = useCallback((s: Session) => {
+    setSession(s);
+    setError(undefined);
+    setStatus(s.authenticated ? 'authenticated' : 'unauthenticated');
+    if (wasAuthenticated.current && !s.authenticated) {
+      onUnauthorizedRef.current?.();
+    }
+    wasAuthenticated.current = s.authenticated;
+  }, []);
+
+  const fail = useCallback((err: unknown) => {
+    setError(err instanceof Error ? err : new Error(String(err)));
+    setStatus('error');
+  }, []);
 
   const refresh = useCallback(async () => {
     try {
-      const s = await bff.getSession();
-      setSession(s);
-      setError(undefined);
-      setStatus(s.authenticated ? 'authenticated' : 'unauthenticated');
-      if (wasAuthenticated.current && !s.authenticated) {
-        onUnauthorizedRef.current?.();
-      }
-      wasAuthenticated.current = s.authenticated;
+      apply(await bff.getSession());
     } catch (err) {
-      setError(err instanceof Error ? err : new Error(String(err)));
-      setStatus('error');
+      fail(err);
     }
-  }, [bff]);
+  }, [bff, apply, fail]);
 
   useEffect(() => {
-    void refresh();
-  }, [refresh]);
+    let live = true;
+    bff.getSession().then(
+      (s) => live && apply(s),
+      (err: unknown) => live && fail(err)
+    );
+    return () => {
+      live = false;
+    };
+  }, [bff, apply, fail]);
 
   useEffect(() => {
     if (!refreshOnFocus || typeof window === 'undefined') return undefined;
