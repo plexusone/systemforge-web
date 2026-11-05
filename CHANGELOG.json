@@ -167,27 +167,55 @@
         {
           "description": "Console help links with a malformed URL no longer break the page",
           "commit": "bc97fa4"
+        },
+        {
+          "description": "`useConversations` applies only the latest load: a refresh still in flight when the API base changes no longer overwrites the new base's list, and a new base shows loading and no earlier error until its own load settles",
+          "commit": "10dd9c8"
+        },
+        {
+          "description": "`SessionProvider` and `useConversations` set state only when a load started in an effect settles, and only while mounted; `SessionProvider` updates `onUnauthorized` in a layout effect, so a session read settling right after a render calls the current callback",
+          "commit": "ad62aea"
         }
       ],
       "tests": [
         {
           "description": "URL checks, return addresses, catalog filtering, request paths, cache resets, chat focus and streaming, telemetry privacy, org-scoped roles, failed sign-out, org page reloads and role controls, tenant storage and the production dev-session guard",
           "commit": "5c220b6"
+        },
+        {
+          "description": "Stale refreshes and API base changes in `useConversations`",
+          "commit": "adbec15"
         }
       ],
       "dependencies": [
         {
           "description": "vitest 4.1 with vite 8, and dependencies refreshed within their ranges",
           "commit": "2dd11cf"
+        },
+        {
+          "description": "TypeScript 6.0, ESLint 10 with a flat configuration and `@eslint-react/eslint-plugin` in place of `eslint-plugin-react`, vitest 5, jsdom 30, tsup 9, changesets 3 and postcss-cli 12",
+          "commit": "0a1ec99"
         }
       ],
       "infrastructure": [
         {
           "description": "`scripts/dist-paths.mjs` checks build output for local paths in `pnpm build` and every `prepublishOnly`; Dependabot updates actions and npm dependencies",
           "commit": "e3fbb14"
+        },
+        {
+          "description": "Building the repository needs Node.js 24.15 or later; CI tests on Node 24 and 26 with a read-only token, and lints and releases on 26. The published packages are unchanged by this",
+          "commit": "b109c0a"
+        },
+        {
+          "description": "Dependabot groups minor and patch updates and opens a pull request per major update",
+          "commit": "a97970f"
         }
       ],
       "documentation": [
+        {
+          "description": "The README and installation guide state the Node.js 24.15 minimum for building",
+          "commit": "3c176aa"
+        },
         {
           "description": "api-client, auth, chat, pages and telemetry pages describe the new behavior and options; the releasing and application guides describe the path check and the development session",
           "commit": "9e5d6f9"
