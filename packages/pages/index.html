@@ -2196,6 +2196,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../releases/v0.8.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../releases/v0.7.0/" class="md-nav__link">
         
   
@@ -3035,32 +3063,56 @@
 </thead>
 <tbody>
 <tr>
-<td><code>brandName</code></td>
+<td><code>appName</code></td>
 <td><code>string</code></td>
 <td>Application name</td>
 </tr>
 <tr>
-<td><code>brandLogo</code></td>
-<td><code>string</code></td>
-<td>Logo URL</td>
+<td><code>logo</code></td>
+<td><code>ReactNode</code></td>
+<td>Logo</td>
 </tr>
 <tr>
-<td><code>providers</code></td>
-<td><code>string[]</code></td>
-<td>OAuth providers</td>
+<td><code>oauthProviders</code></td>
+<td><code>OAuthProvider[]</code></td>
+<td>OAuth providers to offer</td>
 </tr>
 <tr>
-<td><code>onLogin</code></td>
-<td><code>(provider: string) =&gt; void</code></td>
-<td>Login callback</td>
-</tr>
-<tr>
-<td><code>showEmailLogin</code></td>
+<td><code>showEmailForm</code></td>
 <td><code>boolean</code></td>
-<td>Show email/password form</td>
+<td>Show the email and password form</td>
+</tr>
+<tr>
+<td><code>showRegisterLink</code></td>
+<td><code>boolean</code></td>
+<td>Show the link to registration</td>
+</tr>
+<tr>
+<td><code>redirectUrl</code></td>
+<td><code>string</code></td>
+<td>Where to go after sign-in; only a URL on this site is followed, anything else goes to <code>/</code></td>
+</tr>
+<tr>
+<td><code>onNavigate</code></td>
+<td><code>(href: string) =&gt; void</code></td>
+<td>Client-side navigation</td>
+</tr>
+<tr>
+<td><code>registerUrl</code></td>
+<td><code>string</code></td>
+<td>Registration page</td>
+</tr>
+<tr>
+<td><code>forgotPasswordUrl</code></td>
+<td><code>string</code></td>
+<td>Password reset page</td>
 </tr>
 </tbody>
 </table>
+<p><code>redirectUrl</code> often comes from the address bar (<code>?next=…</code>), which is why it
+must be on this site. URLs that reach <code>window.location</code> (<code>registerUrl</code>,
+<code>forgotPasswordUrl</code>, <code>homeUrl</code> on ErrorPage) are followed only when they are
+relative or <code>http(s)</code>.</p>
 <h3 id="usersettingspage-props">UserSettingsPage Props<a class="headerlink" href="#usersettingspage-props" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3072,19 +3124,39 @@
 </thead>
 <tbody>
 <tr>
-<td><code>sections</code></td>
-<td><code>string[]</code></td>
-<td>Settings sections to show</td>
+<td><code>activeTab</code></td>
+<td><code>SettingsTab</code></td>
+<td>Tab to open</td>
 </tr>
 <tr>
-<td><code>onSave</code></td>
-<td><code>(data: UserData) =&gt; Promise&lt;void&gt;</code></td>
-<td>Save callback</td>
+<td><code>tabs</code></td>
+<td><code>SettingsTab[]</code></td>
+<td>Tabs to show</td>
 </tr>
 <tr>
-<td><code>onCancel</code></td>
+<td><code>onTabChange</code></td>
+<td><code>(tab: SettingsTab) =&gt; void</code></td>
+<td>Called when the tab changes</td>
+</tr>
+<tr>
+<td><code>bffBaseUrl</code></td>
+<td><code>string</code></td>
+<td>BFF base URL for linked accounts</td>
+</tr>
+<tr>
+<td><code>oauthProviders</code></td>
+<td><code>OAuthProvider[]</code></td>
+<td>Providers offered for linking</td>
+</tr>
+<tr>
+<td><code>onSaveProfile</code></td>
+<td><code>(profile: { name: string }) =&gt; Promise&lt;void&gt;</code></td>
+<td>Saves the profile; without it the profile is read-only</td>
+</tr>
+<tr>
+<td><code>onChangeAvatar</code></td>
 <td><code>() =&gt; void</code></td>
-<td>Cancel callback</td>
+<td>Starts an avatar change; without it no button shows</td>
 </tr>
 </tbody>
 </table>
@@ -3449,6 +3521,12 @@
 <td>No</td>
 </tr>
 <tr>
+<td>Invite admins</td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
 <td>Edit member roles</td>
 <td>Yes</td>
 <td>Yes*</td>
@@ -3480,7 +3558,13 @@
 </tr>
 </tbody>
 </table>
-<p>*Admin cannot modify other admins or the owner</p>
+<p>*Admins manage members only: granting <code>admin</code>, and changing or removing an owner or another admin, is an owner's. An admin may step down or leave</p>
+<p><code>currentUserRole</code> decides only which controls the pages show. The server must
+enforce this table on every request: which roles may grant which roles,
+and that only an owner can grant <code>owner</code> or <code>admin</code> or act on an owner or
+admin. SystemForge's organization API does.</p>
+<p>The pages encode <code>orgSlug</code> and member and invitation IDs in request paths,
+and load again, with fresh state, when <code>orgSlug</code> or <code>apiBaseUrl</code> changes.</p>
 
 
 

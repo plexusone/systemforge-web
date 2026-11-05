@@ -843,6 +843,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#building-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building blocks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-chat-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The chat endpoint
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1919,6 +1941,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../releases/v0.8.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../releases/v0.7.0/" class="md-nav__link">
         
   
@@ -2370,6 +2420,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#building-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building blocks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-chat-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The chat endpoint
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2454,6 +2526,28 @@ route.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="building-blocks">Building blocks<a class="headerlink" href="#building-blocks" title="Permanent link">&para;</a></h2>
+<p><code>ChatThread</code> renders its own composer unless you pass <code>composer={false}</code>;
+do that when you place a <code>ChatComposer</code> beside it, so the page has one input.
+<code>ChatComposer</code> takes focus only with <code>autoFocus</code>. <code>ChatWidget</code> mounts its
+thread and composer only while it is open, so nothing typed elsewhere on the
+page can reach a hidden input.</p>
+<h2 id="the-chat-endpoint">The chat endpoint<a class="headerlink" href="#the-chat-endpoint" title="Permanent link">&para;</a></h2>
+<p><code>ChatProvider</code> posts the whole conversation to
+<code>{apiBaseUrl}/v1/chat/completions</code> on each turn, in the OpenAI chat format,
+and reads a server-sent event stream (or one JSON reply with
+<code>streaming: false</code>). An <code>{"error": …}</code> object in the stream is shown as an
+error.</p>
+<p>Everything in that request comes from the browser, so the endpoint must not
+trust it:</p>
+<ul>
+<li>Apply the server's own system prompt, and drop <code>system</code> messages the client
+  sends.</li>
+<li>Treat earlier <code>assistant</code> messages as the client's claim, not as what the
+  model said; keep history on the server if it matters.</li>
+<li>Allow only the models the deployment offers, whatever <code>model</code> says.</li>
+<li>Authorize the session cookie and limit rates per person.</li>
+</ul>
 
 
 

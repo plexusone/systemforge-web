@@ -1902,6 +1902,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../releases/v0.8.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../releases/v0.7.0/" class="md-nav__link">
         
   
@@ -2390,11 +2418,14 @@ a stack.</p>
 <p>The application's own front end, for development, uses <code>DevShell</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// main.tsx in the application&#39;s repository</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nx">createRoot</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">)</span><span class="o">!</span><span class="p">).</span><span class="nx">render</span><span class="p">(</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nx">createHost</span><span class="p">({</span><span class="w"> </span><span class="nx">app</span><span class="o">:</span><span class="w"> </span><span class="kt">reportsApp</span><span class="p">,</span><span class="w"> </span><span class="nx">devSession</span><span class="o">:</span><span class="w"> </span><span class="kt">import.meta.env.VITE_DEV_SESSION</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;1&#39;</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nx">createHost</span><span class="p">({</span><span class="w"> </span><span class="nx">app</span><span class="o">:</span><span class="w"> </span><span class="kt">reportsApp</span><span class="p">,</span><span class="w"> </span><span class="nx">devSession</span><span class="o">:</span><span class="w"> </span><span class="kt">import.meta.env.DEV</span><span class="w"> </span><span class="p">})</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">);</span>
 </code></pre></div>
-<p>With <code>devSession</code> it needs no backend. Without it, point the dev server's
-<code>/bff</code> and <code>/api</code> proxy at the application's server, and you sign in for real.</p>
+<p>With <code>devSession</code> it needs no backend: it signs in a canned owner, so gate it
+on a development build (<code>import.meta.env.DEV</code>), never on a variable a
+production build can set. <code>createHost</code> ignores it in a production build.
+Without it, point the dev server's <code>/bff</code> and <code>/api</code> proxy at the
+application's server, and you sign in for real.</p>
 <h2 id="3-test-it">3. Test it<a class="headerlink" href="#3-test-it" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">renderApp</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@plexusone/host/testing&#39;</span><span class="p">;</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>

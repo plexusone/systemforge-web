@@ -1941,6 +1941,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../releases/v0.8.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../releases/v0.7.0/" class="md-nav__link">
         
   
@@ -2474,7 +2502,9 @@ Actions does not publish; it runs only when started by hand.</p>
 <p><code>pnpm build</code> runs <code>scripts/check-exports.mjs</code>, which imports and requires
    every entry point each package exports. It fails when an export names a
    file the build does not write, which once shipped a <code>@plexusone/ui</code> that
-   could not load.</p>
+   could not load. It then runs <code>scripts/dist-paths.mjs check</code>, which fails
+   when any <code>dist/</code> file names a local filesystem path, such as a home
+   directory in a source map.</p>
 <h2 id="2-push-then-tag">2. Push, then tag<a class="headerlink" href="#2-push-then-tag" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Push <code>main</code> and wait for CI to pass.</li>
@@ -2493,9 +2523,10 @@ HEAD (<code>ERR_PNPM_GIT_UNKNOWN_BRANCH</code>), so check out <code>main</code>,
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>pnpm<span class="w"> </span>build
 </code></pre></div>
 <p>Each package's <code>prepublishOnly</code> script builds it again as it is published,
-so <code>pnpm publish</code> never uploads a <code>dist/</code> left from an earlier commit. A
-build from before a <code>git pull</code> once shipped <code>@plexusone/speech</code> 0.1.0
-without its release's fixes. Run the full <code>pnpm build</code> first all the same:
+so <code>pnpm publish</code> never uploads a <code>dist/</code> left from an earlier commit, and
+then checks that <code>dist/</code> names no local path. A build from before a
+<code>git pull</code> once shipped <code>@plexusone/speech</code> 0.1.0 without its release's
+fixes. Run the full <code>pnpm build</code> first all the same:
 a package's type declarations are built against the other packages'
 <code>dist/</code>.</p>
 <p>Sign in right before publishing: tokens from <code>npm login</code> are short-lived, and
