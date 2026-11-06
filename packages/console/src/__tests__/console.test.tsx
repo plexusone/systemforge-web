@@ -4,7 +4,7 @@ import { devSession } from '@plexusone/host';
 import { conformanceProblems, renderApp } from '@plexusone/host/testing';
 import { consoleApp, createConsoleApp } from '../app';
 import { externalLink, withConnection } from '../pages/Connect';
-import { expiryText } from '../components/ui';
+import { accessText, ago, checkText, detailText, expiryText, testResult } from '../components/ui';
 import type { Connection, Manifest } from '../types';
 
 const cloudflare: Manifest = {
@@ -162,6 +162,74 @@ describe('Connections', () => {
         true
       )
     );
+  });
+
+  it('shows the last check, what it found and what it may do', async () => {
+    const checked = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+    respond = (c) =>
+      c.url.endsWith('/connections') && c.method === 'GET'
+        ? json(200, {
+            connections: [
+              connection({
+                scopes: ['Zone:Read'],
+                health: {
+                  lastValidation: 'ok',
+                  lastValidatedAt: checked,
+                  details: [{ label: 'Zones', values: ['example.com', 'example.org'], more: 3 }],
+                },
+              }),
+            ],
+          })
+        : undefined;
+    renderApp(consoleApp, { session: session('member'), path: '/orgs/org-1/connections' });
+    const row = await screen.findByRole('article', { name: 'Cloudflare' });
+    expect(within(row).getByText('Last checked 5 minutes ago: working')).toBeInTheDocument();
+    expect(within(row).getByText('Zones: example.com, example.org and 3 more')).toBeInTheDocument();
+    expect(within(row).getByText('Access: List zones')).toBeInTheDocument();
+  });
+
+  it('says what a test found', async () => {
+    respond = (c) =>
+      c.url.endsWith('/test')
+        ? json(
+            200,
+            connection({
+              health: {
+                lastValidation: 'ok',
+                lastValidatedAt: new Date().toISOString(),
+                details: [
+                  {
+                    label: 'Properties',
+                    values: ['sc-domain:example.com', 'https://example.org/'],
+                  },
+                ],
+              },
+            })
+          )
+        : undefined;
+    renderApp(consoleApp, { session: session('member'), path: '/orgs/org-1/connections' });
+    const row = await screen.findByRole('article', { name: 'Cloudflare' });
+    fireEvent.click(within(row).getByRole('button', { name: 'Test' }));
+    expect(await within(row).findByText('Working: it reaches 2 properties.')).toBeInTheDocument();
+  });
+
+  it('says why a test failed', async () => {
+    respond = (c) =>
+      c.url.endsWith('/test')
+        ? json(
+            200,
+            connection({
+              state: 'needs_attention',
+              health: { lastValidation: 'failed', lastError: 'cloudflare refused the token (403)' },
+            })
+          )
+        : undefined;
+    renderApp(consoleApp, { session: session('member'), path: '/orgs/org-1/connections' });
+    const row = await screen.findByRole('article', { name: 'Cloudflare' });
+    fireEvent.click(within(row).getByRole('button', { name: 'Test' }));
+    expect(
+      await within(row).findByText('The check failed: cloudflare refused the token (403)')
+    ).toBeInTheDocument();
   });
 
   it('says when connections are not enabled', async () => {
@@ -429,5 +497,48 @@ describe('next steps', () => {
     renderApp(consoleApp, { session: session('admin'), path: '/orgs/org-1/connections' });
     const row = await screen.findByRole('article', { name: 'Cloudflare' });
     expect(within(row).queryByRole('link')).toBeNull();
+  });
+});
+
+describe('check and details text', () => {
+  const now = new Date('2026-11-06T12:00:00Z');
+  it('reads how long ago', () => {
+    expect(ago('2026-11-06T11:59:30Z', now)).toBe('just now');
+    expect(ago('2026-11-06T11:59:00Z', now)).toBe('1 minute ago');
+    expect(ago('2026-11-06T09:00:00Z', now)).toBe('3 hours ago');
+    expect(ago('2026-11-04T12:00:00Z', now)).toBe('2 days ago');
+  });
+  it('reads the last check', () => {
+    expect(checkText(connection({ health: {} }), now)).toBe('Not checked yet');
+    expect(
+      checkText(
+        connection({
+          health: { lastValidatedAt: '2026-11-06T11:58:00Z', lastValidation: 'failed' },
+        }),
+        now
+      )
+    ).toBe('Last checked 2 minutes ago: failed');
+  });
+  it('reads a detail', () => {
+    expect(detailText({ label: 'Sites', values: ['a', 'b'] })).toBe('Sites: a, b');
+    expect(detailText({ label: 'Sites', values: ['a'], more: 2 })).toBe('Sites: a and 2 more');
+    expect(detailText({ label: 'Read-only' })).toBe('Read-only');
+  });
+  it('reads access from the service, or not at all', () => {
+    expect(accessText(connection({ scopes: undefined }), cloudflare)).toBe('Access: List zones');
+    expect(accessText(connection({ scopes: ['Zone:Read', 'Analytics:Read'] }), cloudflare)).toBe(
+      'Access: List zones; Traffic and security analytics'
+    );
+    expect(accessText(connection(), undefined)).toBeUndefined();
+  });
+  it('reports a test', () => {
+    expect(testResult(connection({ health: { lastValidation: 'ok' } }))).toBe('Working.');
+    expect(
+      testResult(
+        connection({
+          health: { lastValidation: 'ok', details: [{ label: 'Zones', values: ['a'], more: 4 }] },
+        })
+      )
+    ).toBe('Working: it reaches 5 zones.');
   });
 });
