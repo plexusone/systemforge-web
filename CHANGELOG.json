@@ -7,6 +7,45 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.9.0",
+      "date": "2026-11-05",
+      "highlights": [
+        {
+          "description": "`@plexusone/login-card` 0.1.0: printable login cards with the login code as a QR code, and a camera scanner that reads them on the device",
+          "commit": "eaebd2b"
+        },
+        {
+          "description": "Packages: `@plexusone/login-card` 0.1.0, new; the others are unchanged"
+        }
+      ],
+      "added": [
+        {
+          "description": "`LoginCodeQR`, `loginCodeSvg` and `loginCodeMatrix` draw a login code, and only a login code, as a QR code in alphanumeric mode",
+          "commit": "eaebd2b"
+        },
+        {
+          "description": "`cardSvg`, `LoginCard` and `CardSheet` draw a credit-card-sized login card and print it in wallet, Letter and A4 layouts; `downloadCard` saves it as SVG or a 300 dpi PNG in the browser",
+          "commit": "eaebd2b"
+        },
+        {
+          "description": "`startLoginCodeScanner` (`@plexusone/login-card/scanner`, no framework) and `LoginCodeScanner` and `useLoginCodeScanner` (`/scanner/react`) read a card with the camera on the device, ignoring other QR codes",
+          "commit": "93f6628"
+        }
+      ],
+      "tests": [
+        {
+          "description": "QR round trip, card escaping, downloads without requests, and the scanner's codes, stops and unavailable reasons",
+          "commit": "32ea1ed"
+        }
+      ],
+      "documentation": [
+        {
+          "description": "The `@plexusone/login-card` page: issuing, printing and scanning",
+          "commit": "298b367"
+        }
+      ]
+    },
+    {
       "version": "v0.8.0",
       "date": "2026-11-04",
       "highlights": [

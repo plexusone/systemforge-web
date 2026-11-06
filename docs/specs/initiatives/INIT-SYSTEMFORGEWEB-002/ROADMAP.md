@@ -11,23 +11,23 @@ carry `Refs: RMI-SYSTEMFORGEWEB-<NNN>`.
 
 **Theme:** A token becomes a card a manager can print or save
 
-- [ ] `RMI-SYSTEMFORGEWEB-024` `LoginCodeQR`: the token alone as an SVG QR code in alphanumeric mode, refusing anything that is not a token
-- [ ] `RMI-SYSTEMFORGEWEB-025` `LoginCard` and `CardSheet`: name, picture, instructions, expiry and the grouped token, in wallet, Letter and A4 print layouts
+- [x] `RMI-SYSTEMFORGEWEB-024` `LoginCodeQR`: the token alone as an SVG QR code in alphanumeric mode, refusing anything that is not a token
+- [x] `RMI-SYSTEMFORGEWEB-025` `LoginCard` and `CardSheet`: name, picture, instructions, expiry and the grouped token, in wallet, Letter and A4 print layouts
   - Depends on: `RMI-SYSTEMFORGEWEB-024`
-- [ ] `RMI-SYSTEMFORGEWEB-026` `downloadCard`: the card as PNG and SVG, drawn in the browser
+- [x] `RMI-SYSTEMFORGEWEB-026` `downloadCard`: the card as PNG and SVG, drawn in the browser
   - Depends on: `RMI-SYSTEMFORGEWEB-025`
 
 ## Phase 2 — Scanner
 
 **Theme:** Hold up the card and be signed in, with frames kept on the device
 
-- [ ] `RMI-SYSTEMFORGEWEB-027` `LoginCodeScanner`: camera, `BarcodeDetector` with a lazily loaded fallback decoder, tokens only, idle stop and plain-language fallback to typing
+- [x] `RMI-SYSTEMFORGEWEB-027` `LoginCodeScanner`: camera, `BarcodeDetector` with a lazily loaded fallback decoder, tokens only, idle stop and plain-language fallback to typing
   - Depends on: `RMI-SYSTEMFORGEWEB-024`
 
 ## Phase 3 — Release
 
 **Theme:** Applications adopt it with one dependency
 
-- [ ] `RMI-SYSTEMFORGEWEB-028` Publish `@plexusone/login-card` with a guide to issuing, printing and scanning
+- [x] `RMI-SYSTEMFORGEWEB-028` Publish `@plexusone/login-card` with a guide to issuing, printing and scanning
   - Depends on: `RMI-SYSTEMFORGEWEB-026`
   - Depends on: `RMI-SYSTEMFORGEWEB-027`

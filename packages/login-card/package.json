@@ -1,6 +1,6 @@
 {
   "name": "@plexusone/login-card",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Printable login cards with a SystemAuth login code as a QR code, and a camera scanner that reads them on the device",
   "homepage": "https://plexusone.github.io/systemforge-web/packages/login-card/",
   "main": "./dist/index.js",
