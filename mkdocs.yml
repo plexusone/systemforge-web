@@ -62,6 +62,7 @@ nav:
       - '@plexusone/design-tokens': packages/design-tokens.md
       - '@plexusone/host': packages/host.md
       - '@plexusone/invites': packages/invites.md
+      - '@plexusone/login-card': packages/login-card.md
       - '@plexusone/pages': packages/pages.md
       - '@plexusone/shell': packages/shell.md
       - '@plexusone/speech': packages/speech.md

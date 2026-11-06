@@ -26,21 +26,22 @@ share one copy. Every package also needs React 19, except
 
 ## Package summary
 
-| Package                                      | Purpose                            | Key exports                                                          |
-| -------------------------------------------- | ---------------------------------- | -------------------------------------------------------------------- |
-| [@plexusone/api-client](api-client.md)       | HTTP client                        | `ApiProvider`, `useApiClient`, `createApiClient`                     |
-| [@plexusone/auth](auth.md)                   | Authentication and the BFF session | `SessionProvider`, `useSession`, `AuthProvider`, `ProtectedRoute`    |
-| [@plexusone/chat](chat.md)                   | Chat components                    | `ChatProvider`, `ChatWidget`, `ChatEmbed`                            |
-| [@plexusone/console](console.md)             | The organization console           | `consoleApp`, `consoleSessionClient`, `Connections`, `Connect`       |
-| [@plexusone/design-tokens](design-tokens.md) | Design system                      | Colors, typography, spacing                                          |
-| [@plexusone/host](host.md)                   | Hosting applications               | `AppModule`, `Shell`, `createHost`, `DevShell`                       |
-| [@plexusone/invites](invites.md)             | Invite-gated sign-up pages         | `InviteAdminPage`, `InvitePeoplePage`, `createInvitesApi`            |
-| [@plexusone/pages](pages.md)                 | Pre-built pages                    | `LoginPage`, `ErrorPage`, `OrganizationSettingsPage`                 |
-| [@plexusone/shell](shell.md)                 | Application chrome                 | `AppShell`, `ProductSwitcher`, `OrganizationSwitcher`, `ProfileMenu` |
-| [@plexusone/speech](speech.md)               | Browser speech in and out          | `speak`, `listen`, `getVoices`, `useSpeech`, `useListen`             |
-| [@plexusone/telemetry](telemetry.md)         | Instrumentation                    | `TelemetryProvider`, `ErrorBoundary`                                 |
-| [@plexusone/tenant](tenant.md)               | Multi-tenancy                      | `TenantProvider`, `RequireRole`, `useOrganization`                   |
-| [@plexusone/ui](ui.md)                       | UI components                      | `Button`, `Card`, `DropdownMenu`, `Tooltip`                          |
+| Package                                      | Purpose                            | Key exports                                                              |
+| -------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------ |
+| [@plexusone/api-client](api-client.md)       | HTTP client                        | `ApiProvider`, `useApiClient`, `createApiClient`                         |
+| [@plexusone/auth](auth.md)                   | Authentication and the BFF session | `SessionProvider`, `useSession`, `AuthProvider`, `ProtectedRoute`        |
+| [@plexusone/chat](chat.md)                   | Chat components                    | `ChatProvider`, `ChatWidget`, `ChatEmbed`                                |
+| [@plexusone/console](console.md)             | The organization console           | `consoleApp`, `consoleSessionClient`, `Connections`, `Connect`           |
+| [@plexusone/design-tokens](design-tokens.md) | Design system                      | Colors, typography, spacing                                              |
+| [@plexusone/host](host.md)                   | Hosting applications               | `AppModule`, `Shell`, `createHost`, `DevShell`                           |
+| [@plexusone/invites](invites.md)             | Invite-gated sign-up pages         | `InviteAdminPage`, `InvitePeoplePage`, `createInvitesApi`                |
+| [@plexusone/login-card](login-card.md)       | Login cards and the camera scanner | `CardSheet`, `downloadCard`, `startLoginCodeScanner`, `LoginCodeScanner` |
+| [@plexusone/pages](pages.md)                 | Pre-built pages                    | `LoginPage`, `ErrorPage`, `OrganizationSettingsPage`                     |
+| [@plexusone/shell](shell.md)                 | Application chrome                 | `AppShell`, `ProductSwitcher`, `OrganizationSwitcher`, `ProfileMenu`     |
+| [@plexusone/speech](speech.md)               | Browser speech in and out          | `speak`, `listen`, `getVoices`, `useSpeech`, `useListen`                 |
+| [@plexusone/telemetry](telemetry.md)         | Instrumentation                    | `TelemetryProvider`, `ErrorBoundary`                                     |
+| [@plexusone/tenant](tenant.md)               | Multi-tenancy                      | `TenantProvider`, `RequireRole`, `useOrganization`                       |
+| [@plexusone/ui](ui.md)                       | UI components                      | `Button`, `Card`, `DropdownMenu`, `Tooltip`                              |
 
 ## Choosing packages
 
