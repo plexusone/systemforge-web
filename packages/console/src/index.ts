@@ -38,6 +38,7 @@ export type {
   Subscription,
   Connection,
   ConnectionState,
+  Detail,
   Field,
   Health,
   Manifest,
