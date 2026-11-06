@@ -74,6 +74,16 @@ export interface Health {
   consecutiveFails?: number;
   /** When the current credential stops working, if the service says. */
   credentialExpiresAt?: string;
+  /** What the last successful check found the credential reaches. */
+  details?: Detail[];
+}
+
+/** One thing a check found, such as "Properties" and the properties an account can read. */
+export interface Detail {
+  label: string;
+  values?: string[];
+  /** How many values were left out to keep the list short. */
+  more?: number;
 }
 
 /** A connection's lifecycle state. */
