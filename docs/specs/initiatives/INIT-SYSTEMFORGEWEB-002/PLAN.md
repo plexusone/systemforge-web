@@ -14,11 +14,11 @@
 
 ## Order
 
-| Phase | Items | Exit |
-|---|---|---|
-| 1 — Card | 024, 025, 026 | A token prints as a wallet card and an A4 sheet and downloads as PNG and SVG, and the printed QR decodes to the token |
-| 2 — Scanner | 027 | A printed card scans on a Chromebook and an iPad; other QR codes are ignored; no network request is made |
-| 3 — Release | 028 | `@plexusone/login-card` published, with a guide |
+| Phase       | Items         | Exit                                                                                                                  |
+| ----------- | ------------- | --------------------------------------------------------------------------------------------------------------------- |
+| 1 — Card    | 024, 025, 026 | A token prints as a wallet card and an A4 sheet and downloads as PNG and SVG, and the printed QR decodes to the token |
+| 2 — Scanner | 027           | A printed card scans on a Chromebook and an iPad; other QR codes are ignored; no network request is made              |
+| 3 — Release | 028           | `@plexusone/login-card` published, with a guide                                                                       |
 
 ## Dependencies
 

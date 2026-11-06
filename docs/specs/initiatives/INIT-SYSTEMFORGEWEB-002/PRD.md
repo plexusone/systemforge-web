@@ -53,11 +53,11 @@ a camera scanner that reads it on the sign-in page.
 
 ## Users
 
-| User | Needs |
-|---|---|
+| User                      | Needs                                                                                          |
+| ------------------------- | ---------------------------------------------------------------------------------------------- |
 | Manager (parent, teacher) | Print or save a card right after issuing a token, with its expiry, and know what the card does |
-| Managed principal (child) | Hold the card up to the camera and be signed in, or have an adult type the code |
-| Application developer | Drop in a card and a scanner without choosing libraries or writing print CSS |
+| Managed principal (child) | Hold the card up to the camera and be signed in, or have an adult type the code                |
+| Application developer     | Drop in a card and a scanner without choosing libraries or writing print CSS                   |
 
 ## Success Measures
 
