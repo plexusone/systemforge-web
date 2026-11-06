@@ -1,0 +1,79 @@
+{
+  "name": "@plexusone/login-card",
+  "version": "0.0.0",
+  "description": "Printable login cards with a SystemAuth login code as a QR code, and a camera scanner that reads them on the device",
+  "homepage": "https://plexusone.github.io/systemforge-web/packages/login-card/",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./scanner": {
+      "types": "./dist/scanner.d.ts",
+      "import": "./dist/scanner.mjs",
+      "require": "./dist/scanner.js"
+    },
+    "./scanner/react": {
+      "types": "./dist/scanner-react.d.ts",
+      "import": "./dist/scanner-react.mjs",
+      "require": "./dist/scanner-react.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "pnpm run build && node ../../scripts/dist-paths.mjs check .",
+    "dev": "tsup --watch",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "jsqr": "1.4.0",
+    "qrcode-generator": "2.0.4"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^9.0.0",
+    "typescript": "^6.0.3"
+  },
+  "keywords": [
+    "systemforge",
+    "login",
+    "qr",
+    "scanner",
+    "react"
+  ],
+  "author": "SystemForge Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/plexusone/systemforge-web.git",
+    "directory": "packages/login-card"
+  },
+  "bugs": {
+    "url": "https://github.com/plexusone/systemforge-web/issues"
+  }
+}
