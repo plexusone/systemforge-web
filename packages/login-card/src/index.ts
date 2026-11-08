@@ -1,3 +1,5 @@
+// The React components are on @plexusone/login-card/react, so a page
+// without React can draw and download cards from this entry.
 export {
   CARD_HEIGHT_MM,
   CARD_WIDTH_MM,
@@ -20,5 +22,3 @@ export type {
 } from './code';
 export { downloadCard, svgToPng } from './download';
 export type { DownloadOptions } from './download';
-export { CardSheet, LoginCard, LoginCodeQR } from './react';
-export type { CardLayout, CardSheetProps, LoginCardProps, LoginCodeQRProps } from './react';

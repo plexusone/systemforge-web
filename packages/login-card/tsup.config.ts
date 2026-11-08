@@ -3,10 +3,11 @@ import { defineConfig } from 'tsup';
 import { relativizeSourceMaps } from '../../scripts/dist-paths.mjs';
 
 export default defineConfig({
-  // The scanner has no framework, so a page without React (a game, say)
-  // loads it alone; scanner/react adds the React component and hook.
+  // The card and the scanner have no framework, so a page without React (a
+  // game, say) loads them alone; react and scanner/react add the components.
   entry: {
     index: 'src/index.ts',
+    react: 'src/react.tsx',
     scanner: 'src/scanner.ts',
     'scanner-react': 'src/scanner-react.tsx',
   },
