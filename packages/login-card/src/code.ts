@@ -112,8 +112,8 @@ export interface CardContent {
   /** When the code stops working, printed as "Works until …". */
   expiresAt?: Date;
   /**
-   * A picture beside the name, such as an avatar: a data URL, or a
-   * same-origin URL. A cross-origin image cannot be drawn into a PNG.
+   * A picture beside the name, such as an avatar, as a data URL. The card
+   * is shown and saved as an image, which loads no other URL.
    */
   picture?: string;
 }
@@ -136,7 +136,6 @@ const H = 540;
 const PAD = 30;
 const QR = 400;
 const TEXT_X = PAD + QR + 30;
-const TEXT_W = W - TEXT_X - PAD;
 const FONT = "system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif";
 const MONO = "ui-monospace, 'SF Mono', Menlo, Consolas, 'Courier New', monospace";
 
@@ -197,8 +196,9 @@ export function cardSvg(card: CardContent, opts: CardOptions = {}): string {
   return out.join('');
 }
 
-// A line whose estimated width would overflow the text column is squeezed
-// to fit, whatever font the printer or viewer substitutes.
+// A line whose estimated width would overflow the space from x to the
+// card's right padding is squeezed to fit, whatever font the printer or
+// viewer substitutes.
 function text(
   x: number,
   y: number,
@@ -207,8 +207,9 @@ function text(
   weight = 'normal',
   family = FONT
 ): string {
+  const room = W - PAD - x;
   const fit =
-    s.length * size * 0.6 > TEXT_W ? ` textLength="${TEXT_W}" lengthAdjust="spacingAndGlyphs"` : '';
+    s.length * size * 0.6 > room ? ` textLength="${room}" lengthAdjust="spacingAndGlyphs"` : '';
   return (
     `<text x="${x}" y="${y}" font-family="${escapeXml(family)}" font-size="${size}" font-weight="${weight}" ` +
     `fill="#000"${fit}>${escapeXml(s)}</text>`
@@ -243,9 +244,15 @@ function round(n: number): number {
   return Math.round(n * 1000) / 1000;
 }
 
-/** Escapes text for XML content and attributes. */
+// Characters XML 1.0 does not allow at all, lone surrogates included.
+const NOT_XML = /[^\t\n\r\u0020-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/gu;
+
+/**
+ * Escapes text for XML content and attributes, first removing characters
+ * XML does not allow, which would leave the SVG unreadable.
+ */
 export function escapeXml(s: string): string {
-  return s.replace(
+  return s.replace(NOT_XML, '').replace(
     /[<>&"']/g,
     (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' })[c]!
   );
