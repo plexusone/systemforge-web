@@ -5,11 +5,14 @@
 ## Package
 
 `@plexusone/login-card`, a new package, with the scanner on its own subpath
-so applications that only print never load a camera or a decoder:
+so applications that only print never load a camera or a decoder, and the
+React components on their own subpaths so pages without React load neither:
 
 ```text
-@plexusone/login-card            LoginCodeQR, LoginCard, CardSheet, downloadCard, groupCode
-@plexusone/login-card/scanner    LoginCodeScanner, useLoginCodeScanner
+@plexusone/login-card                 cardSvg, loginCodeSvg, downloadCard, groupCode
+@plexusone/login-card/react           LoginCodeQR, LoginCard, CardSheet
+@plexusone/login-card/scanner         startLoginCodeScanner
+@plexusone/login-card/scanner/react   LoginCodeScanner, useLoginCodeScanner
 ```
 
 Peers: `react`, `@plexusone/ui`. No dependency on `@plexusone/auth`: the
@@ -37,13 +40,13 @@ it.
 
 A card with slots the application fills:
 
-| Slot | Holds |
-|---|---|
-| `name` | The name the managed principal recognizes |
-| `picture` | An optional image or element, such as an avatar |
+| Slot           | Holds                                                                                                                   |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `name`         | The name the managed principal recognizes                                                                               |
+| `picture`      | An optional image or element, such as an avatar                                                                         |
 | `instructions` | Where to use the card, in the application's words, such as "Go to example.com, choose I'm a student, then Scan my card" |
-| `expiresAt` | Printed as "Works until …" when set |
-| `code` | The token, as the QR and in groups of four for typing |
+| `expiresAt`    | Printed as "Works until …" when set                                                                                     |
+| `code`         | The token, as the QR and in groups of four for typing                                                                   |
 
 **Layouts.** `CardSheet` lays out one or more cards for print with a print
 stylesheet: `wallet` (85.6 × 54 mm, one per page or cut marks on a sheet),
