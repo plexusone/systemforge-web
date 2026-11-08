@@ -25,6 +25,13 @@ export function useLoginCodeScanner(
     latest.current = opts;
   });
   const active = opts.active ?? true;
+  // Turning the scanner off or on again leaves nothing of the last run's
+  // state behind.
+  const [ranWith, setRanWith] = useState(active);
+  if (ranWith !== active) {
+    setRanWith(active);
+    setState('starting');
+  }
 
   useEffect(() => {
     const el = video.current;
@@ -119,7 +126,8 @@ function ScannerAttempt({
   let line = m.scanning;
   if (state === 'idle') line = m.idle;
   else if (state in m.unavailable) line = m.unavailable[state as ScannerUnavailableReason];
-  const canRetry = state === 'idle' || state === 'error';
+  // A person who has just allowed the camera can try again.
+  const canRetry = state === 'idle' || state === 'error' || state === 'denied';
 
   return (
     <div className={['plx-login-scanner', className].filter(Boolean).join(' ')} data-state={state}>
