@@ -79,6 +79,25 @@ describe('the card', () => {
     expect(svg).not.toContain(code);
   });
 
+  it('fits a long name beside a picture inside the card', () => {
+    const svg = cardSvg({ code: fakeCode(), name: 'Maximiliana B', picture: 'data:image/png;base64,AAA' });
+    const doc = new DOMParser().parseFromString(svg, 'image/svg+xml');
+    const name = [...doc.querySelectorAll('text')].find((t) => t.textContent === 'Maximiliana B');
+    expect(name).toBeDefined();
+    const right = Number(name!.getAttribute('x')) + Number(name!.getAttribute('textLength'));
+    // Squeezed to end at the card's right padding: 856 wide, 30 padding.
+    expect(name!.getAttribute('textLength')).not.toBeNull();
+    expect(right).toBeLessThanOrEqual(856 - 30);
+  });
+
+  it('drops characters XML does not allow, so the card still renders', () => {
+    const svg = cardSvg({ code: fakeCode(), name: 'Ro\u0000bin\u0007\uD800', instructions: 'Scan\u001b me' });
+    const doc = new DOMParser().parseFromString(svg, 'image/svg+xml');
+    expect(doc.querySelector('parsererror')).toBeNull();
+    expect(svg).toContain('Robin');
+    expect(svg).toContain('Scan me');
+  });
+
   it('leaves out what it is not given', () => {
     const svg = cardSvg({ code: fakeCode(), name: 'Sam' });
     expect(svg).not.toContain('Works until');

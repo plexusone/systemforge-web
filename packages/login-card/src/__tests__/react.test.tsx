@@ -1,7 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
+import { useRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { CardSheet, LoginCard } from '../react';
-import { LoginCodeScanner } from '../scanner-react';
+import { LoginCodeScanner, useLoginCodeScanner } from '../scanner-react';
 import { fakeCode } from './helpers';
 
 describe('LoginCard and CardSheet', () => {
@@ -41,5 +42,39 @@ describe('LoginCodeScanner', () => {
     await waitFor(() => expect(screen.getByRole('status').textContent).toMatch(/not allowed/));
     screen.getByText('Type my code instead').click();
     expect(onTypeInstead).toHaveBeenCalled();
+    // Once the camera is allowed, the person can try again.
+    expect(screen.getByText('Try again')).toBeDefined();
+  });
+});
+
+function Probe({ active }: { active: boolean }) {
+  const video = useRef<HTMLVideoElement>(null);
+  const state = useLoginCodeScanner(video, { active, onCode: vi.fn(), idleMs: 20, decoder: async () => [] });
+  return (
+    <>
+      <video ref={video} />
+      <p data-testid="state">{state}</p>
+    </>
+  );
+}
+
+describe('useLoginCodeScanner', () => {
+  it('starts afresh when turned off and on again', async () => {
+    Object.defineProperty(window, 'isSecureContext', { value: true, configurable: true });
+    Object.defineProperty(navigator, 'mediaDevices', {
+      value: { getUserMedia: () => Promise.resolve({ getTracks: () => [{ stop: vi.fn() }] }) },
+      configurable: true,
+    });
+    Object.defineProperty(HTMLMediaElement.prototype, 'readyState', { value: 4, configurable: true });
+    vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
+    const state = () => screen.getByTestId('state').textContent;
+
+    const { rerender } = render(<Probe active />);
+    await waitFor(() => expect(state()).toBe('idle'));
+    await act(async () => rerender(<Probe active={false} />));
+    expect(state()).toBe('starting');
+    await act(async () => rerender(<Probe active />));
+    await waitFor(() => expect(state()).toBe('scanning'));
+    vi.restoreAllMocks();
   });
 });

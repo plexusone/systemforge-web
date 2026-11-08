@@ -26,6 +26,7 @@ describe('startLoginCodeScanner', () => {
   const fetchSpy = vi.fn();
   beforeEach(() => vi.stubGlobal('fetch', fetchSpy));
   afterEach(() => {
+    vi.restoreAllMocks();
     vi.useRealTimers();
     vi.unstubAllGlobals();
     fetchSpy.mockReset();
@@ -95,11 +96,36 @@ describe('startLoginCodeScanner', () => {
     const onCode = vi.fn();
     const h = await startLoginCodeScanner(videoEl(), {
       onCode,
-      decoder: async () => [fakeCode()],
+      decoder: async () => [],
       intervalMs: 1000,
     });
+    // Nothing was read, so the camera is still on until stop.
+    expect(s.track.stop).not.toHaveBeenCalled();
     h.stop();
     h.stop();
     expect(s.track.stop).toHaveBeenCalledTimes(1);
+    expect(onCode).not.toHaveBeenCalled();
+  });
+
+  it("leaves a newer scanner's stream on the video", async () => {
+    camera(() => Promise.resolve(stream().stream));
+    const video = videoEl();
+    const h = await startLoginCodeScanner(video, { onCode: vi.fn(), decoder: async () => [] });
+    const newer = stream().stream as unknown as MediaStream;
+    video.srcObject = newer;
+    h.stop();
+    expect(video.srcObject).toBe(newer);
+  });
+
+  it('turns the camera off and reports an error when no decoder loads', async () => {
+    // No BarcodeDetector in the test browser, and no canvas for jsQR.
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
+    const s = stream();
+    camera(() => Promise.resolve(s.stream));
+    const onUnavailable = vi.fn();
+    await startLoginCodeScanner(videoEl(), { onCode: vi.fn(), onUnavailable });
+    await vi.waitFor(() => expect(onUnavailable).toHaveBeenCalledWith('error'));
+    expect(onUnavailable).toHaveBeenCalledTimes(1);
+    expect(s.track.stop).toHaveBeenCalled();
   });
 });
