@@ -117,6 +117,40 @@ describe('startLoginCodeScanner', () => {
     expect(video.srcObject).toBe(newer);
   });
 
+  it('turns off a camera granted after it was stopped, without showing it', async () => {
+    const stale = stream();
+    let grant: (s: unknown) => void = () => {};
+    camera(() => new Promise((resolve) => (grant = resolve)));
+    const video = videoEl();
+    const decoder = vi.fn(async () => []);
+    const onUnavailable = vi.fn();
+    const ac = new AbortController();
+    const starting = startLoginCodeScanner(video, {
+      onCode: vi.fn(),
+      onUnavailable,
+      decoder,
+      signal: ac.signal,
+    });
+    ac.abort();
+    // A newer scanner has its camera on the video before this one's arrives.
+    const newer = stream().stream as unknown as MediaStream;
+    video.srcObject = newer;
+    grant(stale.stream);
+    await starting;
+    expect(video.srcObject).toBe(newer);
+    expect(stale.track.stop).toHaveBeenCalledTimes(1);
+    expect(decoder).not.toHaveBeenCalled();
+    expect(onUnavailable).not.toHaveBeenCalled();
+  });
+
+  it('does not ask for the camera once aborted', async () => {
+    camera(() => Promise.resolve(stream().stream));
+    const ac = new AbortController();
+    ac.abort();
+    await startLoginCodeScanner(videoEl(), { onCode: vi.fn(), signal: ac.signal });
+    expect(navigator.mediaDevices.getUserMedia).not.toHaveBeenCalled();
+  });
+
   it('turns the camera off and reports an error when no decoder loads', async () => {
     // No BarcodeDetector in the test browser, and no canvas for jsQR.
     vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);

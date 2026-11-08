@@ -1,5 +1,5 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
-import { useRef } from 'react';
+import { StrictMode, useRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { CardSheet, LoginCard } from '../react';
 import { LoginCodeScanner, useLoginCodeScanner } from '../scanner-react';
@@ -83,6 +83,43 @@ describe('useLoginCodeScanner', () => {
     expect(state()).toBe('starting');
     await act(async () => rerender(<Probe active />));
     await waitFor(() => expect(state()).toBe('scanning'));
+    vi.restoreAllMocks();
+  });
+
+  it("keeps the newer run's camera when an earlier run's arrives late", async () => {
+    // React mounts twice in development: the first run is cancelled while
+    // its camera is starting, and here its camera arrives after the second's.
+    const grants: ((s: unknown) => void)[] = [];
+    const tracks = [{ stop: vi.fn() }, { stop: vi.fn() }];
+    const streams = tracks.map((t) => ({ getTracks: () => [t] }));
+    Object.defineProperty(window, 'isSecureContext', { value: true, configurable: true });
+    Object.defineProperty(navigator, 'mediaDevices', {
+      value: { getUserMedia: () => new Promise((resolve) => grants.push(resolve)) },
+      configurable: true,
+    });
+    Object.defineProperty(HTMLMediaElement.prototype, 'readyState', {
+      value: 4,
+      configurable: true,
+    });
+    vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
+
+    function Running() {
+      const video = useRef<HTMLVideoElement>(null);
+      useLoginCodeScanner(video, { onCode: vi.fn(), idleMs: 0, decoder: async () => [] });
+      return <video ref={video} data-testid="video" />;
+    }
+    render(
+      <StrictMode>
+        <Running />
+      </StrictMode>
+    );
+    await waitFor(() => expect(grants).toHaveLength(2));
+    await act(async () => grants[1]!(streams[1]));
+    await act(async () => grants[0]!(streams[0]));
+    const video = screen.getByTestId('video') as HTMLVideoElement;
+    expect(video.srcObject).toBe(streams[1]);
+    expect(tracks[0]!.stop).toHaveBeenCalled();
+    expect(tracks[1]!.stop).not.toHaveBeenCalled();
     vi.restoreAllMocks();
   });
 });
