@@ -39,6 +39,12 @@ export interface ScannerOptions {
   facingMode?: 'environment' | 'user';
   /** The decoder; default BarcodeDetector, or a JavaScript decoder loaded when scanning starts. */
   decoder?: FrameDecoder;
+  /**
+   * Stops the scanner when aborted, even while the camera is still
+   * starting: a camera granted after that is turned off and never shown,
+   * so it cannot replace a newer scanner's on the same video.
+   */
+  signal?: AbortSignal;
 }
 
 /** A running scanner. */
@@ -77,6 +83,11 @@ export async function startLoginCodeScanner(
     if (stream && video.srcObject === stream) video.srcObject = null;
   };
   const handle: ScannerHandle = { stop };
+  if (opts.signal?.aborted) {
+    stopped = true;
+    return handle;
+  }
+  opts.signal?.addEventListener('abort', stop, { once: true });
 
   const unsupported = cameraSupported();
   if (unsupported) {
@@ -90,8 +101,14 @@ export async function startLoginCodeScanner(
       video: { facingMode: { ideal: opts.facingMode ?? 'environment' } },
     });
   } catch (err) {
+    if (stopped) return handle;
     stopped = true;
     opts.onUnavailable?.(reasonOf(err));
+    return handle;
+  }
+  if (stopped) {
+    // Stopped while the camera was starting: turn it off without showing it.
+    stream.getTracks().forEach((t) => t.stop());
     return handle;
   }
   video.muted = true;
@@ -101,10 +118,12 @@ export async function startLoginCodeScanner(
   try {
     await video.play();
   } catch {
+    if (stopped) return handle;
     stop();
     opts.onUnavailable?.('error');
     return handle;
   }
+  if (stopped) return handle;
 
   const accept = opts.isLoginCode ?? isLoginCode;
   const idleMs = opts.idleMs ?? 60_000;

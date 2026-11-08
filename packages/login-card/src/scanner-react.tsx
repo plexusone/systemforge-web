@@ -36,10 +36,12 @@ export function useLoginCodeScanner(
   useEffect(() => {
     const el = video.current;
     if (!active || !el) return;
-    let cancelled = false;
-    let stop: (() => void) | undefined;
+    // Aborting reaches a scanner still waiting for the camera, so an
+    // earlier run cannot attach its camera over a newer run's.
+    const ac = new AbortController();
     void startLoginCodeScanner(el, {
       ...latest.current,
+      signal: ac.signal,
       onCode: (code) => {
         setState('done');
         latest.current.onCode(code);
@@ -52,18 +54,11 @@ export function useLoginCodeScanner(
         setState('idle');
         latest.current.onIdle?.();
       },
-    }).then((h) => {
-      if (cancelled) {
-        h.stop();
-        return;
-      }
-      stop = h.stop;
+    }).then(() => {
+      if (ac.signal.aborted) return;
       setState((s) => (s === 'starting' ? 'scanning' : s));
     });
-    return () => {
-      cancelled = true;
-      stop?.();
-    };
+    return () => ac.abort();
   }, [video, active]);
 
   return state;
