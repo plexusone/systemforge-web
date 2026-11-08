@@ -15,7 +15,7 @@ export type ScannerUnavailableReason =
   | 'no-camera'
   /** The person or a policy refused the camera. */
   | 'denied'
-  /** The camera is in use elsewhere, or failed to start. */
+  /** The camera is in use elsewhere or failed to start, or no decoder loaded. */
   | 'error';
 
 /** Reads the QR codes in the video's current frame. */
@@ -25,7 +25,7 @@ export type FrameDecoder = (video: HTMLVideoElement) => Promise<string[]>;
 export interface ScannerOptions {
   /** Called once, with the first login code read; the camera has stopped. */
   onCode: (code: string) => void;
-  /** Called when the camera cannot start. */
+  /** Called when the camera cannot start, or no QR decoder can be loaded. */
   onUnavailable?: (reason: ScannerUnavailableReason) => void;
   /** Called when the camera stopped after idleMs without a code. */
   onIdle?: () => void;
@@ -73,7 +73,8 @@ export async function startLoginCodeScanner(
     clearTimeout(timer);
     clearTimeout(idle);
     stream?.getTracks().forEach((t) => t.stop());
-    video.srcObject = null;
+    // A newer scanner may have attached its own stream to the same video.
+    if (stream && video.srcObject === stream) video.srcObject = null;
   };
   const handle: ScannerHandle = { stop };
 
@@ -116,20 +117,32 @@ export async function startLoginCodeScanner(
   let decode = opts.decoder;
   const tick = async () => {
     if (stopped) return;
-    try {
-      decode ??= await defaultDecoder();
-      if (video.readyState >= 2) {
-        const code = (await decode(video)).map((v) => v.trim()).find(accept);
-        if (code && !stopped) {
-          stop();
-          opts.onCode(code);
-          return;
-        }
+    if (!decode) {
+      try {
+        decode = await defaultDecoder();
+      } catch {
+        // No decoder can be loaded, so no frame could ever be read.
+        stop();
+        opts.onUnavailable?.('error');
+        return;
       }
-    } catch {
-      // A frame that cannot be decoded is skipped; the next one is tried.
+      if (stopped) return;
     }
-    if (!stopped) timer = setTimeout(tick, opts.intervalMs ?? 150);
+    let code: string | undefined;
+    if (video.readyState >= 2) {
+      try {
+        code = (await decode(video)).map((v) => v.trim()).find(accept);
+      } catch {
+        // A frame that cannot be decoded is skipped; the next one is tried.
+      }
+    }
+    if (stopped) return;
+    if (code) {
+      stop();
+      opts.onCode(code);
+      return;
+    }
+    timer = setTimeout(tick, opts.intervalMs ?? 150);
   };
   void tick();
   return handle;
