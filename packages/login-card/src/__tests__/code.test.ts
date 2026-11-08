@@ -80,7 +80,11 @@ describe('the card', () => {
   });
 
   it('fits a long name beside a picture inside the card', () => {
-    const svg = cardSvg({ code: fakeCode(), name: 'Maximiliana B', picture: 'data:image/png;base64,AAA' });
+    const svg = cardSvg({
+      code: fakeCode(),
+      name: 'Maximiliana B',
+      picture: 'data:image/png;base64,AAA',
+    });
     const doc = new DOMParser().parseFromString(svg, 'image/svg+xml');
     const name = [...doc.querySelectorAll('text')].find((t) => t.textContent === 'Maximiliana B');
     expect(name).toBeDefined();
@@ -91,7 +95,11 @@ describe('the card', () => {
   });
 
   it('drops characters XML does not allow, so the card still renders', () => {
-    const svg = cardSvg({ code: fakeCode(), name: 'Ro\u0000bin\u0007\uD800', instructions: 'Scan\u001b me' });
+    const svg = cardSvg({
+      code: fakeCode(),
+      name: 'Ro\u0000bin\u0007\uD800',
+      instructions: 'Scan\u001b me',
+    });
     const doc = new DOMParser().parseFromString(svg, 'image/svg+xml');
     expect(doc.querySelector('parsererror')).toBeNull();
     expect(svg).toContain('Robin');

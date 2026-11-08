@@ -49,7 +49,12 @@ describe('LoginCodeScanner', () => {
 
 function Probe({ active }: { active: boolean }) {
   const video = useRef<HTMLVideoElement>(null);
-  const state = useLoginCodeScanner(video, { active, onCode: vi.fn(), idleMs: 20, decoder: async () => [] });
+  const state = useLoginCodeScanner(video, {
+    active,
+    onCode: vi.fn(),
+    idleMs: 20,
+    decoder: async () => [],
+  });
   return (
     <>
       <video ref={video} />
@@ -65,7 +70,10 @@ describe('useLoginCodeScanner', () => {
       value: { getUserMedia: () => Promise.resolve({ getTracks: () => [{ stop: vi.fn() }] }) },
       configurable: true,
     });
-    Object.defineProperty(HTMLMediaElement.prototype, 'readyState', { value: 4, configurable: true });
+    Object.defineProperty(HTMLMediaElement.prototype, 'readyState', {
+      value: 4,
+      configurable: true,
+    });
     vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
     const state = () => screen.getByTestId('state').textContent;
 

@@ -252,8 +252,10 @@ const NOT_XML = /[^\t\n\r\u0020-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/gu;
  * XML does not allow, which would leave the SVG unreadable.
  */
 export function escapeXml(s: string): string {
-  return s.replace(NOT_XML, '').replace(
-    /[<>&"']/g,
-    (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' })[c]!
-  );
+  return s
+    .replace(NOT_XML, '')
+    .replace(
+      /[<>&"']/g,
+      (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' })[c]!
+    );
 }
