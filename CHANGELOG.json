@@ -20,11 +20,11 @@
       ],
       "added": [
         {
-          "description": "`LoginCodeQR`, `loginCodeSvg` and `loginCodeMatrix` draw a login code, and only a login code, as a QR code in alphanumeric mode",
+          "description": "`loginCodeSvg` and `loginCodeMatrix`, and `LoginCodeQR` (`@plexusone/login-card/react`), draw a login code, and only a login code, as a QR code in alphanumeric mode",
           "commit": "eaebd2b"
         },
         {
-          "description": "`cardSvg`, `LoginCard` and `CardSheet` draw a credit-card-sized login card and print it in wallet, Letter and A4 layouts; `downloadCard` saves it as SVG or a 300 dpi PNG in the browser",
+          "description": "`cardSvg` draws a credit-card-sized login card, and `LoginCard` and `CardSheet` (`/react`) show it and print it in wallet, Letter and A4 layouts; `downloadCard` saves it as SVG or a 300 dpi PNG in the browser",
           "commit": "eaebd2b"
         },
         {
@@ -36,6 +36,10 @@
         {
           "description": "QR round trip, card escaping, downloads without requests, and the scanner's codes, stops and unavailable reasons",
           "commit": "32ea1ed"
+        },
+        {
+          "description": "The scanner's stop, a newer scanner's stream, a decoder that cannot load, retrying once the camera is allowed, the hook starting afresh, and card text fitting and staying valid XML",
+          "commit": "25b1bc7"
         }
       ],
       "documentation": [

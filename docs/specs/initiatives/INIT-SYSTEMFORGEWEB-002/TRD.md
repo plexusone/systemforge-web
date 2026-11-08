@@ -5,11 +5,14 @@
 ## Package
 
 `@plexusone/login-card`, a new package, with the scanner on its own subpath
-so applications that only print never load a camera or a decoder:
+so applications that only print never load a camera or a decoder, and the
+React components on their own subpaths so pages without React load neither:
 
 ```text
-@plexusone/login-card            LoginCodeQR, LoginCard, CardSheet, downloadCard, groupCode
-@plexusone/login-card/scanner    LoginCodeScanner, useLoginCodeScanner
+@plexusone/login-card                 cardSvg, loginCodeSvg, downloadCard, groupCode
+@plexusone/login-card/react           LoginCodeQR, LoginCard, CardSheet
+@plexusone/login-card/scanner         startLoginCodeScanner
+@plexusone/login-card/scanner/react   LoginCodeScanner, useLoginCodeScanner
 ```
 
 Peers: `react`, `@plexusone/ui`. No dependency on `@plexusone/auth`: the

@@ -10,11 +10,12 @@ and never sent.
 pnpm add @plexusone/login-card
 ```
 
-| Entry                                 | For                                                    | React                                                                      |
-| ------------------------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------- |
-| `@plexusone/login-card`               | The QR code, the card, print sheets and downloads      | Components need React; `cardSvg`, `loginCodeSvg` and `downloadCard` do not |
-| `@plexusone/login-card/scanner`       | `startLoginCodeScanner`, for any page, a game included | No                                                                         |
-| `@plexusone/login-card/scanner/react` | `LoginCodeScanner` and `useLoginCodeScanner`           | Yes                                                                        |
+| Entry                                 | For                                                         | React |
+| ------------------------------------- | ----------------------------------------------------------- | ----- |
+| `@plexusone/login-card`               | `cardSvg`, `loginCodeSvg`, `downloadCard` and `isLoginCode` | No    |
+| `@plexusone/login-card/react`         | `LoginCodeQR`, `LoginCard` and `CardSheet`                  | Yes   |
+| `@plexusone/login-card/scanner`       | `startLoginCodeScanner`, for any page, a game included      | No    |
+| `@plexusone/login-card/scanner/react` | `LoginCodeScanner` and `useLoginCodeScanner`                | Yes   |
 
 ## The Code
 
@@ -33,7 +34,8 @@ value is returned once: show it, print it or download it, and do not store
 it.
 
 ```tsx
-import { CardSheet, downloadCard } from '@plexusone/login-card';
+import { downloadCard } from '@plexusone/login-card';
+import { CardSheet } from '@plexusone/login-card/react';
 
 const card = {
   code,                               // from the issue call
@@ -54,8 +56,8 @@ const card = {
 - **Printing.** While a `CardSheet` is on the page, the browser prints only
   the sheet: `wallet` puts one card on each card-sized page; `letter` and
   `a4` put two across with a gap to cut along.
-- **A picture,** such as an avatar, must be a data URL to appear on the card
-  and in a PNG.
+- **A picture,** such as an avatar, must be a data URL: the card is shown
+  and saved as an image, which loads no other URL.
 - **Only what you pass** is printed: the package adds no identifier.
 
 ## Scan
@@ -90,8 +92,10 @@ const scanner = await startLoginCodeScanner(video, {
 - **Stopping.** The camera stops on a code, on `stop()`, when the component
   unmounts, and after `idleMs` without a code (60 seconds by default).
 - **No camera.** `onUnavailable` says why: `insecure-context`, `no-camera`,
-  `denied` or `error`. The component says so in plain words, which
-  `messages` translates, and offers typing.
+  `denied` or `error`, which also covers a decoder that cannot load. The
+  component says so in plain words, which `messages` translates, offers
+  typing, and offers Try again after `idle`, `error` or `denied`, for a
+  person who has just allowed the camera.
 
 Post the code to SystemAuth's `POST /login-token` as a form, with your
 client ID and where to return, exactly as a typed code is posted.
