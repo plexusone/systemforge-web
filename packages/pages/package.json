@@ -27,13 +27,13 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "@plexusone/auth": "workspace:^"
+    "@plexusone/auth": "workspace:^",
+    "react": "^19.0.0"
   },
   "devDependencies": {
     "@plexusone/auth": "workspace:*",
-    "@types/react": "^19.0.0",
-    "react": "^19.0.0",
+    "@types/react": "^19.3.0",
+    "react": "^19.3.1",
     "tsup": "^9.0.0",
     "typescript": "^6.0.3"
   },

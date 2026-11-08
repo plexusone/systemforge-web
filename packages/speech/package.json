@@ -42,7 +42,7 @@
     }
   },
   "devDependencies": {
-    "@types/react": "^19.0.0",
+    "@types/react": "^19.3.0",
     "tsup": "^9.0.0",
     "typescript": "^6.0.3"
   },
