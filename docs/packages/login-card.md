@@ -90,12 +90,15 @@ const scanner = await startLoginCodeScanner(video, {
 - **Only codes.** A QR code that is not a login code, such as a web
   address, is ignored, and nothing is requested for it.
 - **Stopping.** The camera stops on a code, on `stop()`, when the component
-  unmounts, and after `idleMs` without a code (60 seconds by default).
+  unmounts, and after `idleMs` without a code (60 seconds by default). To
+  cancel a scanner before `startLoginCodeScanner` has returned, pass a
+  `signal`: a camera granted after it is aborted is turned off and never
+  shown, so it cannot replace a newer scanner's on the same video.
 - **No camera.** `onUnavailable` says why: `insecure-context`, `no-camera`,
   `denied` or `error`, which also covers a decoder that cannot load. The
   component says so in plain words, which `messages` translates, offers
-  typing, and offers Try again after `idle`, `error` or `denied`, for a
-  person who has just allowed the camera.
+  typing when you pass `onTypeInstead`, and offers Try again after `idle`,
+  `error` or `denied`, for a person who has just allowed the camera.
 
 Post the code to SystemAuth's `POST /login-token` as a form, with your
 client ID and where to return, exactly as a typed code is posted.

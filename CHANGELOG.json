@@ -40,6 +40,10 @@
         {
           "description": "The scanner's stop, a newer scanner's stream, a decoder that cannot load, retrying once the camera is allowed, the hook starting afresh, and card text fitting and staying valid XML",
           "commit": "25b1bc7"
+        },
+        {
+          "description": "A scanner cancelled while its camera starts, alone and when React mounts the component twice",
+          "commit": "8e88368"
         }
       ],
       "documentation": [
