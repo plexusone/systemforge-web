@@ -1,4 +1,4 @@
-import type { Connection, Manifest } from './types';
+import type { BillingStatus, Connection, Manifest } from './types';
 
 /** An error from the console's API, with its HTTP status. */
 export class ApiError extends Error {
@@ -40,6 +40,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return (await res.json()) as T;
 }
 
+const billing = (org: string) => `/v1/organizations/${encodeURIComponent(org)}/billing`;
 const conns = (org: string) => `/v1/organizations/${encodeURIComponent(org)}/connections`;
 const conn = (org: string, id: string) => `${conns(org)}/${encodeURIComponent(id)}`;
 
@@ -68,6 +69,17 @@ export const api = {
       body: JSON.stringify({ fields }),
     }),
   disconnect: (org: string, id: string) => request<Connection>(conn(org, id), { method: 'DELETE' }),
+  /** The organization's plan, subscription and the plans it can choose. */
+  billing: (org: string) => request<BillingStatus>(billing(org)),
+  /** Starts a checkout for a plan; the browser goes to the returned address. */
+  checkout: (org: string, plan: string, interval: string) =>
+    request<{ url: string }>(`${billing(org)}/checkout`, {
+      method: 'POST',
+      body: JSON.stringify({ plan, interval }),
+    }).then((r) => r.url),
+  /** Opens the payment provider's billing portal; the browser goes to the returned address. */
+  portal: (org: string) =>
+    request<{ url: string }>(`${billing(org)}/portal`, { method: 'POST' }).then((r) => r.url),
   /** The return address to use, if sign-in's redirect policy allows it. */
   returnTo: (url: string) =>
     request<{ url: string }>(`/v1/return-to?url=${encodeURIComponent(url)}`).then((r) => r.url),

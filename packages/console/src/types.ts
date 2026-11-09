@@ -98,3 +98,76 @@ export interface Connection {
 
 /** The rotation modes the console offers. */
 export const OFFERED_ROTATION = ['manual', 'automatic'];
+
+/** A price of a plan, in the smallest unit of the spec's currency. */
+export interface Price {
+  interval: 'month' | 'year';
+  amountCents: number;
+}
+
+/** A plan as the pricing view lists it, in order. */
+export interface PlanColumn {
+  id: string;
+  name: string;
+  tier: string;
+  tierName: string;
+  tierRank: number;
+  selfServe: boolean;
+  free: boolean;
+  default: boolean;
+  trialDays?: number;
+  prices?: Price[];
+}
+
+/** A feature across the plans, one cell per plan in the plans' order. */
+export interface FeatureRow {
+  id: string;
+  name: string;
+  description?: string;
+  levels?: string[];
+  cells: { plan: string; included: boolean; level?: string }[];
+}
+
+/** A limit across the plans, one cell per plan in the plans' order. */
+export interface LimitRow {
+  id: string;
+  name: string;
+  unit?: string;
+  period: 'none' | 'day' | 'month' | 'year';
+  description?: string;
+  cells: { plan: string; max: number; unlimited?: boolean; fairUse?: boolean }[];
+}
+
+/** The pricing spec arranged for a page to render. */
+export interface PricingView {
+  app: string;
+  currency: string;
+  plans: PlanColumn[];
+  features: FeatureRow[];
+  limits: LimitRow[];
+}
+
+/** An organization's stored subscription. */
+export interface Subscription {
+  plan: string;
+  /** active, trialing, past_due, canceled, unpaid, incomplete or incomplete_expired. */
+  status: string;
+  currentPeriodEnd: string;
+  cancelAtPeriodEnd: boolean;
+  /** Whether a payment provider subscription stands behind it, managed in the billing portal. */
+  paid: boolean;
+}
+
+/** An organization's billing, as the console's billing API serves it. */
+export interface BillingStatus {
+  /** False when the deployment takes no payments: every organization is on the default plan. */
+  configured: boolean;
+  /** The payment provider's mode, `test` or `live`. */
+  mode?: 'test' | 'live';
+  /** The plan the organization is on. */
+  plan: string;
+  subscription?: Subscription;
+  /** Whether the person may choose a plan and open the billing portal. */
+  canManage: boolean;
+  pricing: PricingView;
+}

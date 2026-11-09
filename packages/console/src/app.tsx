@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from 'react-router';
 import type { AppModule } from '@plexusone/host';
+import { Billing } from './pages/Billing';
 import { Connect } from './pages/Connect';
 import { Connections } from './pages/Connections';
 import { Gallery } from './pages/Gallery';
@@ -12,8 +13,8 @@ const org = (id: string) => `/orgs/${encodeURIComponent(id)}`;
 
 /**
  * createConsoleApp is the organization console's pages, for createHost: an
- * organization's connections, a gallery of services to connect, and a
- * step-by-step wizard for each. Routes are relative to `/orgs/{id}/`.
+ * organization's connections, a gallery of services to connect, a
+ * step-by-step wizard for each, and the organization's plan and billing. Routes are relative to `/orgs/{id}/`.
  * options.nextSteps lets the host point a connection at the products that
  * use it, such as adding sites from a Cloudflare connection.
  */
@@ -34,6 +35,7 @@ export function createConsoleApp(options: ConsoleOptions = {}): AppModule {
           { path: 'connections', element: <Connections /> },
           { path: 'connections/new', element: <Gallery /> },
           { path: 'connections/new/:provider', element: <Connect /> },
+          { path: 'billing', element: <Billing /> },
         ],
       },
     ],
@@ -42,6 +44,9 @@ export function createConsoleApp(options: ConsoleOptions = {}): AppModule {
         title: 'Organization',
         items: [
           { id: 'connections', label: 'Connections', href: `${org(organizationId)}/connections` },
+          ...(options.billing
+            ? [{ id: 'billing', label: 'Billing', href: `${org(organizationId)}/billing` }]
+            : []),
         ],
       },
     ],

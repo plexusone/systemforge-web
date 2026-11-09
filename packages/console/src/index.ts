@@ -2,7 +2,8 @@
  * @plexusone/console
  *
  * The SystemForge organization console: an organization's connections to
- * external services, connected step by step from each service's manifest.
+ * external services, connected step by step from each service's manifest,
+ * and its plan and billing.
  * SystemAuth serves the pages under `/console` and signs them in with its
  * login session.
  *
@@ -25,8 +26,16 @@ export { api, ApiError, API_BASE } from './api';
 export { Connections } from './pages/Connections';
 export { Gallery } from './pages/Gallery';
 export { Connect } from './pages/Connect';
+export { Billing, BillingView } from './pages/Billing';
 export type {
   AuthMethod,
+  BillingStatus,
+  FeatureRow,
+  LimitRow,
+  PlanColumn,
+  Price,
+  PricingView,
+  Subscription,
   Connection,
   ConnectionState,
   Field,
