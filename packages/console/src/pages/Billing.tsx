@@ -166,7 +166,8 @@ export function BillingView({ org, status: s }: { org: string; status: BillingSt
         </div>
         <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {s.pricing.plans.map((p, i) => {
-            const pr = price(p, interval) ?? price(p, 'month');
+            // A plan without a price for the chosen interval shows, and sells, the one it has.
+            const pr = price(p, interval) ?? p.prices?.[0];
             const isCurrent = p.id === s.plan;
             const canBuy =
               s.configured && s.canManage && !paid && p.selfServe && !p.free && pr !== undefined;
@@ -230,13 +231,21 @@ function price(p: PlanColumn, interval: Price['interval']): Price | undefined {
   return p.prices?.find((x) => x.interval === interval);
 }
 
-/** money formats an amount in the smallest unit, without cents when there are none. */
-export function money(cents: number, currency: string): string {
+/**
+ * money formats an amount in the currency's smallest unit (cents for USD,
+ * yen for JPY), without a fraction when there is none.
+ */
+export function money(amount: number, currency: string): string {
+  const code = currency.toUpperCase();
+  const digits =
+    new Intl.NumberFormat(undefined, { style: 'currency', currency: code }).resolvedOptions()
+      .maximumFractionDigits ?? 2;
+  const scale = 10 ** digits;
   return new Intl.NumberFormat(undefined, {
     style: 'currency',
-    currency: currency.toUpperCase(),
-    minimumFractionDigits: cents % 100 === 0 ? 0 : 2,
-  }).format(cents / 100);
+    currency: code,
+    minimumFractionDigits: amount % scale === 0 ? 0 : digits,
+  }).format(amount / scale);
 }
 
 const PER: Record<LimitRow['period'], string> = {

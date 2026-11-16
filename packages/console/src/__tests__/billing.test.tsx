@@ -149,6 +149,22 @@ describe('Billing', () => {
     expect(post?.body).toEqual({ plan: 'builder', interval: 'year' });
   });
 
+  it('shows and sells the yearly price of a plan with no monthly one', async () => {
+    current = status();
+    const builder = current.pricing.plans[1]!;
+    builder.prices = [{ interval: 'year', amountCents: 19000 }];
+    const go = vi.spyOn(browser, 'go').mockImplementation(() => undefined);
+    renderApp(app, { session: session('owner'), path: '/orgs/org-1/billing' });
+    const card = await screen.findByRole('article', { name: 'Builder' });
+    expect(within(card).getByText(/\/ year/)).toBeInTheDocument();
+    fireEvent.click(within(card).getByRole('button', { name: 'Choose Builder' }));
+    await waitFor(() => expect(go).toHaveBeenCalled());
+    expect(calls.find((c) => c.method === 'POST')?.body).toEqual({
+      plan: 'builder',
+      interval: 'year',
+    });
+  });
+
   it('sends a paying organization to the billing portal', async () => {
     const go = vi.spyOn(browser, 'go').mockImplementation(() => undefined);
     current = status({
@@ -207,6 +223,7 @@ describe('formatting', () => {
   it('formats prices without empty cents', () => {
     expect(money(1900, 'usd')).toMatch(/19(?!\.)/);
     expect(money(499, 'usd')).toMatch(/4\.99/);
+    expect(money(1900, 'jpy')).toMatch(/1,900(?!\.)/);
   });
 
   it('says what happens next to a subscription', () => {
