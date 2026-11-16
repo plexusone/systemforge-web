@@ -7,6 +7,50 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.10.0",
+      "date": "2026-11-16",
+      "highlights": [
+        {
+          "description": "`@plexusone/console` 0.3.0: a Billing page where members see the organization's plan and owners and admins choose one through checkout and manage it in the billing portal, for SystemForge v0.33.0 and later",
+          "commit": "1b6fe10"
+        },
+        {
+          "description": "Packages: `@plexusone/console` 0.3.0; the others are unchanged"
+        }
+      ],
+      "added": [
+        {
+          "description": "The `billing` route and `Billing` and `BillingView`: the current plan and subscription, the plans with prices, limits and features, checkout and the billing portal, free mode and test mode",
+          "commit": "1b6fe10"
+        },
+        {
+          "description": "`createConsoleApp({ billing: true })` lists Billing in the navigation, and `api.billing`, `api.checkout` and `api.portal` call SystemForge's billing API",
+          "commit": "1b6fe10"
+        },
+        {
+          "description": "A plan the operator set (`setByOperator`) is shown as such, with no other plan offered and the billing portal still available to a paying organization",
+          "commit": "b0adf46"
+        }
+      ],
+      "fixed": [
+        {
+          "description": "A plan with only a yearly price shows and sells it while Monthly is selected, and amounts are scaled by the currency's minor unit, so JPY is not shown a hundred times too small",
+          "commit": "d359c6d"
+        }
+      ],
+      "tests": [
+        {
+          "description": "The billing page for owners, members and paying organizations, free mode, the return from checkout, the navigation option, a yearly-only plan, JPY amounts and a plan the operator set",
+          "commit": "1b6fe10"
+        }
+      ],
+      "documentation": [
+        {
+          "description": "The `@plexusone/console` page describes billing"
+        }
+      ]
+    },
+    {
       "version": "v0.9.0",
       "date": "2026-11-05",
       "highlights": [
