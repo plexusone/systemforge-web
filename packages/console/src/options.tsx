@@ -22,6 +22,11 @@ export type NextSteps = (
 export interface ConsoleOptions {
   /** Links shown after connecting and on each usable connection. */
   nextSteps?: NextSteps;
+  /**
+   * Lists Billing in the navigation, for a deployment whose SystemAuth has a
+   * billing section. The page is served either way.
+   */
+  billing?: boolean;
 }
 
 const OptionsContext = createContext<ConsoleOptions>({});
