@@ -193,6 +193,15 @@ describe('Billing', () => {
     expect(screen.queryByRole('button', { name: /^Choose/ })).toBeNull();
   });
 
+  it('offers no plan when the operator set it', async () => {
+    current = status({ plan: 'builder', setByOperator: true });
+    renderApp(app, { session: session('owner'), path: '/orgs/org-1/billing' });
+    await screen.findByText(/set by the operator of this deployment/);
+    expect(screen.queryByRole('button', { name: /^Choose / })).not.toBeInTheDocument();
+    expect(screen.queryByText('Change in the billing portal')).not.toBeInTheDocument();
+    expect(screen.queryByText('An owner or admin can change the plan.')).not.toBeInTheDocument();
+  });
+
   it('says when the deployment takes no payments', async () => {
     current = status({ configured: false, mode: undefined });
     renderApp(app, { session: session('owner'), path: '/orgs/org-1/billing' });

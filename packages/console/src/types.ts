@@ -166,6 +166,12 @@ export interface BillingStatus {
   mode?: 'test' | 'live';
   /** The plan the organization is on. */
   plan: string;
+  /**
+   * Whether the deployment's operator set the plan. Checkout does not change
+   * it, so no other plan is offered; the billing portal still manages a paid
+   * subscription.
+   */
+  setByOperator?: boolean;
   subscription?: Subscription;
   /** Whether the person may choose a plan and open the billing portal. */
   canManage: boolean;
