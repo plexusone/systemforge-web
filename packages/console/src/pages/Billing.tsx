@@ -136,7 +136,13 @@ export function BillingView({ org, status: s }: { org: string; status: BillingSt
           {current?.name ?? 'the free plan'}.
         </p>
       )}
-      {s.configured && !s.canManage && (
+      {s.setByOperator && (
+        <p className="rounded-md border border-dashed border-border px-3 py-2 text-sm text-muted-foreground">
+          Your plan was set by the operator of this deployment, so it cannot be changed here.
+          Contact them to change it.
+        </p>
+      )}
+      {s.configured && !s.canManage && !s.setByOperator && (
         <p className="text-sm text-muted-foreground">An owner or admin can change the plan.</p>
       )}
       {error && <ErrorNote>{error}</ErrorNote>}
@@ -170,7 +176,13 @@ export function BillingView({ org, status: s }: { org: string; status: BillingSt
             const pr = price(p, interval) ?? p.prices?.[0];
             const isCurrent = p.id === s.plan;
             const canBuy =
-              s.configured && s.canManage && !paid && p.selfServe && !p.free && pr !== undefined;
+              s.configured &&
+              s.canManage &&
+              !s.setByOperator &&
+              !paid &&
+              p.selfServe &&
+              !p.free &&
+              pr !== undefined;
             return (
               <li key={p.id}>
                 <article
@@ -213,7 +225,7 @@ export function BillingView({ org, status: s }: { org: string; status: BillingSt
                       </Button>
                     ) : !p.selfServe ? (
                       <p className="text-sm text-muted-foreground">Talk to us</p>
-                    ) : paid && s.canManage && !p.free ? (
+                    ) : paid && s.canManage && !p.free && !s.setByOperator ? (
                       <p className="text-sm text-muted-foreground">Change in the billing portal</p>
                     ) : null}
                   </div>
