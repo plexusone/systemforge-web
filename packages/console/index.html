@@ -844,6 +844,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#billing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Billing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#linking-from-an-application" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2112,6 +2123,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../releases/v0.10.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.10.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../releases/v0.9.0/" class="md-nav__link">
         
   
@@ -2592,6 +2631,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#billing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Billing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#linking-from-an-application" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2635,9 +2685,10 @@
 
 <h1 id="plexusoneconsole">@plexusone/console<a class="headerlink" href="#plexusoneconsole" title="Permanent link">&para;</a></h1>
 <p>The organization console's pages: an organization's connections to external
-services, a gallery of services to connect, and a step-by-step wizard for
-each, driven by the service's manifest. SystemAuth serves the console under
-<code>/console</code> on its own host and signs it in with its login session; see
+services, a gallery of services to connect, a step-by-step wizard for each,
+driven by the service's manifest, and the organization's plan and billing.
+SystemAuth serves the console under <code>/console</code> on its own host and signs it
+in with its login session; see
 SystemForge's <a href="https://plexusone.github.io/systemforge/guides/console/">organization console guide</a>
 and ADR-018.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pnpm<span class="w"> </span>add<span class="w"> </span>@plexusone/console<span class="w"> </span>@plexusone/host<span class="w"> </span>@plexusone/auth<span class="w"> </span>@plexusone/ui<span class="w"> </span>react-router
@@ -2683,6 +2734,10 @@ package's <code>dist</code> to the stack's Tailwind sources.</p>
 <td><code>connections/new/{provider}</code></td>
 <td>The wizard: choose how the token is rotated, create it at the service by the manifest's steps, grant the listed permissions, paste it</td>
 </tr>
+<tr>
+<td><code>billing</code></td>
+<td>The organization's plan, the plans to choose from, checkout and the billing portal; see <a href="#billing">Billing</a></td>
+</tr>
 </tbody>
 </table>
 <p>Everyone in the organization sees its connections and may test them; owners
@@ -2716,16 +2771,48 @@ connection:</p>
 </code></pre></div>
 <p><code>apps</code> is the app catalog from the session. <code>consoleApp</code> is
 <code>createConsoleApp()</code>, without next steps.</p>
+<h2 id="billing">Billing<a class="headerlink" href="#billing" title="Permanent link">&para;</a></h2>
+<p>The Billing page shows the organization's plan and the deployment's plans,
+from SystemForge's billing API (v0.33.0 or later, with a <code>billing</code> section
+in SystemAuth's configuration; see SystemForge's
+<a href="https://plexusone.github.io/systemforge/guides/billing/">billing guide</a>).
+List it in the navigation with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createConsoleApp</span><span class="p">({</span><span class="w"> </span><span class="nx">billing</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">});</span>
+</code></pre></div>
+<p>The page is served at <code>/orgs/{id}/billing</code> with or without the option; a
+deployment without billing answers it with "Billing is not enabled on this
+deployment".</p>
+<ul>
+<li><strong>Every member</strong> sees the current plan, the subscription's state and the
+  plans with their prices, limits and features, monthly or yearly.</li>
+<li><strong>Owners and admins</strong> choose a plan, which sends them to checkout, and,
+  once the organization pays, open the billing portal to change or cancel
+  the plan, update the card and download invoices.</li>
+<li><strong>Returning from checkout,</strong> <code>?checkout=success</code> thanks the buyer and
+  offers a refresh, since the plan changes when the payment provider
+  confirms it; <code>?checkout=canceled</code> says nothing was charged.</li>
+<li><strong>Free mode,</strong> when the deployment takes no payments, shows the plans
+  with no way to buy and says so. A test-mode key shows "Test mode: no real
+  charges".</li>
+<li><strong>A plan the operator set</strong> (<code>setByOperator</code>, SystemForge v0.33.0) is
+  shown as such, with no other plan offered; the billing portal still
+  manages a paid subscription.</li>
+</ul>
+<p>Prices are in the currency's smallest unit and shown in its own format,
+so zero-decimal currencies such as JPY display correctly. <code>BillingView</code>
+renders the page's body from a <code>BillingStatus</code>, for a host that loads the
+status itself.</p>
 <h2 id="linking-from-an-application">Linking from an application<a class="headerlink" href="#linking-from-an-application" title="Permanent link">&para;</a></h2>
 <p>An application sends people to the wizard and gets them back:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/console/orgs/{org}/connections/new/cloudflare?return_to=https://app.example.com/sites/new
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/console/orgs/{org}/connections/new/cloudflare?return_to=https://app.example.com/sites/new
 </code></pre></div>
 <p>After connecting, <strong>Continue</strong> checks <code>return_to</code> with SystemAuth, which
 allows paths on its host and its allowed redirect origins, and goes there.</p>
 <h2 id="api">API<a class="headerlink" href="#api" title="Permanent link">&para;</a></h2>
 <p><code>api</code> calls the console's API under <code>/console/api</code> as the signed-in person:
 <code>providers</code>, <code>connections</code>, <code>create</code>, <code>rename</code>, <code>test</code>, <code>reconnect</code>,
-<code>disconnect</code> and <code>returnTo</code>. Failures are <code>ApiError</code>s with the HTTP status.</p>
+<code>disconnect</code> and <code>returnTo</code>; and for billing, <code>billing</code>, <code>checkout</code> and
+<code>portal</code>, the last two answering the address to send the browser to. Failures are <code>ApiError</code>s with the HTTP status.</p>
 
 
 
