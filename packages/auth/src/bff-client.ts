@@ -8,6 +8,7 @@ import type {
   LinkedAccount,
   AuthError,
   OAuthProvider,
+  SignInMethod,
 } from './types';
 
 /**
@@ -97,7 +98,7 @@ export class BFFClient {
   /**
    * Get OAuth login URL and redirect
    */
-  getOAuthUrl(provider: OAuthProvider, returnTo?: string): string {
+  getOAuthUrl(provider: SignInMethod, returnTo?: string): string {
     const params = new URLSearchParams();
     const path = returnPath(returnTo);
     if (path) {
@@ -110,7 +111,7 @@ export class BFFClient {
   /**
    * Initiate OAuth login (redirects browser)
    */
-  loginWithOAuth(provider: OAuthProvider, returnTo?: string): void {
+  loginWithOAuth(provider: SignInMethod, returnTo?: string): void {
     window.location.assign(this.getOAuthUrl(provider, returnTo));
   }
 

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { OAuthProvider } from '@plexusone/auth';
+import type { OAuthProvider, SignInMethod } from '@plexusone/auth';
 
 /**
  * Login page props
@@ -16,9 +16,10 @@ export interface LoginPageProps {
   logo?: ReactNode;
 
   /**
-   * Available OAuth providers
+   * Sign-in methods to offer as buttons: OAuth providers, and `email` for
+   * a code mailed to the person (entered on SystemAuth's own page)
    */
-  oauthProviders?: OAuthProvider[];
+  oauthProviders?: SignInMethod[];
 
   /**
    * Show email/password form

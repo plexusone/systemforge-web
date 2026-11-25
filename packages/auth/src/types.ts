@@ -60,6 +60,13 @@ export interface LinkedAccount {
 export type OAuthProvider = 'github' | 'google' | 'microsoft';
 
 /**
+ * A way to sign in through SystemAuth: an upstream OAuth provider, or
+ * `email` for a one-time code mailed to the person. Email is not an account
+ * that can be linked, so linking uses OAuthProvider.
+ */
+export type SignInMethod = OAuthProvider | 'email';
+
+/**
  * Login credentials for email/password auth
  */
 export interface LoginCredentials {
@@ -147,7 +154,7 @@ export interface AuthContextValue {
   isLoading: boolean;
   error: AuthError | null;
   login: (credentials: LoginCredentials) => Promise<void>;
-  loginWithOAuth: (provider: OAuthProvider) => void;
+  loginWithOAuth: (provider: SignInMethod) => void;
   logout: () => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   refreshUser: () => Promise<void>;

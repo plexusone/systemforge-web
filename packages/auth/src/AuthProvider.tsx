@@ -18,7 +18,7 @@ import type {
   LoginCredentials,
   RegisterData,
   AuthError,
-  OAuthProvider,
+  SignInMethod,
 } from './types';
 
 /**
@@ -151,7 +151,7 @@ export function AuthProvider({
    * Login with OAuth provider
    */
   const loginWithOAuth = useCallback(
-    (provider: OAuthProvider) => {
+    (provider: SignInMethod) => {
       const returnTo = returnPath(currentPath());
       client.loginWithOAuth(provider, returnTo);
     },
