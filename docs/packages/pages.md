@@ -102,17 +102,17 @@ function Maintenance() {
 
 ### LoginPage Props
 
-| Prop                | Type                     | Description                                                                               |
-| ------------------- | ------------------------ | ----------------------------------------------------------------------------------------- |
-| `appName`           | `string`                 | Application name                                                                          |
-| `logo`              | `ReactNode`              | Logo                                                                                      |
-| `oauthProviders`    | `OAuthProvider[]`        | OAuth providers to offer                                                                  |
-| `showEmailForm`     | `boolean`                | Show the email and password form                                                          |
-| `showRegisterLink`  | `boolean`                | Show the link to registration                                                             |
-| `redirectUrl`       | `string`                 | Where to go after sign-in; only a URL on this site is followed, anything else goes to `/` |
-| `onNavigate`        | `(href: string) => void` | Client-side navigation                                                                    |
-| `registerUrl`       | `string`                 | Registration page                                                                         |
-| `forgotPasswordUrl` | `string`                 | Password reset page                                                                       |
+| Prop                | Type                     | Description                                                                                            |
+| ------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `appName`           | `string`                 | Application name                                                                                       |
+| `logo`              | `ReactNode`              | Logo                                                                                                   |
+| `oauthProviders`    | `SignInMethod[]`         | Sign-in buttons to offer: `github`, `google`, `microsoft`, and `email` for a code mailed to the person |
+| `showEmailForm`     | `boolean`                | Show the email and password form                                                                       |
+| `showRegisterLink`  | `boolean`                | Show the link to registration                                                                          |
+| `redirectUrl`       | `string`                 | Where to go after sign-in; only a URL on this site is followed, anything else goes to `/`              |
+| `onNavigate`        | `(href: string) => void` | Client-side navigation                                                                                 |
+| `registerUrl`       | `string`                 | Registration page                                                                                      |
+| `forgotPasswordUrl` | `string`                 | Password reset page                                                                                    |
 
 `redirectUrl` often comes from the address bar (`?next=…`), which is why it
 must be on this site. URLs that reach `window.location` (`registerUrl`,
