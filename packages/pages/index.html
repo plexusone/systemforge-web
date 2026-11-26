@@ -2395,6 +2395,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../releases/v0.11.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.11.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../releases/v0.10.0/" class="md-nav__link">
         
   
@@ -3329,8 +3357,8 @@
 </tr>
 <tr>
 <td><code>oauthProviders</code></td>
-<td><code>OAuthProvider[]</code></td>
-<td>OAuth providers to offer</td>
+<td><code>SignInMethod[]</code></td>
+<td>Sign-in buttons to offer: <code>github</code>, <code>google</code>, <code>microsoft</code>, and <code>email</code> for a code mailed to the person (needs a SystemForge BFF that serves <code>/bff/auth/email</code>; see below)</td>
 </tr>
 <tr>
 <td><code>showEmailForm</code></td>
@@ -3364,6 +3392,12 @@
 </tr>
 </tbody>
 </table>
+<p>List <code>email</code> in <code>oauthProviders</code> only after the host's SystemForge BFF and
+SystemAuth are deployed with email sign-in (SystemForge v0.37.0 or later, with
+<code>social_login.email</code> configured). The button goes to <code>/bff/auth/email</code>; against
+a BFF that predates it, the click fails with <code>UNKNOWN_PROVIDER</code>, and against a
+SystemAuth without email sign-in it lands on SystemAuth's own chooser. Deploy
+the server first, then add <code>email</code> to the page.</p>
 <p><code>redirectUrl</code> often comes from the address bar (<code>?next=…</code>), which is why it
 must be on this site. URLs that reach <code>window.location</code> (<code>registerUrl</code>,
 <code>forgotPasswordUrl</code>, <code>homeUrl</code> on ErrorPage) are followed only when they are
