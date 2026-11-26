@@ -554,6 +554,10 @@ function AccountsTab({
     google: 'Google',
     microsoft: 'Microsoft',
   };
+  // A host's linked-accounts API can return a sign-in method this page has no
+  // name for, such as `email` for a code sign-in; show its own name.
+  const providerLabel = (provider: string): string =>
+    (providerNames as Record<string, string | undefined>)[provider] ?? provider;
 
   return (
     <div>
@@ -599,7 +603,7 @@ function AccountsTab({
                 </div>
                 <div>
                   <div style={{ fontWeight: 500, color: 'var(--cf-color-fg-primary, #18181b)' }}>
-                    {providerNames[account.provider]}
+                    {providerLabel(account.provider)}
                   </div>
                   <div style={{ fontSize: '14px', color: 'var(--cf-color-fg-secondary, #52525b)' }}>
                     {account.email}
