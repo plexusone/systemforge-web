@@ -40,6 +40,7 @@ export { ProtectedRoute, hasRoleIn, usePermissions } from './ProtectedRoute';
 
 // Linked accounts
 export { useLinkedAccounts } from './useLinkedAccounts';
+export { safeName, displayName, looksLikeAddress, DEFAULT_NAME } from './names';
 
 // Session over the relying-party BFF: memberships with per-application
 // roles, and the deployment's app catalog

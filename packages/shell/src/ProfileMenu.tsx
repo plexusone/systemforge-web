@@ -1,5 +1,11 @@
 import { type ReactNode } from 'react';
-import { membershipFor, navigateTo, organizationLabel, useSessionOptional } from '@plexusone/auth';
+import {
+  membershipFor,
+  navigateTo,
+  organizationLabel,
+  safeName,
+  useSessionOptional,
+} from '@plexusone/auth';
 import {
   Avatar,
   AvatarFallback,
@@ -62,7 +68,12 @@ export function ProfileMenu({
     return null;
   }
 
-  const who = user.name || user.email || 'Signed in';
+  // A name that is an email address is no name: the address is shown only as
+  // an address, never in the name's place.
+  const name = safeName(user.name);
+  const heading = name ?? 'Signed in';
+  // The trigger says which account this is, to its own owner.
+  const who = name || user.email || 'Signed in';
   const membership = membershipFor(ctx.session, organizationId);
   const role = membership
     ? (appId && membership.applications[appId]) || membership.role
@@ -89,7 +100,7 @@ export function ProfileMenu({
           <Avatar className="h-8 w-8">
             {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
             <AvatarFallback className="bg-primary/10 text-primary text-xs font-medium">
-              {initials(user.name || user.email)}
+              {initials(name || user.email)}
             </AvatarFallback>
           </Avatar>
         </button>
@@ -98,8 +109,8 @@ export function ProfileMenu({
       <DropdownMenuContent align="end" className="w-64">
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col gap-1">
-            <p className="text-sm font-medium leading-none">{who}</p>
-            {user.email && user.email !== who && (
+            <p className="text-sm font-medium leading-none">{heading}</p>
+            {user.email && user.email !== heading && (
               <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
             )}
           </div>
