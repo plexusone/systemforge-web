@@ -25,18 +25,19 @@ pnpm add @plexusone/pages react-router-dom
 import { LoginPage } from '@plexusone/pages';
 
 function Login() {
-  return (
-    <LoginPage
-      brandName="My App"
-      brandLogo="/logo.svg"
-      providers={['github', 'google']}
-      onLogin={(provider) => {
-        // Handle OAuth login
-      }}
-    />
-  );
+  // No provider list: the buttons are what the deployment offers.
+  return <LoginPage appName="My App" showEmailForm={false} showRegisterLink={false} />;
 }
 ```
+
+`LoginPage` signs in through `useAuth`, so it goes inside `AuthProvider`.
+
+Left without `oauthProviders`, it reads the BFF's `GET /bff/auth/methods`
+(SystemForge v0.39.0 or later) and shows a button for each method, in the
+server's order, so a method turned on in SystemAuth's configuration appears
+without a change to the application. Against an older BFF, or if the request
+fails, a page with `showEmailForm={false}` shows one **Continue to sign in**
+button that goes to SystemAuth's own sign-in page.
 
 ### UserSettingsPage
 
@@ -102,24 +103,25 @@ function Maintenance() {
 
 ### LoginPage Props
 
-| Prop                | Type                     | Description                                                                                                                                                               |
-| ------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `appName`           | `string`                 | Application name                                                                                                                                                          |
-| `logo`              | `ReactNode`              | Logo                                                                                                                                                                      |
-| `oauthProviders`    | `SignInMethod[]`         | Sign-in buttons to offer: `github`, `google`, `microsoft`, and `email` for a code mailed to the person (needs a SystemForge BFF that serves `/bff/auth/email`; see below) |
-| `showEmailForm`     | `boolean`                | Show the email and password form                                                                                                                                          |
-| `showRegisterLink`  | `boolean`                | Show the link to registration                                                                                                                                             |
-| `redirectUrl`       | `string`                 | Where to go after sign-in; only a URL on this site is followed, anything else goes to `/`                                                                                 |
-| `onNavigate`        | `(href: string) => void` | Client-side navigation                                                                                                                                                    |
-| `registerUrl`       | `string`                 | Registration page                                                                                                                                                         |
-| `forgotPasswordUrl` | `string`                 | Password reset page                                                                                                                                                       |
+| Prop                | Type                     | Description                                                                                                                                          |
+| ------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `appName`           | `string`                 | Application name                                                                                                                                     |
+| `logo`              | `ReactNode`              | Logo                                                                                                                                                 |
+| `oauthProviders`    | `SignInMethod[]`         | Sign-in buttons to offer (`github`, `google`, `microsoft`, and `email` for a mailed code). Omit it to offer what the deployment lists; `[]` for none |
+| `showEmailForm`     | `boolean`                | Show the email and password form                                                                                                                     |
+| `showRegisterLink`  | `boolean`                | Show the link to registration                                                                                                                        |
+| `redirectUrl`       | `string`                 | Where to go after sign-in; only a URL on this site is followed, anything else goes to `/`                                                            |
+| `onNavigate`        | `(href: string) => void` | Client-side navigation                                                                                                                               |
+| `registerUrl`       | `string`                 | Registration page                                                                                                                                    |
+| `forgotPasswordUrl` | `string`                 | Password reset page                                                                                                                                  |
 
-List `email` in `oauthProviders` only after the host's SystemForge BFF and
+When you list methods yourself, include `email` only after the host's SystemForge BFF and
 SystemAuth are deployed with email sign-in (SystemForge v0.37.0 or later, with
 `social_login.email` configured). The button goes to `/bff/auth/email`; against
 a BFF that predates it, the click fails with `UNKNOWN_PROVIDER`, and against a
 SystemAuth without email sign-in it lands on SystemAuth's own chooser. Deploy
-the server first, then add `email` to the page.
+the server first, then add `email` to the page. Omitting `oauthProviders`
+avoids this ordering: the page offers only what the server lists.
 
 `redirectUrl` often comes from the address bar (`?next=…`), which is why it
 must be on this site. URLs that reach `window.location` (`registerUrl`,

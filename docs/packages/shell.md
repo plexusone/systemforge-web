@@ -146,8 +146,8 @@ is called for you by `ShellProvider`, so by `AppShell`, and by
 
 ### Profile menu
 
-Under `SessionProvider`, the bar shows `ProfileMenu`: who is signed in, the
-current organization, the role held in this application (falling back to
+Under `SessionProvider`, the bar shows `ProfileMenu`: who is signed in (a name
+that is an email address is not shown as a name), the current organization, the role held in this application (falling back to
 the organization role), the application's `profileItems`, and sign out. It
 has no default links. Applications on `AuthProvider` keep `UserMenu`, whose
 default links were removed for the same reason.
