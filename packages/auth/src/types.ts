@@ -67,6 +67,19 @@ export type OAuthProvider = 'github' | 'google' | 'microsoft';
 export type SignInMethod = OAuthProvider | 'email';
 
 /**
+ * One sign-in method as the BFF lists it at `GET /bff/auth/methods`: what the
+ * deployment offers, in its order.
+ */
+export interface SignInMethodInfo {
+  /** The method (`github`, `google`, `email`). */
+  id: SignInMethod;
+  /** What a sign-in page shows for it ("GitHub", "Email"). */
+  name: string;
+  /** Where signing in with it starts: `GET <path>?return_to=`. */
+  path: string;
+}
+
+/**
  * Login credentials for email/password auth
  */
 export interface LoginCredentials {
@@ -149,6 +162,8 @@ export interface AuthConfig {
  * Auth context value
  */
 export interface AuthContextValue {
+  /** The BFF's base URL, as given to `AuthProvider`; empty for the same origin. */
+  bffBaseUrl?: string;
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
