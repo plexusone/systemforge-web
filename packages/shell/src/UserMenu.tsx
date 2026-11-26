@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { navigateTo, useAuthOptional } from '@plexusone/auth';
+import { displayName, navigateTo, useAuthOptional } from '@plexusone/auth';
 import {
   Avatar,
   AvatarImage,
@@ -74,7 +74,9 @@ export function UserMenu({ actions = defaultActions, onNavigate }: UserMenuProps
           className="flex items-center gap-2 p-1 bg-transparent border-none rounded-full cursor-pointer hover:bg-accent"
         >
           <Avatar className="h-8 w-8">
-            {user.avatar_url ? <AvatarImage src={user.avatar_url} alt={user.name} /> : null}
+            {user.avatar_url ? (
+              <AvatarImage src={user.avatar_url} alt={displayName(user, 'Signed in')} />
+            ) : null}
             <AvatarFallback className="bg-primary/10 text-primary">
               <UserIcon className="h-4 w-4" />
             </AvatarFallback>
@@ -86,7 +88,7 @@ export function UserMenu({ actions = defaultActions, onNavigate }: UserMenuProps
         {/* User info header */}
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.name}</p>
+            <p className="text-sm font-medium leading-none">{displayName(user, 'Signed in')}</p>
             <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
           </div>
         </DropdownMenuLabel>

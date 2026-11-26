@@ -323,6 +323,7 @@ export function AuthProvider({
 
   const value = useMemo<AuthContextValue>(
     () => ({
+      bffBaseUrl,
       user,
       isAuthenticated: !!user,
       isLoading,
@@ -338,6 +339,7 @@ export function AuthProvider({
       resetPassword,
     }),
     [
+      bffBaseUrl,
       user,
       isLoading,
       error,

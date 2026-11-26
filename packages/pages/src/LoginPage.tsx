@@ -1,5 +1,11 @@
-import { useState, type ReactNode, type FormEvent } from 'react';
-import { navigateTo, sameOriginURL, useAuth, type SignInMethod } from '@plexusone/auth';
+import { useState, type CSSProperties, type ReactNode, type FormEvent } from 'react';
+import {
+  navigateTo,
+  sameOriginURL,
+  useAuth,
+  useSignInMethods,
+  type SignInMethod,
+} from '@plexusone/auth';
 import type { LoginPageProps } from './types';
 
 /**
@@ -67,8 +73,33 @@ const providerLabels: Record<SignInMethod, string> = {
   email: 'email',
 };
 
+const methodButtonStyle: CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '12px',
+  width: '100%',
+  padding: '12px',
+  marginBottom: '8px',
+  backgroundColor: 'var(--cf-color-bg-primary, #ffffff)',
+  border: '1px solid var(--cf-color-border-default, #e4e4e7)',
+  borderRadius: '8px',
+  fontSize: '14px',
+  fontWeight: 500,
+  color: 'var(--cf-color-fg-primary, #18181b)',
+};
+
 /**
  * LoginPage - Standard login page component
+ *
+ * Leave `oauthProviders` out to offer what the deployment offers: the buttons
+ * come from the BFF's `GET /bff/auth/methods`, so a method turned on in
+ * SystemAuth's configuration appears without a change to the application.
+ *
+ * @example
+ * ```tsx
+ * <LoginPage appName="My App" showEmailForm={false} showRegisterLink={false} />
+ * ```
  *
  * @example
  * ```tsx
@@ -82,7 +113,7 @@ const providerLabels: Record<SignInMethod, string> = {
 export function LoginPage({
   appName = 'SystemForge',
   logo,
-  oauthProviders = [],
+  oauthProviders,
   showEmailForm = true,
   showRegisterLink = true,
   redirectUrl = '/',
@@ -90,7 +121,17 @@ export function LoginPage({
   registerUrl = '/register',
   forgotPasswordUrl = '/forgot-password',
 }: LoginPageProps): ReactNode {
-  const { login, loginWithOAuth, isLoading, error } = useAuth();
+  const { login, loginWithOAuth, isLoading, error, bffBaseUrl = '' } = useAuth();
+  const fromDeployment = oauthProviders === undefined;
+  const deployment = useSignInMethods(bffBaseUrl, fromDeployment);
+  // An id this version has no label for is left out rather than shown broken.
+  const methods: SignInMethod[] =
+    oauthProviders ??
+    deployment.methods.map((m) => m.id).filter((id) => Object.hasOwn(providerLabels, id));
+  // With no password form and no list (an older server, or the request
+  // failed), SystemAuth's own sign-in page is still one click away.
+  const offerSignInPage =
+    fromDeployment && !deployment.isLoading && methods.length === 0 && !showEmailForm;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -194,30 +235,29 @@ export function LoginPage({
           </div>
         )}
 
+        {offerSignInPage && (
+          <button
+            type="button"
+            onClick={() => navigateTo(`${bffBaseUrl}/bff/auth/login`)}
+            disabled={isLoading}
+            style={{ ...methodButtonStyle, cursor: isLoading ? 'not-allowed' : 'pointer' }}
+          >
+            Continue to sign in
+          </button>
+        )}
+
         {/* OAuth buttons */}
-        {oauthProviders.length > 0 && (
+        {methods.length > 0 && (
           <div style={{ marginBottom: showEmailForm ? '24px' : 0 }}>
-            {oauthProviders.map((provider) => (
+            {methods.map((provider) => (
               <button
                 key={provider}
                 type="button"
                 onClick={() => handleOAuthLogin(provider)}
                 disabled={isLoading}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '12px',
-                  width: '100%',
-                  padding: '12px',
-                  marginBottom: '8px',
-                  backgroundColor: 'var(--cf-color-bg-primary, #ffffff)',
-                  border: '1px solid var(--cf-color-border-default, #e4e4e7)',
-                  borderRadius: '8px',
+                  ...methodButtonStyle,
                   cursor: isLoading ? 'not-allowed' : 'pointer',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  color: 'var(--cf-color-fg-primary, #18181b)',
                   opacity: isLoading ? 0.6 : 1,
                 }}
               >
@@ -229,7 +269,7 @@ export function LoginPage({
         )}
 
         {/* Divider */}
-        {oauthProviders.length > 0 && showEmailForm && (
+        {methods.length > 0 && showEmailForm && (
           <div
             style={{
               display: 'flex',

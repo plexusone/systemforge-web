@@ -10,8 +10,11 @@ const account = (id: string, provider: string) => ({
   linked_at: '2026-01-01T00:00:00Z',
 });
 
+const user = { id: 'u-1', name: 'jane@example.com', email: 'jane@example.com' };
+
 vi.mock('@plexusone/auth', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@plexusone/auth')>()),
+  useAuth: () => ({ user }),
   useLinkedAccounts: () => ({
     // `email` is a sign-in method the page has no name or icon for.
     linkedAccounts: [account('1', 'github'), account('2', 'email')],
@@ -28,5 +31,14 @@ describe('UserSettingsPage linked accounts', () => {
     // Not blank, and not a crash.
     expect(screen.getByText('email')).toBeTruthy();
     expect(screen.getByText('email@example.com')).toBeTruthy();
+  });
+});
+
+describe('UserSettingsPage profile', () => {
+  it('starts the name empty and required when the stored name is an address', () => {
+    render(<UserSettingsPage activeTab="profile" tabs={['profile']} onSaveProfile={vi.fn()} />);
+    const name = screen.getByLabelText(/name/i) as HTMLInputElement;
+    expect(name.value).toBe('');
+    expect(name.required).toBe(true);
   });
 });

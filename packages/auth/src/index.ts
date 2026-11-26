@@ -40,6 +40,9 @@ export { ProtectedRoute, hasRoleIn, usePermissions } from './ProtectedRoute';
 
 // Linked accounts
 export { useLinkedAccounts } from './useLinkedAccounts';
+export { useSignInMethods } from './useSignInMethods';
+export type { SignInMethodsState } from './useSignInMethods';
+export { safeName, displayName, looksLikeAddress, DEFAULT_NAME } from './names';
 
 // Session over the relying-party BFF: memberships with per-application
 // roles, and the deployment's app catalog
@@ -61,6 +64,7 @@ export type {
   LinkedAccount,
   OAuthProvider,
   SignInMethod,
+  SignInMethodInfo,
   LoginCredentials,
   RegisterData,
   SessionStatus,

@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode, type FormEvent } from 'react';
+import { safeName } from '@plexusone/auth';
 import { orgUrl } from './api';
 import type { OrganizationMembersPageProps, OrgMember, MemberRole } from './types';
 
@@ -199,7 +200,7 @@ function TransferOwnershipModal({
               <option value="">Select a member</option>
               {eligibleMembers.map((member) => (
                 <option key={member.id} value={member.principal_id}>
-                  {member.user?.name || member.user?.email || member.principal_id}
+                  {safeName(member.user?.name) || member.user?.email || member.principal_id}
                 </option>
               ))}
             </select>
@@ -528,11 +529,14 @@ function OrganizationMembersPageBody({
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Avatar name={member.user?.name || ''} avatarUrl={member.user?.avatar_url} />
+                <Avatar
+                  name={safeName(member.user?.name) ?? ''}
+                  avatarUrl={member.user?.avatar_url}
+                />
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span style={{ fontWeight: 500, color: 'var(--cf-color-fg-primary, #18181b)' }}>
-                      {member.user?.name || 'Unknown'}
+                      {safeName(member.user?.name) ?? 'Unknown'}
                     </span>
                     <RoleBadge role={member.role} />
                     {isCurrentUser && (

@@ -1,5 +1,11 @@
 import { useState, type ReactNode, type FormEvent } from 'react';
-import { useAuth, useLinkedAccounts, type OAuthProvider } from '@plexusone/auth';
+import {
+  displayName,
+  safeName,
+  useAuth,
+  useLinkedAccounts,
+  type OAuthProvider,
+} from '@plexusone/auth';
 import type { UserSettingsPageProps, SettingsTab } from './types';
 
 /**
@@ -103,7 +109,9 @@ function ProfileTab({
   onChangeAvatar,
 }: Pick<UserSettingsPageProps, 'onSaveProfile' | 'onChangeAvatar'>): ReactNode {
   const { user } = useAuth();
-  const [name, setName] = useState(user?.name || '');
+  // An address stored as the name starts the field empty, so the person is
+  // prompted for a real one.
+  const [name, setName] = useState(safeName(user?.name) ?? '');
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -174,7 +182,7 @@ function ProfileTab({
             {user?.avatar_url ? (
               <img
                 src={user.avatar_url}
-                alt={user.name}
+                alt={displayName(user)}
                 style={{
                   width: '64px',
                   height: '64px',
@@ -197,7 +205,7 @@ function ProfileTab({
                   color: 'var(--cf-color-primary-700, #1d4ed8)',
                 }}
               >
-                {user?.name?.charAt(0).toUpperCase() || '?'}
+                {safeName(user?.name)?.charAt(0).toUpperCase() || '?'}
               </div>
             )}
             {onChangeAvatar && (
@@ -240,6 +248,7 @@ function ProfileTab({
             value={name}
             onChange={(e) => setName(e.target.value)}
             readOnly={!onSaveProfile}
+            required={!!onSaveProfile}
             style={{
               width: '100%',
               maxWidth: '400px',

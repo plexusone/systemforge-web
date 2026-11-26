@@ -156,6 +156,43 @@ The session is re-read when the window regains focus and every five
 minutes (`refreshInterval`, `refreshOnFocus`). `onUnauthorized` runs when a
 signed-in session is found signed out, not after a deliberate sign-out.
 
+### Sign-in methods
+
+`useSignInMethods(bffBaseUrl?)` returns what the deployment offers, from the
+BFF's `GET /bff/auth/methods` (SystemForge v0.39.0 or later), for a sign-in
+page of your own:
+
+```tsx
+const { loginWithOAuth, bffBaseUrl } = useAuth();
+const { methods, isLoading, error } = useSignInMethods(bffBaseUrl);
+
+return methods.map((m) => (
+  <button key={m.id} onClick={() => loginWithOAuth(m.id)}>
+    Continue with {m.name}
+  </button>
+));
+```
+
+Each method is `{ id, name, path }`. The list is empty from a server that
+publishes none. `BFFClient.getSignInMethods()` is the same request without the
+hook.
+
+### Names
+
+A name is shown to other people, and an email address is not the person's to
+publish. Show names through these helpers, never `user.name || user.email`:
+
+| Function                         | Returns                                                             |
+| -------------------------------- | ------------------------------------------------------------------- |
+| `safeName(name)`                 | The name trimmed, or `undefined` when empty or an address (has `@`) |
+| `displayName(person, fallback?)` | `safeName(person.name)`, else the fallback (`"Member"`)             |
+| `looksLikeAddress(s)`            | Whether the string has an `@`                                       |
+
+SystemAuth asks new accounts for a name, but an older account may still have
+its address as its name. The shell's profile menus and the account and member
+pages use these helpers. The Go counterpart is SystemForge's
+`identity/displayname`.
+
 ### Signing out of SystemAuth too
 
 Signing out ends the app's session at the BFF, then SystemAuth's login

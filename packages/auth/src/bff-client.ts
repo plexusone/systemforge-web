@@ -9,6 +9,7 @@ import type {
   AuthError,
   OAuthProvider,
   SignInMethod,
+  SignInMethodInfo,
 } from './types';
 
 /**
@@ -93,6 +94,17 @@ export class BFFClient {
       headers: { Accept: 'application/json' },
     });
     return readSignOut(body);
+  }
+
+  /**
+   * The sign-in methods the deployment offers (`GET /bff/auth/methods`), in
+   * order. Empty from a server that publishes none (SystemForge before v0.39.0).
+   */
+  async getSignInMethods(): Promise<SignInMethodInfo[]> {
+    const body = await this.request<{ methods?: SignInMethodInfo[] }>('/bff/auth/methods', {
+      headers: { Accept: 'application/json' },
+    });
+    return Array.isArray(body?.methods) ? body.methods : [];
   }
 
   /**

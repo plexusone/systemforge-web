@@ -17,7 +17,9 @@ export interface LoginPageProps {
 
   /**
    * Sign-in methods to offer as buttons: OAuth providers, and `email` for
-   * a code mailed to the person (entered on SystemAuth's own page)
+   * a code mailed to the person (entered on SystemAuth's own page). Leave it
+   * out to offer what the deployment offers, from the BFF's
+   * `GET /bff/auth/methods`; pass `[]` for none.
    */
   oauthProviders?: SignInMethod[];
 
