@@ -43,6 +43,19 @@ describe('OrganizationMembersPage', () => {
     );
   });
 
+  it('never shows an email address in the name’s place', async () => {
+    const person = member('x');
+    const people = [{ ...person, user: { ...person.user, name: 'x@example.com' } }];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response(JSON.stringify({ members: people }), { status: 200 }))
+    );
+    render(<OrganizationMembersPage orgSlug="acme" currentUserId="u" apiBaseUrl="/api" />);
+    await screen.findByText('Unknown');
+    // The address appears once, as the address.
+    expect(screen.getAllByText('x@example.com')).toHaveLength(1);
+  });
+
   it('offers an admin no controls over another admin, and owners full control', async () => {
     const people = [
       { ...member('a2'), principal_id: 'p-a2', role: 'admin' },

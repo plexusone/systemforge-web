@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { SessionClient, SessionProvider, type WireSession } from '@plexusone/auth';
 import { Navbar } from '../Navbar';
@@ -49,6 +49,19 @@ describe('ProfileMenu', () => {
     expect(menu).toHaveTextContent('ada@example.com');
     expect(menu).toHaveTextContent('Acme');
     expect(menu).toHaveTextContent('viewer');
+  });
+
+  it('does not show an email address in the name’s place', async () => {
+    const session = { ...wire, user: { ...wire.user!, name: 'ada@example.com' } };
+    render(
+      <WithSession session={session}>
+        <ProfileMenu />
+      </WithSession>
+    );
+    const menu = await openMenu(/Account: ada@example\.com/);
+    expect(menu).toHaveTextContent('Signed in');
+    // Once, as the address.
+    expect(within(menu).getAllByText('ada@example.com')).toHaveLength(1);
   });
 
   it('falls back to the organization role without a role in this application', async () => {
