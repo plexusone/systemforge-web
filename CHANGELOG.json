@@ -7,6 +7,43 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.11.0",
+      "date": "2026-11-25",
+      "highlights": [
+        {
+          "description": "`@plexusone/pages` 0.4.0 and `@plexusone/auth` 0.3.1: the login page offers Continue with email for SystemAuth's mailed one-time code, entered on SystemAuth's own page, for SystemForge v0.37.0 and later",
+          "commit": "4aefc2f"
+        },
+        {
+          "description": "Packages: `@plexusone/auth` 0.3.1 and `@plexusone/pages` 0.4.0; the others are unchanged"
+        }
+      ],
+      "added": [
+        {
+          "description": "`SignInMethod`, an OAuth provider or `email`, used by `loginWithOAuth`, `BFFClient.getOAuthUrl` and `BFFClient.loginWithOAuth`, and the login page's `oauthProviders`; the email button goes to `/bff/auth/email`",
+          "commit": "4aefc2f"
+        }
+      ],
+      "fixed": [
+        {
+          "description": "The linked accounts list names a sign-in method it has no entry for by its own name instead of showing a blank one",
+          "commit": "e1789db"
+        }
+      ],
+      "tests": [
+        {
+          "description": "The sign-in URL for email, a return path on another site, the login page's buttons and clicks, and a linked method the settings page does not know",
+          "commit": "c8c044c"
+        }
+      ],
+      "documentation": [
+        {
+          "description": "The `@plexusone/pages` page describes the email button and that the server is deployed first",
+          "commit": "011255a"
+        }
+      ]
+    },
+    {
       "version": "v0.10.0",
       "date": "2026-11-16",
       "highlights": [
