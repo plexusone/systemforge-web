@@ -2123,6 +2123,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../releases/v0.12.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.12.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../releases/v0.11.0/" class="md-nav__link">
         
   
@@ -2752,7 +2780,7 @@ package's <code>dist</code> to the stack's Tailwind sources.</p>
 <tbody>
 <tr>
 <td><code>connections</code></td>
-<td>The organization's connections: service, account, rotation, expiry, and Test, Replace token, Rename, Disconnect. The organization home opens it</td>
+<td>The organization's connections: service, account, rotation, expiry, last check, what it reaches and its access, and Test, Replace token, Rename, Disconnect. The organization home opens it</td>
 </tr>
 <tr>
 <td><code>connections/new</code></td>
@@ -2779,6 +2807,14 @@ and its <code>fields</code> the form. A token the service rejects is explained a
 saved. A service without guidance gets the form and its help link.</p>
 <p><strong>Expiry.</strong> When the service reports when a token expires, the list shows it
 and flags the last two weeks, so it can be replaced in time.</p>
+<p><strong>Checks.</strong> Each connection shows when it was last checked and whether it
+worked, what that check found it reaches (<code>health.details</code>, such as the
+properties a Search Console account can read, with "and N more" when the list
+was shortened), and what its permissions allow, from the service's scope
+descriptions. <strong>Test</strong> reports what it found ("Working: it reaches 2
+properties.") or why it failed. Details come from connectforge v0.7.0 and
+later, which SystemForge has required since v0.32.1; a deployment on an earlier
+one shows the check line alone.</p>
 <h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <p>The console does not know the products. A host that does can point each
 connection at what uses it, shown after connecting and on each usable
