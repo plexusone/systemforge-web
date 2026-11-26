@@ -524,6 +524,14 @@ describe('check and details text', () => {
     expect(detailText({ label: 'Sites', values: ['a'], more: 2 })).toBe('Sites: a and 2 more');
     expect(detailText({ label: 'Read-only' })).toBe('Read-only');
   });
+  it('keeps the count when every value was left out', () => {
+    expect(detailText({ label: 'Properties', more: 3 })).toBe('Properties: 3');
+  });
+  it('says so when a list is empty, and leaves a detail with no list alone', () => {
+    expect(detailText({ label: 'Properties', values: [] })).toBe('Properties: none');
+    expect(detailText({ label: 'Properties', values: [], more: 2 })).toBe('Properties: 2');
+    expect(detailText({ label: 'Properties' })).toBe('Properties');
+  });
   it('reads access from the service, or not at all', () => {
     expect(accessText(connection({ scopes: undefined }), cloudflare)).toBe('Access: List zones');
     expect(accessText(connection({ scopes: ['Zone:Read', 'Analytics:Read'] }), cloudflare)).toBe(
@@ -540,5 +548,20 @@ describe('check and details text', () => {
         })
       )
     ).toBe('Working: it reaches 5 zones.');
+  });
+  it('reports an explicitly empty result as zero, and keeps a detail with no list as a name', () => {
+    const details = (d: { label: string; values?: string[]; more?: number }[]) =>
+      testResult(connection({ health: { lastValidation: 'ok', details: d } }));
+    expect(details([{ label: 'Properties', values: [] }])).toBe(
+      'Working: it reaches 0 properties.'
+    );
+    expect(details([{ label: 'Properties', more: 3 }])).toBe('Working: it reaches 3 properties.');
+    expect(details([{ label: 'Search Console' }])).toBe('Working: it reaches search console.');
+    expect(
+      details([
+        { label: 'Zones', values: ['a'] },
+        { label: 'Properties', values: [] },
+      ])
+    ).toBe('Working: it reaches 1 zones, 0 properties.');
   });
 });

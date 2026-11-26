@@ -121,11 +121,17 @@ export function checkText(c: Connection, now: Date = new Date()): string {
   return when;
 }
 
-/** A detail as one line: "Properties: a, b and 3 more". */
+/**
+ * A detail as one line: "Properties: a, b and 3 more". With every value left
+ * out only the count is known ("Properties: 3"); an explicitly empty list says
+ * "none"; a detail with no list at all is just its label.
+ */
 export function detailText(d: Detail): string {
   const values = d.values ?? [];
-  const more = d.more ? ` and ${d.more} more` : '';
-  return values.length ? `${d.label}: ${values.join(', ')}${more}` : d.label;
+  const more = d.more ?? 0;
+  if (values.length) return `${d.label}: ${values.join(', ')}${more ? ` and ${more} more` : ''}`;
+  if (more) return `${d.label}: ${more}`;
+  return d.values ? `${d.label}: none` : d.label;
 }
 
 /** What the connection's permissions let it do, from the service's descriptions. */
@@ -146,7 +152,9 @@ export function testResult(c: Connection): string {
   }
   const found = (c.health.details ?? []).map((d) => {
     const n = (d.values?.length ?? 0) + (d.more ?? 0);
-    return n ? `${n} ${d.label.toLowerCase()}` : d.label.toLowerCase();
+    // A list is a count, even an empty one: the check found nothing. A detail
+    // with no list is only a name.
+    return d.values !== undefined || n ? `${n} ${d.label.toLowerCase()}` : d.label.toLowerCase();
   });
   return found.length ? `Working: it reaches ${found.join(', ')}.` : 'Working.';
 }
