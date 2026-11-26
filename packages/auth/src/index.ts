@@ -60,6 +60,7 @@ export type {
   Role,
   LinkedAccount,
   OAuthProvider,
+  SignInMethod,
   LoginCredentials,
   RegisterData,
   SessionStatus,

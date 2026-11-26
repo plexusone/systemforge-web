@@ -63,6 +63,23 @@ describe('BFFClient errors', () => {
   });
 });
 
+describe('BFFClient sign-in URLs', () => {
+  it('names the method in the path and carries a same-site return path', () => {
+    const client = new BFFClient();
+    expect(client.getOAuthUrl('github', '/dash')).toBe('/bff/auth/github?return_to=%2Fdash');
+    expect(client.getOAuthUrl('email', '/dash?tab=1')).toBe(
+      '/bff/auth/email?return_to=%2Fdash%3Ftab%3D1'
+    );
+    expect(client.getOAuthUrl('email')).toBe('/bff/auth/email');
+  });
+
+  it('refuses a return target on another site', () => {
+    expect(new BFFClient().getOAuthUrl('email', 'https://evil.example.com/')).toBe(
+      '/bff/auth/email'
+    );
+  });
+});
+
 function Who() {
   const { user, error, logout } = useAuth();
   return (

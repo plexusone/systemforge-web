@@ -102,17 +102,24 @@ function Maintenance() {
 
 ### LoginPage Props
 
-| Prop                | Type                     | Description                                                                               |
-| ------------------- | ------------------------ | ----------------------------------------------------------------------------------------- |
-| `appName`           | `string`                 | Application name                                                                          |
-| `logo`              | `ReactNode`              | Logo                                                                                      |
-| `oauthProviders`    | `OAuthProvider[]`        | OAuth providers to offer                                                                  |
-| `showEmailForm`     | `boolean`                | Show the email and password form                                                          |
-| `showRegisterLink`  | `boolean`                | Show the link to registration                                                             |
-| `redirectUrl`       | `string`                 | Where to go after sign-in; only a URL on this site is followed, anything else goes to `/` |
-| `onNavigate`        | `(href: string) => void` | Client-side navigation                                                                    |
-| `registerUrl`       | `string`                 | Registration page                                                                         |
-| `forgotPasswordUrl` | `string`                 | Password reset page                                                                       |
+| Prop                | Type                     | Description                                                                                                                                                               |
+| ------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `appName`           | `string`                 | Application name                                                                                                                                                          |
+| `logo`              | `ReactNode`              | Logo                                                                                                                                                                      |
+| `oauthProviders`    | `SignInMethod[]`         | Sign-in buttons to offer: `github`, `google`, `microsoft`, and `email` for a code mailed to the person (needs a SystemForge BFF that serves `/bff/auth/email`; see below) |
+| `showEmailForm`     | `boolean`                | Show the email and password form                                                                                                                                          |
+| `showRegisterLink`  | `boolean`                | Show the link to registration                                                                                                                                             |
+| `redirectUrl`       | `string`                 | Where to go after sign-in; only a URL on this site is followed, anything else goes to `/`                                                                                 |
+| `onNavigate`        | `(href: string) => void` | Client-side navigation                                                                                                                                                    |
+| `registerUrl`       | `string`                 | Registration page                                                                                                                                                         |
+| `forgotPasswordUrl` | `string`                 | Password reset page                                                                                                                                                       |
+
+List `email` in `oauthProviders` only after the host's SystemForge BFF and
+SystemAuth are deployed with email sign-in (SystemForge v0.37.0 or later, with
+`social_login.email` configured). The button goes to `/bff/auth/email`; against
+a BFF that predates it, the click fails with `UNKNOWN_PROVIDER`, and against a
+SystemAuth without email sign-in it lands on SystemAuth's own chooser. Deploy
+the server first, then add `email` to the page.
 
 `redirectUrl` often comes from the address bar (`?next=…`), which is why it
 must be on this site. URLs that reach `window.location` (`registerUrl`,
