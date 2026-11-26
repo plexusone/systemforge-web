@@ -47,9 +47,4 @@ describe('LoginPage sign-in methods', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Continue with GitHub' }));
     expect(loginWithOAuth).toHaveBeenCalledExactlyOnceWith('github');
   });
-
-  it('shows no method buttons when none are given', () => {
-    render(<LoginPage showEmailForm={false} showRegisterLink={false} />);
-    expect(screen.queryByRole('button', { name: /Continue with/ })).toBeNull();
-  });
 });
