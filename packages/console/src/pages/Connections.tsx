@@ -9,9 +9,13 @@ import {
   Loading,
   PageHeader,
   StateBadge,
+  accessText,
   canManage,
+  checkText,
+  detailText,
   expiryText,
   orgHref,
+  testResult,
 } from '../components/ui';
 import { useLoad } from '../useLoad';
 import type { Connection, Manifest } from '../types';
@@ -108,15 +112,21 @@ function ConnectionRow({
   const [note, setNote] = useState<string>();
   const expiry = expiryText(c);
   const service = manifest?.displayName ?? c.provider;
+  const access = accessText(c, manifest);
+  const failed = c.health.lastValidation === 'failed';
 
-  async function run(what: string, fn: () => Promise<unknown>, after?: string) {
+  async function run<T>(
+    what: string,
+    fn: () => Promise<T>,
+    after?: string | ((result: T) => string)
+  ) {
     setBusy(true);
     setError(undefined);
     setNote(undefined);
     try {
-      await fn();
+      const result = await fn();
       setPanel(undefined);
-      if (after) setNote(after);
+      if (after) setNote(typeof after === 'function' ? after(result) : after);
       onChange();
     } catch (err) {
       setError(`${what}: ${err instanceof Error ? err.message : String(err)}`);
@@ -149,6 +159,15 @@ function ConnectionRow({
             {expiry.text}
             {expiry.soon && manage && ' — replace the token before then'}
           </p>
+          <p className={`mt-1 text-sm ${failed ? 'text-destructive' : 'text-muted-foreground'}`}>
+            {checkText(c)}
+          </p>
+          {(c.health.details ?? []).map((d) => (
+            <p key={d.label} className="mt-1 break-words text-sm text-muted-foreground">
+              {detailText(d)}
+            </p>
+          ))}
+          {access && <p className="mt-1 text-sm text-muted-foreground">{access}</p>}
           <p className="mt-2 flex flex-wrap gap-3">
             <NextStepLinks connection={c} />
           </p>
@@ -161,7 +180,7 @@ function ConnectionRow({
             variant="outline"
             size="sm"
             disabled={busy}
-            onClick={() => run('Test', () => api.test(org, c.id), 'Checked just now.')}
+            onClick={() => run('Test', () => api.test(org, c.id), testResult)}
           >
             Test
           </Button>

@@ -40,12 +40,12 @@ package's `dist` to the stack's Tailwind sources.
 
 Routes are relative to `/orgs/{id}/`:
 
-| Route                        | Page                                                                                                                                            |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `connections`                | The organization's connections: service, account, rotation, expiry, and Test, Replace token, Rename, Disconnect. The organization home opens it |
-| `connections/new`            | A card for each service the deployment offers, with how many are connected                                                                      |
-| `connections/new/{provider}` | The wizard: choose how the token is rotated, create it at the service by the manifest's steps, grant the listed permissions, paste it           |
-| `billing`                    | The organization's plan, the plans to choose from, checkout and the billing portal; see [Billing](#billing)                                     |
+| Route                        | Page                                                                                                                                                                                        |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `connections`                | The organization's connections: service, account, rotation, expiry, last check, what it reaches and its access, and Test, Replace token, Rename, Disconnect. The organization home opens it |
+| `connections/new`            | A card for each service the deployment offers, with how many are connected                                                                                                                  |
+| `connections/new/{provider}` | The wizard: choose how the token is rotated, create it at the service by the manifest's steps, grant the listed permissions, paste it                                                       |
+| `billing`                    | The organization's plan, the plans to choose from, checkout and the billing portal; see [Billing](#billing)                                                                                 |
 
 Everyone in the organization sees its connections and may test them; owners
 and admins connect, replace, rename and disconnect, as SystemAuth enforces.
@@ -60,6 +60,15 @@ saved. A service without guidance gets the form and its help link.
 
 **Expiry.** When the service reports when a token expires, the list shows it
 and flags the last two weeks, so it can be replaced in time.
+
+**Checks.** Each connection shows when it was last checked and whether it
+worked, what that check found it reaches (`health.details`, such as the
+properties a Search Console account can read, with "and N more" when the list
+was shortened), and what its permissions allow, from the service's scope
+descriptions. **Test** reports what it found ("Working: it reaches 2
+properties.") or why it failed. Details come from connectforge v0.7.0 and
+later, which SystemForge has required since v0.32.1; a deployment on an earlier
+one shows the check line alone.
 
 ## Next steps
 

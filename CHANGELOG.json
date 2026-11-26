@@ -7,6 +7,41 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.12.0",
+      "date": "2026-11-25",
+      "highlights": [
+        {
+          "description": "`@plexusone/console` 0.4.0: the Connections page shows when each connection was last checked and whether it worked, what the check found it reaches and what its permissions allow, for SystemForge v0.32.1 and later",
+          "commit": "9345e70"
+        },
+        {
+          "description": "Packages: `@plexusone/console` 0.4.0; the others are unchanged"
+        }
+      ],
+      "added": [
+        {
+          "description": "Each connection shows its last check, what that check found it reaches (`health.details`, with \"and N more\" for a shortened list) and what its permissions allow, in the service's words; Test reports what it found or why it failed",
+          "commit": "9345e70"
+        },
+        {
+          "description": "`Detail`, one thing a check found, is exported with the other console types",
+          "commit": "8f47447"
+        }
+      ],
+      "tests": [
+        {
+          "description": "The check line, the details, access and the results of Test",
+          "commit": "912275b"
+        }
+      ],
+      "documentation": [
+        {
+          "description": "The `@plexusone/console` page describes connection checks",
+          "commit": "be8e7ae"
+        }
+      ]
+    },
+    {
       "version": "v0.11.0",
       "date": "2026-11-25",
       "highlights": [

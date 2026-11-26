@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { Connection, ConnectionState } from '../types';
+import type { Connection, ConnectionState, Detail, Manifest } from '../types';
 
 export function PageHeader({
   title,
@@ -97,4 +97,64 @@ export function orgHref(org: string, rest: string): string {
 /** A query string carrying a return address, or none. */
 export function returnQuery(returnTo: string | null): string {
   return returnTo ? `?return_to=${encodeURIComponent(returnTo)}` : '';
+}
+
+/** "just now", "5 minutes ago", "3 hours ago" or "2 days ago". */
+export function ago(iso: string, now: Date = new Date()): string {
+  const seconds = Math.max(0, Math.round((now.getTime() - new Date(iso).getTime()) / 1000));
+  if (seconds < 60) return 'just now';
+  const unit = (n: number, what: string) => `${n} ${what}${n === 1 ? '' : 's'} ago`;
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 60) return unit(minutes, 'minute');
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return unit(hours, 'hour');
+  return unit(Math.round(hours / 24), 'day');
+}
+
+/** When the connection was last checked and how it went. */
+export function checkText(c: Connection, now: Date = new Date()): string {
+  const h = c.health;
+  if (!h.lastValidatedAt) return 'Not checked yet';
+  const when = `Last checked ${ago(h.lastValidatedAt, now)}`;
+  if (h.lastValidation === 'ok') return `${when}: working`;
+  if (h.lastValidation === 'failed') return `${when}: failed`;
+  return when;
+}
+
+/**
+ * A detail as one line: "Properties: a, b and 3 more". With every value left
+ * out only the count is known ("Properties: 3"); an explicitly empty list says
+ * "none"; a detail with no list at all is just its label.
+ */
+export function detailText(d: Detail): string {
+  const values = d.values ?? [];
+  const more = d.more ?? 0;
+  if (values.length) return `${d.label}: ${values.join(', ')}${more ? ` and ${more} more` : ''}`;
+  if (more) return `${d.label}: ${more}`;
+  return d.values ? `${d.label}: none` : d.label;
+}
+
+/** What the connection's permissions let it do, from the service's descriptions. */
+export function accessText(c: Connection, manifest?: Manifest): string | undefined {
+  const method = manifest?.authMethods.find((m) => m.key === c.authMethod);
+  const scopes = method?.scopes ?? [];
+  const held = c.scopes?.length
+    ? scopes.filter((s) => c.scopes?.includes(s.name))
+    : scopes.filter((s) => s.required);
+  const described = held.map((s) => s.description).filter((d): d is string => !!d);
+  return described.length ? `Access: ${described.join('; ')}` : undefined;
+}
+
+/** What a Test reports: that it worked and what it found, or why it failed. */
+export function testResult(c: Connection): string {
+  if (c.health.lastValidation === 'failed') {
+    return c.health.lastError ? `The check failed: ${c.health.lastError}` : 'The check failed.';
+  }
+  const found = (c.health.details ?? []).map((d) => {
+    const n = (d.values?.length ?? 0) + (d.more ?? 0);
+    // A list is a count, even an empty one: the check found nothing. A detail
+    // with no list is only a name.
+    return d.values !== undefined || n ? `${n} ${d.label.toLowerCase()}` : d.label.toLowerCase();
+  });
+  return found.length ? `Working: it reaches ${found.join(', ')}.` : 'Working.';
 }
